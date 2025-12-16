@@ -45,7 +45,6 @@
             border: 1px solid #e8e6e3;
             border-radius: 8px;
             padding: 10px 12px;
-            margin-bottom: 12px;
         }
 
         .search-box input {
@@ -73,35 +72,11 @@
             cursor: pointer;
         }
 
-        .new-agent-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .new-agent-btn:hover {
-            background-color: #1557b0;
-        }
-
-        .new-agent-btn svg {
-            width: 18px;
-            height: 18px;
-        }
-
         .project-list {
             flex: 1;
             overflow-y: auto;
             padding: 0 8px;
+            margin-top: 8px;
         }
 
         .project-group {
@@ -194,12 +169,20 @@
         }
 
         /* 模型卡片区域 */
-        .model-cards {
-            display: flex;
-            gap: 12px;
+        .model-cards-container {
             padding: 20px 24px;
             border-bottom: 1px solid #f0f0f0;
-            overflow-x: auto;
+        }
+
+        .model-cards {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .model-cards.collapsed .model-card:nth-child(n+6) {
+            display: none;
         }
 
         .model-card {
@@ -253,6 +236,41 @@
         .model-working {
             font-size: 12px;
             color: #999;
+        }
+
+        /* 展开/折叠按钮 */
+        .toggle-cards-btn {
+            display: none;
+            margin: 12px auto 0;
+            padding: 6px 16px;
+            background-color: transparent;
+            border: 1px solid #e8e6e3;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-cards-btn:hover {
+            background-color: #f5f3f0;
+            color: #333;
+        }
+
+        .toggle-cards-btn.visible {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .toggle-cards-btn svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s;
+        }
+
+        .toggle-cards-btn.expanded svg {
+            transform: rotate(180deg);
         }
 
         /* 对话区域 */
@@ -406,58 +424,6 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #ccc;
         }
-
-        /* 输入区域 */
-        .input-area {
-            padding: 16px 24px;
-            border-top: 1px solid #f0f0f0;
-            background: #fff;
-        }
-
-        .input-box {
-            display: flex;
-            align-items: center;
-            background-color: #f5f3f0;
-            border-radius: 12px;
-            padding: 12px 16px;
-            gap: 12px;
-        }
-
-        .input-box input {
-            flex: 1;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 15px;
-            color: #333;
-        }
-
-        .input-box input::placeholder {
-            color: #999;
-        }
-
-        .send-btn {
-            width: 36px;
-            height: 36px;
-            background-color: #1a73e8;
-            border: none;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .send-btn:hover {
-            background-color: #1557b0;
-        }
-
-        .send-btn svg {
-            width: 18px;
-            height: 18px;
-            color: white;
-        }
     </style>
 </head>
 <body>
@@ -479,14 +445,6 @@
                         </svg>
                     </div>
                 </div>
-                <button class="new-agent-btn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="12" y1="8" x2="12" y2="16"></line>
-                        <line x1="8" y1="12" x2="16" y2="12"></line>
-                    </svg>
-                    New Agent
-                </button>
             </div>
 
             <div class="project-list" id="projectList">
@@ -497,26 +455,21 @@
         <!-- 右侧主区域 -->
         <div class="main-content">
             <!-- 模型卡片 -->
-            <div class="model-cards" id="modelCards">
-                <!-- 模型卡片将通过JavaScript动态生成 -->
+            <div class="model-cards-container">
+                <div class="model-cards collapsed" id="modelCards">
+                    <!-- 模型卡片将通过JavaScript动态生成 -->
+                </div>
+                <button class="toggle-cards-btn" id="toggleCardsBtn" onclick="toggleCards()">
+                    <span id="toggleText">展开更多</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
             </div>
 
             <!-- 对话区域 -->
             <div class="chat-area" id="chatArea">
                 <!-- 对话内容将通过JavaScript动态生成 -->
-            </div>
-
-            <!-- 输入区域 -->
-            <div class="input-area">
-                <div class="input-box">
-                    <input type="text" placeholder="输入消息..." id="messageInput">
-                    <button class="send-btn" onclick="sendMessage()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="22" y1="2" x2="11" y2="13"></line>
-                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                        </svg>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -580,7 +533,12 @@
                             models: [
                                 { name: 'Claude 3.5', status: 'completed', time: '2m 15s' },
                                 { name: 'GPT-4', status: 'completed', time: '1m 45s' },
-                                { name: 'Gemini Pro', status: 'completed', time: '3m 22s' }
+                                { name: 'Gemini Pro', status: 'completed', time: '3m 22s' },
+                                { name: 'Llama 3', status: 'completed', time: '2m 30s' },
+                                { name: 'Mistral', status: 'completed', time: '1m 55s' },
+                                { name: 'Claude 2', status: 'completed', time: '4m 10s' },
+                                { name: 'GPT-3.5', status: 'completed', time: '1m 20s' },
+                                { name: 'Qwen 2', status: 'completed', time: '2m 45s' }
                             ],
                             messages: [
                                 {
@@ -589,7 +547,24 @@
                                 },
                                 {
                                     role: 'assistant',
-                                    content: '这个项目是一个基于蒙特卡洛树搜索的软件工程AI代理系统...'
+                                    status: [
+                                        { type: 'ready', label: 'Environment ready' },
+                                        { type: 'thought', label: 'Thought', value: 'for 5s' },
+                                    ],
+                                    thoughtContent: '让我分析这个项目的核心功能和架构...',
+                                    explored: { label: 'Explored', value: '3 directories 25 files' },
+                                    content: `这个项目是一个基于蒙特卡洛树搜索的软件工程AI代理系统。
+
+## 主要功能
+
+### 🔍 代码搜索
+项目能够智能搜索代码库，找到与问题相关的代码片段。
+
+### 🛠️ 自动修复
+使用MCTS算法自动生成和评估代码修复方案。
+
+### 📊 评估反馈
+内置评估系统，对生成的解决方案进行打分和优化。`
                                 }
                             ]
                         }
@@ -616,7 +591,14 @@
                                 },
                                 {
                                     role: 'assistant',
-                                    content: '根据搜索结果，找到了以下关于上下文压缩的内容...'
+                                    status: [
+                                        { type: 'ready', label: 'Search complete' }
+                                    ],
+                                    content: `根据搜索结果，找到了以下关于上下文压缩的内容...
+
+## 上下文压缩技术
+
+上下文压缩是一种优化大型语言模型输入的技术，可以有效减少token使用量。`
                                 }
                             ]
                         }
@@ -629,6 +611,7 @@
         let currentProject = null;
         let currentCard = null;
         let currentModelIndex = 0;
+        let cardsExpanded = false;
 
         // 渲染项目列表
         function renderProjectList() {
@@ -719,6 +702,7 @@
             currentProject = project;
             currentCard = project.cards[0];
             currentModelIndex = 0;
+            cardsExpanded = false;
 
             renderModelCards();
             renderChat();
@@ -726,9 +710,28 @@
 
         function renderModelCards() {
             const modelCards = document.getElementById('modelCards');
+            const toggleBtn = document.getElementById('toggleCardsBtn');
             modelCards.innerHTML = '';
 
             if (!currentCard) return;
+
+            // 重置折叠状态
+            if (cardsExpanded) {
+                modelCards.classList.remove('collapsed');
+                toggleBtn.classList.add('expanded');
+                document.getElementById('toggleText').textContent = '收起';
+            } else {
+                modelCards.classList.add('collapsed');
+                toggleBtn.classList.remove('expanded');
+                document.getElementById('toggleText').textContent = '展开更多';
+            }
+
+            // 显示或隐藏展开按钮
+            if (currentCard.models.length > 5) {
+                toggleBtn.classList.add('visible');
+            } else {
+                toggleBtn.classList.remove('visible');
+            }
 
             currentCard.models.forEach((model, index) => {
                 const card = document.createElement('div');
@@ -753,6 +756,23 @@
 
                 modelCards.appendChild(card);
             });
+        }
+
+        function toggleCards() {
+            cardsExpanded = !cardsExpanded;
+            const modelCards = document.getElementById('modelCards');
+            const toggleBtn = document.getElementById('toggleCardsBtn');
+            const toggleText = document.getElementById('toggleText');
+
+            if (cardsExpanded) {
+                modelCards.classList.remove('collapsed');
+                toggleBtn.classList.add('expanded');
+                toggleText.textContent = '收起';
+            } else {
+                modelCards.classList.add('collapsed');
+                toggleBtn.classList.remove('expanded');
+                toggleText.textContent = '展开更多';
+            }
         }
 
         function selectModel(index) {
@@ -831,41 +851,6 @@
             // 滚动到底部
             chatArea.scrollTop = chatArea.scrollHeight;
         }
-
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (!message || !currentCard) return;
-
-            // 添加用户消息
-            currentCard.messages.push({
-                role: 'user',
-                content: message
-            });
-
-            // 模拟助手回复
-            setTimeout(() => {
-                currentCard.messages.push({
-                    role: 'assistant',
-                    status: [
-                        { type: 'ready', label: 'Processing complete' }
-                    ],
-                    content: `收到您的消息："${message}"。这是一个模拟回复，实际应用中会连接到真正的AI模型。`
-                });
-                renderChat();
-            }, 1000);
-
-            input.value = '';
-            renderChat();
-        }
-
-        // 回车发送消息
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
 
         // 初始化
         renderProjectList();
