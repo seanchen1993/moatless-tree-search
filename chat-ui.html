@@ -38,33 +38,6 @@
             padding: 16px;
         }
 
-        .project-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 12px;
-            padding: 8px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .project-title-icon {
-            width: 24px;
-            height: 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        .project-title-icon svg {
-            width: 14px;
-            height: 14px;
-        }
-
         .search-box {
             display: flex;
             align-items: center;
@@ -99,14 +72,14 @@
             cursor: pointer;
         }
 
-        .card-list {
+        .project-list {
             flex: 1;
             overflow-y: auto;
             padding: 0 8px;
             margin-top: 8px;
         }
 
-        .card-group {
+        .project-group {
             margin-bottom: 8px;
         }
 
@@ -115,75 +88,84 @@
             color: #999;
             padding: 12px 8px 8px;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
         }
 
-        .group-count {
-            background-color: #e8e6e3;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-        }
-
-        .card-item {
+        .project-item {
             padding: 12px;
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.15s;
             margin-bottom: 2px;
+            position: relative;
         }
 
-        .card-item:hover {
+        .project-item:hover {
             background-color: #f0eeeb;
         }
 
-        .card-item.active {
+        .project-item.active {
             background-color: #f0eeeb;
         }
 
-        .card-item-header {
+        .project-item.loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .project-item-header {
             display: flex;
             align-items: flex-start;
             gap: 8px;
         }
 
-        .card-icon {
+        .project-icon {
             width: 20px;
             height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            color: #e8b94b;
             flex-shrink: 0;
             margin-top: 2px;
         }
 
-        .card-icon.running {
-            color: #e8b94b;
-        }
-
-        .card-icon.completed {
+        .project-icon.check {
             color: #4ade80;
         }
 
-        .card-icon.failed {
-            color: #f87171;
+        .project-icon.loading svg {
+            animation: spin 1s linear infinite;
         }
 
-        .card-content {
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .project-content {
             flex: 1;
             min-width: 0;
         }
 
-        .card-title-row {
+        .project-title-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 4px;
         }
 
-        .card-title {
+        .project-title {
             font-size: 14px;
             font-weight: 500;
             color: #333;
@@ -192,39 +174,15 @@
             text-overflow: ellipsis;
         }
 
-        .card-time {
+        .project-time {
             font-size: 12px;
             color: #999;
             flex-shrink: 0;
         }
 
-        .card-meta {
+        .project-meta {
             font-size: 12px;
             color: #999;
-        }
-
-        /* 加载状态 */
-        .loading-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-            color: #999;
-            font-size: 14px;
-            gap: 8px;
-        }
-
-        .loading-spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #e8e6e3;
-            border-top-color: #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
 
         /* 右侧主区域 */
@@ -240,6 +198,24 @@
         .model-cards-container {
             padding: 20px 24px;
             border-bottom: 1px solid #f0f0f0;
+            position: relative;
+        }
+
+        .model-cards-container.refreshing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            background-size: 200% 100%;
+            animation: gradientMove 1s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
         }
 
         .model-cards {
@@ -341,29 +317,17 @@
             transform: rotate(180deg);
         }
 
-        /* 刷新状态 */
-        .refresh-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px;
-            font-size: 12px;
-            color: #999;
-            background-color: #faf9f7;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .refresh-indicator.hidden {
-            display: none;
-        }
-
         /* 对话区域 */
         .chat-area {
             flex: 1;
             overflow-y: auto;
             padding: 32px 48px;
             background: linear-gradient(180deg, #fefefe 0%, #faf9f7 100%);
+            transition: opacity 0.3s;
+        }
+
+        .chat-area.refreshing {
+            opacity: 0.6;
         }
 
         .chat-message {
@@ -647,36 +611,6 @@
             margin: 24px 0;
         }
 
-        /* 空状态 */
-        .empty-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
-            color: #999;
-            text-align: center;
-        }
-
-        .empty-state svg {
-            width: 64px;
-            height: 64px;
-            color: #ddd;
-            margin-bottom: 16px;
-        }
-
-        .empty-state-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        .empty-state-desc {
-            font-size: 14px;
-            color: #999;
-        }
-
         /* 代码块 */
         .code-block {
             position: relative;
@@ -717,6 +651,67 @@
             margin: 0;
             border-radius: 0 0 12px 12px;
         }
+
+        /* 加载遮罩 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .loading-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .loading-spinner-large {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e8e6e3;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        /* 刷新成功提示 */
+        .refresh-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .refresh-toast.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .refresh-toast svg {
+            width: 18px;
+            height: 18px;
+        }
     </style>
 </head>
 <body>
@@ -724,17 +719,14 @@
         <!-- 左侧边栏 -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <div class="project-title">
-                    <div class="project-title-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                        </svg>
-                    </div>
-                    <span id="projectTitleText">Loading...</span>
-                </div>
                 <div class="search-box">
-                    <input type="text" placeholder="Search cards..." id="searchInput">
+                    <input type="text" placeholder="Search agents...">
                     <div class="search-icons">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="4" y1="6" x2="20" y2="6"></line>
+                            <line x1="4" y1="12" x2="14" y2="12"></line>
+                            <line x1="4" y1="18" x2="18" y2="18"></line>
+                        </svg>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -743,18 +735,15 @@
                 </div>
             </div>
 
-            <div class="card-list" id="cardList">
-                <div class="loading-indicator">
-                    <div class="loading-spinner"></div>
-                    <span>Loading cards...</span>
-                </div>
+            <div class="project-list" id="projectList">
+                <!-- 项目列表将通过JavaScript动态生成 -->
             </div>
         </div>
 
         <!-- 右侧主区域 -->
         <div class="main-content">
             <!-- 模型卡片 -->
-            <div class="model-cards-container">
+            <div class="model-cards-container" id="modelCardsContainer">
                 <div class="model-cards collapsed" id="modelCards">
                     <!-- 模型卡片将通过JavaScript动态生成 -->
                 </div>
@@ -766,499 +755,604 @@
                 </button>
             </div>
 
-            <!-- 刷新提示 -->
-            <div class="refresh-indicator hidden" id="refreshIndicator">
-                <div class="loading-spinner" style="width: 14px; height: 14px;"></div>
-                <span>Refreshing...</span>
-            </div>
-
             <!-- 对话区域 -->
             <div class="chat-area" id="chatArea">
-                <div class="empty-state">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                    </svg>
-                    <div class="empty-state-title">Select a card to view</div>
-                    <div class="empty-state-desc">Choose a card from the left panel to see the conversation</div>
-                </div>
+                <!-- 对话内容将通过JavaScript动态生成 -->
             </div>
         </div>
     </div>
 
-    <script>
-        // ==================== 配置 ====================
-        const CONFIG = {
-            REFRESH_INTERVAL: 10000, // 10秒刷新一次
-            API_BASE_URL: '/api', // API基础路径（实际使用时替换）
-        };
+    <!-- 刷新成功提示 -->
+    <div class="refresh-toast" id="refreshToast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span>Data refreshed</span>
+    </div>
 
-        // ==================== 状态管理 ====================
-        const state = {
-            projectId: null,
-            cards: [],
-            currentCardId: null,
-            currentCardData: null,
-            currentModelIndex: 0,
-            cardsExpanded: false,
-            refreshTimer: null,
-            isLoading: false,
-        };
+    <script>
+        // ==================== 从URL读取project_id ====================
+        function getProjectIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('project_id') || 'wealthboxapi_project';
+        }
+
+        const currentProjectId = getProjectIdFromUrl();
 
         // ==================== Mock API ====================
-        // 模拟API延迟
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        // Mock: 根据 project_id 获取卡片列表
-        async function apiGetCardsByProject(projectId) {
-            await delay(500); // 模拟网络延迟
+        // Mock: 根据 project_id 获取项目数据（包含所有卡片）
+        async function apiGetProjectData(projectId) {
+            await delay(800); // 模拟网络延迟
             
-            // Mock 数据 - 根据不同的 projectId 返回不同的卡片
-            const mockCards = {
-                'wealthboxapi_project': [
-                    { id: 'card_001', title: 'API Authentication Fix', status: 'completed', created_at: '2024-12-16T08:00:00Z', model_count: 5 },
-                    { id: 'card_002', title: 'Database Query Optimization', status: 'running', created_at: '2024-12-16T07:30:00Z', model_count: 3 },
-                    { id: 'card_003', title: 'User Permission Bug', status: 'running', created_at: '2024-12-15T14:20:00Z', model_count: 4 },
-                    { id: 'card_004', title: 'Cache Implementation', status: 'completed', created_at: '2024-12-14T10:00:00Z', model_count: 2 },
-                    { id: 'card_005', title: 'Rate Limiting Feature', status: 'failed', created_at: '2024-12-13T16:45:00Z', model_count: 6 },
-                ],
-                'moatless_project': [
-                    { id: 'card_101', title: 'MCTS Algorithm Enhancement', status: 'running', created_at: '2024-12-16T09:00:00Z', model_count: 5 },
-                    { id: 'card_102', title: 'Code Search Improvement', status: 'completed', created_at: '2024-12-15T11:00:00Z', model_count: 3 },
-                ],
-                'default': [
-                    { id: 'card_201', title: 'Sample Task 1', status: 'running', created_at: '2024-12-16T08:00:00Z', model_count: 3 },
-                    { id: 'card_202', title: 'Sample Task 2', status: 'completed', created_at: '2024-12-15T10:00:00Z', model_count: 2 },
-                ]
+            // 返回完整的项目数据
+            return {
+                projectId: projectId,
+                projectsData: getMockProjectsData(projectId)
             };
-
-            return mockCards[projectId] || mockCards['default'];
         }
 
         // Mock: 根据 card_id 获取卡片详情
-        async function apiGetCardDetail(cardId) {
-            await delay(300); // 模拟网络延迟
+        async function apiGetCardDetail(projectId, cardIndex) {
+            await delay(500); // 模拟网络延迟
             
-            // Mock 详细数据
-            const mockCardDetails = {
-                'card_001': {
-                    id: 'card_001',
-                    title: 'API Authentication Fix',
-                    status: 'completed',
-                    models: [
-                        { name: 'Opus 4.5', status: 'completed', time: '2m 15s' },
-                        { name: 'GPT-5.2', status: 'completed', time: '1m 53s' },
-                        { name: 'Sonnet 4.5', status: 'completed', time: '3m 10s' },
-                        { name: 'Gemini 3 Pro', status: 'completed', time: '2m 45s' },
-                        { name: 'Composer 1', status: 'completed', time: '1m 30s' }
-                    ],
-                    messages: [
-                        {
-                            role: 'user',
-                            content: 'Fix the authentication bug in the API endpoint /api/v1/auth/login'
-                        },
-                        {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Environment ready' },
-                                { type: 'thought', icon: 'brain', text: 'Thought for 5s' },
-                                { type: 'explored', icon: 'folder', text: 'Explored 8 files' }
-                            ],
-                            thought: 'Let me analyze the authentication flow and identify the root cause of the bug...',
-                            content: `<h2>🔐 Authentication Bug Analysis</h2>
+            const data = getMockProjectsData(projectId);
+            // 模拟数据可能有更新（随机更新时间）
+            return data;
+        }
 
-<p>I've identified the issue in your authentication endpoint. The problem is in the token validation logic.</p>
+        // 获取Mock数据
+        function getMockProjectsData(projectId) {
+            return {
+                today: [
+                    {
+                        id: 'p1',
+                        title: projectId, // 使用 project_id 作为标题
+                        time: 'now',
+                        meta: '0/5 Models C... · moatless-tre...',
+                        icon: 'sparkle',
+                        cards: [
+                            {
+                                id: 'c1',
+                                models: [
+                                    { name: 'Opus 4.5', status: 'working', time: '1m 53s' },
+                                    { name: 'GPT-5.2', status: 'working', time: '1m 53s' },
+                                    { name: 'Sonnet 4.5', status: 'working', time: '1m 53s' },
+                                    { name: 'Gemini 3 Pro', status: 'working', time: '1m 53s' },
+                                    { name: 'Composer 1', status: 'working', time: '1m 53s' }
+                                ],
+                                messages: [
+                                    {
+                                        role: 'user',
+                                        content: '详细讲解这个项目'
+                                    },
+                                    {
+                                        role: 'assistant',
+                                        statusPills: [
+                                            { type: 'ready', icon: 'check', text: 'Environment ready' },
+                                            { type: 'thought', icon: 'brain', text: 'Thought for 3s' },
+                                            { type: 'explored', icon: 'folder', text: 'Explored 1 directory, 13 files' }
+                                        ],
+                                        thought: '我来详细探索这个项目，首先阅读关键文件来理解项目的整体架构和功能。让我从 README.md 和主要的源代码目录开始分析...',
+                                        content: `<p>现在我已经全面分析了这个项目。让我为您详细讲解。</p>
 
-<h3>🔍 Root Cause</h3>
-<p>The JWT token expiration check was using <code>Date.now()</code> incorrectly, causing valid tokens to be rejected.</p>
+<h2>🚀 Moatless Tree Search 项目详解</h2>
+
+<h3>📁 项目概述</h3>
+<p>这是一个名为 <strong>Moatless Tree Search</strong> 的开源项目，是论文 <a href="#">"SWE-Search: Enhancing Software Agents with Monte Carlo Tree Search and Iterative Refinement"</a> 的代码实现。</p>
+
+<div class="info-card">
+    <div class="info-card-title">💡 核心目标</div>
+    <div class="info-card-content">使用 <strong>蒙特卡洛树搜索（MCTS）</strong> 算法来增强 AI 软件工程代理的能力，帮助自动化解决软件开发中的问题（如 bug 修复、功能实现等）。</div>
+</div>
+
+<h3>📂 项目结构</h3>
+<div class="file-tree">
+    <div class="file-tree-item folder">📁 moatless/</div>
+    <div class="file-tree-item file">├── actions/ - 定义各种代码操作</div>
+    <div class="file-tree-item file">├── benchmark/ - 基准测试相关</div>
+    <div class="file-tree-item file">├── completion/ - 模型补全逻辑</div>
+    <div class="file-tree-item file">├── index/ - 代码索引功能</div>
+    <div class="file-tree-item file">└── search_tree.py - 核心搜索树实现</div>
+</div>
+
+<h3>⚙️ 关键技术</h3>
+<ul>
+    <li><strong>蒙特卡洛树搜索 (MCTS)</strong> - 用于探索解决方案空间</li>
+    <li><strong>代码上下文管理</strong> - 智能管理和压缩代码上下文</li>
+    <li><strong>多模型支持</strong> - 支持多种 LLM 后端</li>
+</ul>`
+                                    },
+                                    {
+                                        role: 'user',
+                                        content: '能详细解释一下 MCTS 算法在这个项目中是如何工作的吗？'
+                                    },
+                                    {
+                                        role: 'assistant',
+                                        statusPills: [
+                                            { type: 'ready', icon: 'check', text: 'Analysis complete' },
+                                            { type: 'thought', icon: 'brain', text: 'Thought for 8s' },
+                                            { type: 'explored', icon: 'folder', text: 'Explored 5 files' }
+                                        ],
+                                        thought: '让我深入分析 search_tree.py 和相关文件，理解 MCTS 的具体实现细节...',
+                                        content: `<h2>🌲 MCTS 算法在项目中的工作原理</h2>
+
+<p>蒙特卡洛树搜索在这个项目中被创新性地应用于<strong>代码修复和生成任务</strong>。让我详细解释其工作流程：</p>
+
+<h3>1️⃣ 选择阶段 (Selection)</h3>
+<p>从根节点开始，使用 <code>UCB1</code> 公式选择最有潜力的子节点：</p>
 
 <div class="code-block">
     <div class="code-header">
-        <span class="code-lang">JavaScript</span>
-        <button class="code-copy">Copy</button>
+        <span class="code-lang">Python</span>
+        <button class="code-copy">复制代码</button>
     </div>
-    <pre>// Before (Bug)
-if (token.exp < Date.now()) {
-    throw new Error('Token expired');
-}
+    <pre>def select_node(self, node: Node) -> Node:
+    while node.children:
+        node = max(node.children, 
+                   key=lambda n: n.ucb_score())
+    return node</pre>
+</div>
 
-// After (Fixed)
-if (token.exp < Math.floor(Date.now() / 1000)) {
-    throw new Error('Token expired');
-}</pre>
+<h3>2️⃣ 扩展阶段 (Expansion)</h3>
+<p>当到达叶节点时，生成可能的代码修改操作作为新的子节点：</p>
+<ul>
+    <li><strong>StringReplace</strong> - 字符串替换操作</li>
+    <li><strong>InsertLine</strong> - 插入新代码行</li>
+    <li><strong>CreateFile</strong> - 创建新文件</li>
+    <li><strong>ViewCode</strong> - 查看更多代码上下文</li>
+</ul>
+
+<h3>3️⃣ 模拟阶段 (Simulation)</h3>
+<blockquote>与传统 MCTS 不同，这里使用 LLM 来评估代码修改的质量，而不是随机模拟。</blockquote>
+
+<h3>4️⃣ 回传阶段 (Backpropagation)</h3>
+<p>将评估结果回传到路径上的所有节点，更新它们的统计信息：</p>
+
+<div class="code-block">
+    <div class="code-header">
+        <span class="code-lang">Python</span>
+        <button class="code-copy">复制代码</button>
+    </div>
+    <pre>def backpropagate(self, node: Node, reward: float):
+    while node:
+        node.visits += 1
+        node.total_reward += reward
+        node = node.parent</pre>
 </div>
 
 <div class="info-card">
-    <div class="info-card-title">💡 Explanation</div>
-    <div class="info-card-content">JWT expiration times are in <strong>seconds</strong>, but <code>Date.now()</code> returns <strong>milliseconds</strong>. The fix divides by 1000 to convert to seconds.</div>
+    <div class="info-card-title">🎯 创新点</div>
+    <div class="info-card-content">该项目将传统的 MCTS 与大语言模型相结合，用 LLM 的评估能力替代随机模拟，使得算法能够在代码修复这种复杂任务中表现出色。</div>
 </div>`
-                        },
-                        {
-                            role: 'user',
-                            content: 'Can you also add refresh token support?'
-                        },
-                        {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Implementation complete' },
-                                { type: 'explored', icon: 'folder', text: 'Modified 3 files' }
-                            ],
-                            content: `<h2>🔄 Refresh Token Implementation</h2>
+                                    },
+                                    {
+                                        role: 'user',
+                                        content: '这个项目支持哪些大语言模型？如何配置？'
+                                    },
+                                    {
+                                        role: 'assistant',
+                                        statusPills: [
+                                            { type: 'ready', icon: 'check', text: 'Config analyzed' },
+                                            { type: 'explored', icon: 'folder', text: 'Explored completion/, .env.example' }
+                                        ],
+                                        thought: '让我查看 completion 模块和配置文件来了解支持的模型...',
+                                        content: `<h2>🤖 支持的大语言模型</h2>
 
-<p>I've added refresh token support to your authentication system. Here's the implementation:</p>
+<p>该项目通过灵活的适配器架构支持多种主流大语言模型：</p>
 
-<h3>📁 Files Modified</h3>
-<div class="file-tree">
-    <div class="file-tree-item folder">📁 src/auth/</div>
-    <div class="file-tree-item file">├── tokenService.js - Added refresh logic</div>
-    <div class="file-tree-item file">├── authController.js - New endpoint</div>
-    <div class="file-tree-item file">└── middleware.js - Token validation</div>
-</div>
+<h3>📋 支持的模型列表</h3>
 
-<h3>🛠️ New Endpoint</h3>
+<table style="width:100%; border-collapse: collapse; margin: 16px 0;">
+    <tr style="background: #f3f4f6;">
+        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">提供商</th>
+        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">模型</th>
+        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">推荐场景</th>
+    </tr>
+    <tr>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;"><strong>Anthropic</strong></td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">Claude 3.5 Sonnet, Claude 3 Opus</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">复杂推理、代码生成</td>
+    </tr>
+    <tr style="background: #fafafa;">
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;"><strong>OpenAI</strong></td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">GPT-4, GPT-4 Turbo, GPT-3.5</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">通用任务、快速响应</td>
+    </tr>
+    <tr>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;"><strong>Google</strong></td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">Gemini Pro, Gemini Ultra</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">多模态、长上下文</td>
+    </tr>
+    <tr style="background: #fafafa;">
+        <td style="padding: 12px;"><strong>本地部署</strong></td>
+        <td style="padding: 12px;">Ollama, vLLM</td>
+        <td style="padding: 12px;">隐私保护、离线使用</td>
+    </tr>
+</table>
+
+<h3>⚙️ 配置方法</h3>
+
+<p>1. 首先复制环境变量模板：</p>
 <div class="code-block">
     <div class="code-header">
-        <span class="code-lang">JavaScript</span>
-        <button class="code-copy">Copy</button>
+        <span class="code-lang">Bash</span>
+        <button class="code-copy">复制代码</button>
     </div>
-    <pre>// POST /api/v1/auth/refresh
-app.post('/api/v1/auth/refresh', async (req, res) => {
-    const { refreshToken } = req.body;
-    
-    const decoded = jwt.verify(refreshToken, REFRESH_SECRET);
-    const newAccessToken = generateAccessToken(decoded.userId);
-    
-    res.json({ accessToken: newAccessToken });
-});</pre>
-</div>`
-                        }
-                    ]
-                },
-                'card_002': {
-                    id: 'card_002',
-                    title: 'Database Query Optimization',
-                    status: 'running',
-                    models: [
-                        { name: 'Claude 3.5', status: 'working', time: '1m 23s' },
-                        { name: 'GPT-4', status: 'working', time: '1m 23s' },
-                        { name: 'Gemini Pro', status: 'pending', time: '0s' }
-                    ],
-                    messages: [
-                        {
-                            role: 'user',
-                            content: 'The user list query is very slow, taking over 5 seconds to load. Please optimize it.'
-                        },
-                        {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Analysis started' },
-                                { type: 'thought', icon: 'brain', text: 'Analyzing for 8s' },
-                                { type: 'explored', icon: 'folder', text: 'Explored database schema' }
-                            ],
-                            thought: 'Let me analyze the query execution plan and identify bottlenecks...',
-                            content: `<h2>📊 Query Performance Analysis</h2>
+    <pre>cp .env.example .env</pre>
+</div>
 
-<p>I've analyzed your user list query and found several optimization opportunities:</p>
-
-<h3>🐌 Current Issues</h3>
-<ul>
-    <li><strong>Missing Index</strong> - No index on <code>users.created_at</code></li>
-    <li><strong>N+1 Query</strong> - Loading related data inefficiently</li>
-    <li><strong>SELECT *</strong> - Fetching unnecessary columns</li>
-</ul>
-
-<h3>⚡ Optimizations Applied</h3>
-
+<p>2. 在 <code>.env</code> 文件中配置 API 密钥：</p>
 <div class="code-block">
     <div class="code-header">
-        <span class="code-lang">SQL</span>
-        <button class="code-copy">Copy</button>
+        <span class="code-lang">Environment</span>
+        <button class="code-copy">复制代码</button>
     </div>
-    <pre>-- Add index for sorting
-CREATE INDEX idx_users_created_at ON users(created_at DESC);
+    <pre># Anthropic
+ANTHROPIC_API_KEY=sk-ant-xxx
 
--- Optimized query
-SELECT id, name, email, avatar_url, created_at
-FROM users
-WHERE status = 'active'
-ORDER BY created_at DESC
-LIMIT 50;</pre>
+# OpenAI
+OPENAI_API_KEY=sk-xxx
+
+# Google
+GOOGLE_API_KEY=xxx</pre>
 </div>
 
-<blockquote>Query time reduced from 5.2s to 45ms - a 115x improvement!</blockquote>`
-                        }
-                    ]
-                },
-                'card_003': {
-                    id: 'card_003',
-                    title: 'User Permission Bug',
-                    status: 'running',
-                    models: [
-                        { name: 'Opus 4.5', status: 'working', time: '45s' },
-                        { name: 'GPT-5.2', status: 'working', time: '45s' },
-                        { name: 'Sonnet 4.5', status: 'working', time: '45s' },
-                        { name: 'Gemini 3 Pro', status: 'pending', time: '0s' }
-                    ],
-                    messages: [
-                        {
-                            role: 'user',
-                            content: 'Users with "editor" role can access admin-only features. Please investigate and fix.'
-                        },
-                        {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'thought', icon: 'brain', text: 'Investigating...' }
-                            ],
-                            thought: 'Checking permission middleware and role definitions...',
-                            content: `<h2>🔍 Investigation in Progress</h2>
+<p>3. 在代码中指定模型：</p>
+<div class="code-block">
+    <div class="code-header">
+        <span class="code-lang">Python</span>
+        <button class="code-copy">复制代码</button>
+    </div>
+    <pre>from moatless.completion import create_completion
 
-<p>Currently analyzing the permission system...</p>
-
-<h3>📋 Checked So Far</h3>
-<ul>
-    <li>✅ Role definitions in database</li>
-    <li>✅ Permission middleware configuration</li>
-    <li>🔄 Route protection decorators</li>
-    <li>⏳ Frontend route guards</li>
-</ul>
-
-<p><em>Analysis ongoing, will update with findings...</em></p>`
-                        }
-                    ]
-                },
-                'card_004': {
-                    id: 'card_004',
-                    title: 'Cache Implementation',
-                    status: 'completed',
-                    models: [
-                        { name: 'Claude 3.5', status: 'completed', time: '4m 30s' },
-                        { name: 'GPT-4', status: 'completed', time: '5m 15s' }
-                    ],
-                    messages: [
-                        {
-                            role: 'user',
-                            content: 'Implement Redis caching for the product catalog API'
-                        },
-                        {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Implementation complete' },
-                                { type: 'explored', icon: 'folder', text: 'Created 4 files' }
-                            ],
-                            content: `<h2>🚀 Redis Cache Implementation</h2>
-
-<p>Successfully implemented Redis caching for your product catalog. Here's the summary:</p>
-
-<h3>📁 New Files</h3>
-<div class="file-tree">
-    <div class="file-tree-item folder">📁 src/cache/</div>
-    <div class="file-tree-item file">├── redisClient.js</div>
-    <div class="file-tree-item file">├── cacheMiddleware.js</div>
-    <div class="file-tree-item file">├── cacheKeys.js</div>
-    <div class="file-tree-item file">└── cacheInvalidation.js</div>
+completion = create_completion(
+    model="claude-3-5-sonnet-20241022",
+    temperature=0.7
+)</pre>
 </div>
-
-<h3>⚡ Performance Improvement</h3>
-<ul>
-    <li>Cache hit rate: <strong>94%</strong></li>
-    <li>Average response time: <strong>15ms</strong> (was 250ms)</li>
-    <li>TTL: <strong>5 minutes</strong> for catalog data</li>
-</ul>
 
 <div class="info-card">
-    <div class="info-card-title">🔧 Configuration</div>
-    <div class="info-card-content">Add <code>REDIS_URL</code> to your environment variables. Default: <code>redis://localhost:6379</code></div>
+    <div class="info-card-title">💡 推荐配置</div>
+    <div class="info-card-content">对于代码修复任务，推荐使用 <strong>Claude 3.5 Sonnet</strong> 或 <strong>GPT-4 Turbo</strong>，它们在代码理解和生成方面表现最佳。如果需要处理超长代码文件，可以考虑 Gemini Pro 的 100K 上下文窗口。</div>
 </div>`
-                        }
-                    ]
-                },
-                'card_005': {
-                    id: 'card_005',
-                    title: 'Rate Limiting Feature',
-                    status: 'failed',
-                    models: [
-                        { name: 'Opus 4.5', status: 'failed', time: '1m 20s' },
-                        { name: 'GPT-5.2', status: 'failed', time: '2m 10s' },
-                        { name: 'Sonnet 4.5', status: 'failed', time: '1m 45s' },
-                        { name: 'Gemini 3 Pro', status: 'failed', time: '1m 30s' },
-                        { name: 'Composer 1', status: 'failed', time: '2m 00s' },
-                        { name: 'Claude 3', status: 'failed', time: '1m 15s' }
-                    ],
-                    messages: [
-                        {
-                            role: 'user',
-                            content: 'Add rate limiting to all API endpoints'
-                        },
-                        {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Analysis failed' }
-                            ],
-                            content: `<h2>❌ Task Failed</h2>
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'p2',
+                        title: 'Project explanation',
+                        time: '39m',
+                        meta: '3 Models · moatless-tree-search',
+                        icon: 'sparkle',
+                        cards: [
+                            {
+                                id: 'c2',
+                                models: [
+                                    { name: 'Claude 3.5', status: 'completed', time: '2m 15s' },
+                                    { name: 'GPT-4', status: 'completed', time: '1m 45s' },
+                                    { name: 'Gemini Pro', status: 'completed', time: '3m 22s' },
+                                    { name: 'Llama 3', status: 'completed', time: '2m 30s' },
+                                    { name: 'Mistral', status: 'completed', time: '1m 55s' },
+                                    { name: 'Claude 2', status: 'completed', time: '4m 10s' },
+                                    { name: 'GPT-3.5', status: 'completed', time: '1m 20s' },
+                                    { name: 'Qwen 2', status: 'completed', time: '2m 45s' }
+                                ],
+                                messages: [
+                                    {
+                                        role: 'user',
+                                        content: '请解释这个项目的主要功能'
+                                    },
+                                    {
+                                        role: 'assistant',
+                                        statusPills: [
+                                            { type: 'ready', icon: 'check', text: 'Environment ready' },
+                                            { type: 'thought', icon: 'brain', text: 'Thought for 5s' },
+                                            { type: 'explored', icon: 'folder', text: 'Explored 3 directories, 25 files' }
+                                        ],
+                                        thought: '让我分析这个项目的核心功能和架构...',
+                                        content: `<h2>📦 项目主要功能</h2>
 
-<p>Unable to complete the rate limiting implementation due to the following issues:</p>
+<p>这个项目是一个基于蒙特卡洛树搜索的<strong>软件工程AI代理系统</strong>，主要包含以下功能模块：</p>
 
+<h3>🔍 智能代码搜索</h3>
+<p>项目能够智能搜索代码库，找到与问题相关的代码片段。支持语义搜索和精确匹配两种模式。</p>
+
+<h3>🛠️ 自动代码修复</h3>
+<p>使用MCTS算法自动生成和评估代码修复方案，能够处理：</p>
 <ul>
-    <li>Missing Redis connection configuration</li>
-    <li>Incompatible Express version (requires v4.17+)</li>
-    <li>Conflicting middleware in the pipeline</li>
+    <li>Bug 修复</li>
+    <li>功能增强</li>
+    <li>代码重构</li>
+    <li>性能优化</li>
 </ul>
 
-<blockquote>Please ensure Redis is properly configured and update Express to the latest version before retrying.</blockquote>`
-                        }
-                    ]
-                }
-            };
+<h3>📊 评估与反馈</h3>
+<p>内置评估系统，对生成的解决方案进行打分和优化，确保代码质量。</p>
 
-            // 默认返回数据
-            const defaultCard = {
-                id: cardId,
-                title: 'Task ' + cardId,
-                status: 'running',
-                models: [
-                    { name: 'Claude 3.5', status: 'working', time: '30s' }
-                ],
-                messages: [
-                    { role: 'user', content: 'Processing task...' },
-                    { 
-                        role: 'assistant', 
-                        statusPills: [{ type: 'thought', icon: 'brain', text: 'Thinking...' }],
-                        content: '<p>Working on this task...</p>' 
+<div class="info-card">
+    <div class="info-card-title">🎯 适用场景</div>
+    <div class="info-card-content">该项目特别适合处理 GitHub Issues 中的 bug 报告，能够自动理解问题描述、定位相关代码、生成修复补丁。</div>
+</div>`
+                                    },
+                                    {
+                                        role: 'user',
+                                        content: '如何运行这个项目？'
+                                    },
+                                    {
+                                        role: 'assistant',
+                                        statusPills: [
+                                            { type: 'ready', icon: 'check', text: 'Instructions ready' }
+                                        ],
+                                        content: `<h2>🚀 快速开始</h2>
+
+<h3>1. 环境准备</h3>
+<div class="code-block">
+    <div class="code-header">
+        <span class="code-lang">Bash</span>
+        <button class="code-copy">复制代码</button>
+    </div>
+    <pre># 克隆项目
+git clone https://github.com/aorwall/moatless-tree-search.git
+cd moatless-tree-search
+
+# 安装依赖 (推荐使用 Poetry)
+poetry install
+
+# 或使用 pip
+pip install -e .</pre>
+</div>
+
+<h3>2. 配置环境变量</h3>
+<div class="code-block">
+    <div class="code-header">
+        <span class="code-lang">Bash</span>
+        <button class="code-copy">复制代码</button>
+    </div>
+    <pre>cp .env.example .env
+# 编辑 .env 文件，填入你的 API 密钥</pre>
+</div>
+
+<h3>3. 运行示例</h3>
+<div class="code-block">
+    <div class="code-header">
+        <span class="code-lang">Bash</span>
+        <button class="code-copy">复制代码</button>
+    </div>
+    <pre># 运行基准测试
+python -m moatless.benchmark.run
+
+# 或运行特定任务
+python run.py --instance django__django-12345</pre>
+</div>`
+                                    }
+                                ]
+                            }
+                        ]
                     }
-                ]
+                ],
+                older: [
+                    {
+                        id: 'p3',
+                        title: 'Search for context compre...',
+                        time: '1mo',
+                        meta: 'Sonnet 4.5 · Roo-Code',
+                        icon: 'check',
+                        cards: [
+                            {
+                                id: 'c3',
+                                models: [
+                                    { name: 'Sonnet 4.5', status: 'completed', time: '5m 30s' }
+                                ],
+                                messages: [
+                                    {
+                                        role: 'user',
+                                        content: '搜索上下文压缩相关的内容'
+                                    },
+                                    {
+                                        role: 'assistant',
+                                        statusPills: [
+                                            { type: 'ready', icon: 'check', text: 'Search complete' },
+                                            { type: 'explored', icon: 'folder', text: 'Found 8 relevant files' }
+                                        ],
+                                        content: `<h2>🔍 上下文压缩搜索结果</h2>
+
+<p>根据搜索结果，找到了以下关于上下文压缩的内容：</p>
+
+<h3>📄 相关文件</h3>
+<div class="file-tree">
+    <div class="file-tree-item folder">📁 moatless/context/</div>
+    <div class="file-tree-item file">├── compression.py - 核心压缩算法</div>
+    <div class="file-tree-item file">├── summarizer.py - 代码摘要生成</div>
+    <div class="file-tree-item file">└── selector.py - 上下文选择策略</div>
+</div>
+
+<h3>💡 上下文压缩技术</h3>
+<p>上下文压缩是一种优化大型语言模型输入的技术，可以有效减少 token 使用量，同时保留关键信息。</p>
+
+<blockquote>该项目使用了基于重要性评分的压缩策略，能够识别并保留与当前任务最相关的代码片段。</blockquote>`
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                expired: []
             };
-
-            return mockCardDetails[cardId] || defaultCard;
         }
 
-        // ==================== URL 参数解析 ====================
-        function getProjectIdFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('project_id') || 'wealthboxapi_project'; // 默认值
+        // ==================== 状态管理 ====================
+        let projectsData = null;
+        let currentProject = null;
+        let currentCard = null;
+        let currentModelIndex = 0;
+        let cardsExpanded = false;
+        let isRefreshing = false;
+
+        // ==================== 刷新特效 ====================
+        function showRefreshEffect() {
+            isRefreshing = true;
+            document.getElementById('modelCardsContainer').classList.add('refreshing');
+            document.getElementById('chatArea').classList.add('refreshing');
         }
 
-        // ==================== 时间格式化 ====================
-        function formatTime(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diffMs = now - date;
-            const diffMins = Math.floor(diffMs / 60000);
-            const diffHours = Math.floor(diffMs / 3600000);
-            const diffDays = Math.floor(diffMs / 86400000);
-
-            if (diffMins < 1) return 'now';
-            if (diffMins < 60) return `${diffMins}m`;
-            if (diffHours < 24) return `${diffHours}h`;
-            if (diffDays < 7) return `${diffDays}d`;
-            return date.toLocaleDateString();
+        function hideRefreshEffect() {
+            isRefreshing = false;
+            document.getElementById('modelCardsContainer').classList.remove('refreshing');
+            document.getElementById('chatArea').classList.remove('refreshing');
         }
 
-        // ==================== 渲染函数 ====================
-        function renderCardList() {
-            const cardList = document.getElementById('cardList');
+        function showRefreshToast() {
+            const toast = document.getElementById('refreshToast');
+            toast.classList.add('visible');
+            setTimeout(() => {
+                toast.classList.remove('visible');
+            }, 2000);
+        }
+
+        // ==================== 渲染项目列表 ====================
+        function renderProjectList() {
+            const projectList = document.getElementById('projectList');
+            projectList.innerHTML = '';
+
+            if (!projectsData) return;
+
+            // Today 分组
+            if (projectsData.today && projectsData.today.length > 0) {
+                const todayGroup = createProjectGroup('Today', projectsData.today);
+                projectList.appendChild(todayGroup);
+            }
+
+            // Older 分组
+            if (projectsData.older && projectsData.older.length > 0) {
+                const olderGroup = createProjectGroup('Older', projectsData.older);
+                projectList.appendChild(olderGroup);
+            }
+
+            // Expired 分组
+            if (projectsData.expired && projectsData.expired.length > 0) {
+                const expiredGroup = createProjectGroup('Expired', projectsData.expired);
+                projectList.appendChild(expiredGroup);
+            } else {
+                const expiredGroup = document.createElement('div');
+                expiredGroup.className = 'project-group';
+                expiredGroup.innerHTML = '<div class="group-label">Expired</div>';
+                projectList.appendChild(expiredGroup);
+            }
+
+            // 默认选中第一个项目
+            if (projectsData.today && projectsData.today.length > 0 && !currentProject) {
+                selectProject(projectsData.today[0]);
+            }
+        }
+
+        function createProjectGroup(label, projects) {
+            const group = document.createElement('div');
+            group.className = 'project-group';
             
-            if (state.cards.length === 0) {
-                cardList.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                            <line x1="9" y1="9" x2="15" y2="15"/>
-                            <line x1="15" y1="9" x2="9" y2="15"/>
-                        </svg>
-                        <div class="empty-state-title">No cards found</div>
-                        <div class="empty-state-desc">This project has no cards yet</div>
-                    </div>
-                `;
-                return;
-            }
+            const labelEl = document.createElement('div');
+            labelEl.className = 'group-label';
+            labelEl.textContent = label;
+            group.appendChild(labelEl);
 
-            // 按状态分组
-            const running = state.cards.filter(c => c.status === 'running');
-            const completed = state.cards.filter(c => c.status === 'completed');
-            const failed = state.cards.filter(c => c.status === 'failed');
+            projects.forEach(project => {
+                const item = createProjectItem(project);
+                group.appendChild(item);
+            });
 
-            let html = '';
-
-            if (running.length > 0) {
-                html += createCardGroup('Running', running, 'running');
-            }
-            if (completed.length > 0) {
-                html += createCardGroup('Completed', completed, 'completed');
-            }
-            if (failed.length > 0) {
-                html += createCardGroup('Failed', failed, 'failed');
-            }
-
-            cardList.innerHTML = html;
+            return group;
         }
 
-        function createCardGroup(label, cards, status) {
-            const cardItems = cards.map(card => createCardItem(card)).join('');
-            return `
-                <div class="card-group">
-                    <div class="group-label">
-                        ${label}
-                        <span class="group-count">${cards.length}</span>
-                    </div>
-                    ${cardItems}
-                </div>
-            `;
-        }
+        function createProjectItem(project) {
+            const item = document.createElement('div');
+            item.className = 'project-item';
+            item.id = `project-${project.id}`;
+            item.onclick = () => selectProject(project);
 
-        function createCardItem(card) {
-            const isActive = state.currentCardId === card.id;
-            const iconSvg = getStatusIcon(card.status);
-            
-            return `
-                <div class="card-item ${isActive ? 'active' : ''}" onclick="selectCard('${card.id}')">
-                    <div class="card-item-header">
-                        <div class="card-icon ${card.status}">${iconSvg}</div>
-                        <div class="card-content">
-                            <div class="card-title-row">
-                                <span class="card-title">${card.title}</span>
-                                <span class="card-time">${formatTime(card.created_at)}</span>
-                            </div>
-                            <div class="card-meta">${card.model_count} Models</div>
+            const isLoading = isRefreshing && currentProject && currentProject.id === project.id;
+
+            const iconSvg = project.icon === 'check' 
+                ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                   </svg>`
+                : `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                   </svg>`;
+
+            item.innerHTML = `
+                <div class="project-item-header">
+                    <div class="project-icon ${project.icon === 'check' ? 'check' : ''} ${isLoading ? 'loading' : ''}">${iconSvg}</div>
+                    <div class="project-content">
+                        <div class="project-title-row">
+                            <span class="project-title">${project.title}</span>
+                            <span class="project-time">${project.time}</span>
                         </div>
+                        <div class="project-meta">${project.meta}</div>
                     </div>
                 </div>
             `;
+
+            if (currentProject && currentProject.id === project.id) {
+                item.classList.add('active');
+            }
+
+            return item;
         }
 
-        function getStatusIcon(status) {
-            switch (status) {
-                case 'running':
-                    return `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                    </svg>`;
-                case 'completed':
-                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>`;
-                case 'failed':
-                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="15" y1="9" x2="9" y2="15"/>
-                        <line x1="9" y1="9" x2="15" y2="15"/>
-                    </svg>`;
-                default:
-                    return '';
+        // ==================== 选择项目（点击时刷新数据）====================
+        async function selectProject(project) {
+            const isSameProject = currentProject && currentProject.id === project.id;
+            
+            currentProject = project;
+            currentCard = project.cards[0];
+            currentModelIndex = 0;
+            cardsExpanded = false;
+
+            // 更新选中状态
+            document.querySelectorAll('.project-item').forEach(el => el.classList.remove('active'));
+            const activeItem = document.getElementById(`project-${project.id}`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+            }
+
+            // 显示刷新特效
+            showRefreshEffect();
+
+            try {
+                // 调用API刷新数据
+                const data = await apiGetCardDetail(currentProjectId, 0);
+                
+                // 更新当前卡片数据（模拟数据更新）
+                if (currentCard) {
+                    // 这里可以用返回的数据更新 currentCard
+                    // 目前使用mock数据，实际使用时替换
+                }
+
+                // 重新渲染
+                renderModelCards();
+                renderChat();
+
+                // 显示刷新成功提示
+                showRefreshToast();
+            } catch (error) {
+                console.error('Failed to refresh data:', error);
+            } finally {
+                hideRefreshEffect();
             }
         }
 
         function renderModelCards() {
             const modelCards = document.getElementById('modelCards');
             const toggleBtn = document.getElementById('toggleCardsBtn');
-            
-            if (!state.currentCardData || !state.currentCardData.models) {
-                modelCards.innerHTML = '';
-                toggleBtn.classList.remove('visible');
-                return;
-            }
+            modelCards.innerHTML = '';
 
-            const models = state.currentCardData.models;
+            if (!currentCard) return;
 
-            // 折叠状态管理
-            if (state.cardsExpanded) {
+            // 重置折叠状态
+            if (cardsExpanded) {
                 modelCards.classList.remove('collapsed');
                 toggleBtn.classList.add('expanded');
                 document.getElementById('toggleText').textContent = '收起';
@@ -1269,41 +1363,48 @@ LIMIT 50;</pre>
             }
 
             // 显示或隐藏展开按钮
-            if (models.length > 5) {
+            if (currentCard.models.length > 5) {
                 toggleBtn.classList.add('visible');
             } else {
                 toggleBtn.classList.remove('visible');
             }
 
-            modelCards.innerHTML = models.map((model, index) => {
-                const isActive = index === state.currentModelIndex;
+            currentCard.models.forEach((model, index) => {
+                const card = document.createElement('div');
+                card.className = `model-card ${index === currentModelIndex ? 'active' : ''}`;
+                card.onclick = () => selectModel(index);
+
                 const statusIcon = model.status === 'working' 
                     ? `<svg class="model-status-icon loading" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                       </svg>`
-                    : model.status === 'failed'
-                    ? `<svg class="model-status-icon" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="15" y1="9" x2="9" y2="15"/>
-                        <line x1="9" y1="9" x2="15" y2="15"/>
                        </svg>`
                     : `<svg class="model-status-icon" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2">
                         <polyline points="20 6 9 17 4 12"></polyline>
                        </svg>`;
 
-                return `
-                    <div class="model-card ${isActive ? 'active' : ''}" onclick="selectModel(${index})">
-                        <div class="model-card-header">
-                            <span class="model-name">${model.name}</span>
-                            ${statusIcon}
-                        </div>
-                        <div class="model-working">Working for ${model.time}</div>
+                card.innerHTML = `
+                    <div class="model-card-header">
+                        <span class="model-name">${model.name}</span>
+                        ${statusIcon}
                     </div>
+                    <div class="model-working">Working for ${model.time}</div>
                 `;
-            }).join('');
+
+                modelCards.appendChild(card);
+            });
         }
 
-        function getStatusPillIcon(type) {
+        function toggleCards() {
+            cardsExpanded = !cardsExpanded;
+            renderModelCards();
+        }
+
+        function selectModel(index) {
+            currentModelIndex = index;
+            renderModelCards();
+        }
+
+        function getStatusIcon(type) {
             switch(type) {
                 case 'check':
                     return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1324,35 +1425,22 @@ LIMIT 50;</pre>
 
         function renderChat() {
             const chatArea = document.getElementById('chatArea');
-            
-            if (!state.currentCardData || !state.currentCardData.messages) {
-                chatArea.innerHTML = `
-                    <div class="empty-state">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                        </svg>
-                        <div class="empty-state-title">Select a card to view</div>
-                        <div class="empty-state-desc">Choose a card from the left panel to see the conversation</div>
-                    </div>
-                `;
-                return;
-            }
+            chatArea.innerHTML = '';
 
-            const messages = state.currentCardData.messages;
-            
-            chatArea.innerHTML = messages.map((message, index) => {
+            if (!currentCard) return;
+
+            currentCard.messages.forEach((message, index) => {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'chat-message';
+
                 if (message.role === 'user') {
-                    return `
-                        <div class="chat-message">
-                            <div class="user-message">${message.content}</div>
-                        </div>
-                    `;
+                    messageEl.innerHTML = `<div class="user-message">${message.content}</div>`;
                 } else {
                     let statusPillsHtml = '';
                     if (message.statusPills && message.statusPills.length > 0) {
                         const pills = message.statusPills.map(pill => 
                             `<span class="status-pill ${pill.type}">
-                                ${getStatusPillIcon(pill.icon)}
+                                ${getStatusIcon(pill.icon)}
                                 ${pill.text}
                             </span>`
                         ).join('');
@@ -1368,160 +1456,42 @@ LIMIT 50;</pre>
                         `;
                     }
 
-                    const divider = index < messages.length - 1 ? '<div class="divider"></div>' : '';
-
-                    return `
-                        <div class="chat-message">
-                            <div class="assistant-message">
-                                ${statusPillsHtml}
-                                ${thoughtHtml}
-                                <div class="response-content">${message.content}</div>
-                            </div>
+                    messageEl.innerHTML = `
+                        <div class="assistant-message">
+                            ${statusPillsHtml}
+                            ${thoughtHtml}
+                            <div class="response-content">${message.content}</div>
                         </div>
-                        ${divider}
                     `;
                 }
-            }).join('');
 
+                chatArea.appendChild(messageEl);
+
+                // 添加分隔线（除了最后一条消息）
+                if (index < currentCard.messages.length - 1 && message.role === 'assistant') {
+                    const divider = document.createElement('div');
+                    divider.className = 'divider';
+                    chatArea.appendChild(divider);
+                }
+            });
+
+            // 滚动到顶部
             chatArea.scrollTop = 0;
         }
 
-        // ==================== 事件处理 ====================
-        async function selectCard(cardId) {
-            if (state.currentCardId === cardId) return;
-
-            state.currentCardId = cardId;
-            state.currentModelIndex = 0;
-            state.cardsExpanded = false;
-
-            // 更新列表高亮
-            renderCardList();
-
-            // 加载卡片详情
-            await loadCardDetail(cardId);
-
-            // 重新开始定时刷新
-            startRefreshTimer();
-        }
-
-        function selectModel(index) {
-            state.currentModelIndex = index;
-            renderModelCards();
-        }
-
-        function toggleCards() {
-            state.cardsExpanded = !state.cardsExpanded;
-            renderModelCards();
-        }
-
-        // ==================== 数据加载 ====================
-        async function loadCardDetail(cardId, showRefreshIndicator = false) {
-            if (showRefreshIndicator) {
-                document.getElementById('refreshIndicator').classList.remove('hidden');
-            }
-
-            try {
-                const cardData = await apiGetCardDetail(cardId);
-                state.currentCardData = cardData;
-                renderModelCards();
-                renderChat();
-            } catch (error) {
-                console.error('Failed to load card detail:', error);
-            } finally {
-                if (showRefreshIndicator) {
-                    document.getElementById('refreshIndicator').classList.add('hidden');
-                }
-            }
-        }
-
-        async function loadCards() {
-            const cardList = document.getElementById('cardList');
-            cardList.innerHTML = `
-                <div class="loading-indicator">
-                    <div class="loading-spinner"></div>
-                    <span>Loading cards...</span>
-                </div>
-            `;
-
-            try {
-                const cards = await apiGetCardsByProject(state.projectId);
-                state.cards = cards;
-                renderCardList();
-
-                // 默认选中第一个卡片
-                if (cards.length > 0 && !state.currentCardId) {
-                    await selectCard(cards[0].id);
-                }
-            } catch (error) {
-                console.error('Failed to load cards:', error);
-                cardList.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-title">Failed to load</div>
-                        <div class="empty-state-desc">Please try again later</div>
-                    </div>
-                `;
-            }
-        }
-
-        // ==================== 定时刷新 ====================
-        function startRefreshTimer() {
-            // 清除之前的定时器
-            if (state.refreshTimer) {
-                clearInterval(state.refreshTimer);
-            }
-
-            // 设置新的定时器
-            state.refreshTimer = setInterval(async () => {
-                if (state.currentCardId) {
-                    console.log('Auto-refreshing card:', state.currentCardId);
-                    await loadCardDetail(state.currentCardId, true);
-                }
-            }, CONFIG.REFRESH_INTERVAL);
-        }
-
-        function stopRefreshTimer() {
-            if (state.refreshTimer) {
-                clearInterval(state.refreshTimer);
-                state.refreshTimer = null;
-            }
-        }
-
-        // ==================== 搜索功能 ====================
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            const items = document.querySelectorAll('.card-item');
-            
-            items.forEach(item => {
-                const title = item.querySelector('.card-title').textContent.toLowerCase();
-                item.style.display = title.includes(query) ? 'block' : 'none';
-            });
-        });
-
         // ==================== 初始化 ====================
         async function init() {
-            // 从URL获取project_id
-            state.projectId = getProjectIdFromUrl();
+            console.log('Initializing with project_id:', currentProjectId);
             
-            // 更新页面标题
-            document.getElementById('projectTitleText').textContent = state.projectId;
-            document.title = `${state.projectId} - AI Agent`;
-
-            // 加载卡片列表
-            await loadCards();
-
-            // 开始定时刷新
-            startRefreshTimer();
-
-            console.log('Initialized with project_id:', state.projectId);
-            console.log('Auto-refresh interval:', CONFIG.REFRESH_INTERVAL / 1000, 'seconds');
+            // 加载项目数据
+            const data = await apiGetProjectData(currentProjectId);
+            projectsData = data.projectsData;
+            
+            // 渲染列表
+            renderProjectList();
         }
 
-        // 页面卸载时清理
-        window.addEventListener('beforeunload', () => {
-            stopRefreshTimer();
-        });
-
-        // 启动应用
+        // 启动
         init();
     </script>
 </body>
