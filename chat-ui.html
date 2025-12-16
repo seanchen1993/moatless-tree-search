@@ -11,10 +11,25 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --primary: #1a1a1a;
+            --primary-light: #2d2d2d;
+            --accent: #c9a227;
+            --accent-light: #e8c547;
+            --bg: #faf9f7;
+            --bg-card: #fff;
+            --border: #e8e6e3;
+            --text: #1a1a1a;
+            --text-secondary: #666;
+            --text-muted: #999;
+            --success: #2d8a4e;
+            --info: #1e6f9f;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #faf9f7;
-            color: #333;
+            background-color: var(--bg);
+            color: var(--text);
             height: 100vh;
             overflow: hidden;
         }
@@ -27,8 +42,8 @@
         /* 左侧边栏 */
         .sidebar {
             width: 300px;
-            background-color: #faf9f7;
-            border-right: 1px solid #e8e6e3;
+            background-color: var(--bg);
+            border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -41,8 +56,8 @@
         .search-box {
             display: flex;
             align-items: center;
-            background-color: #fff;
-            border: 1px solid #e8e6e3;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
             border-radius: 8px;
             padding: 10px 12px;
         }
@@ -52,18 +67,18 @@
             outline: none;
             flex: 1;
             font-size: 14px;
-            color: #666;
+            color: var(--text-secondary);
             background: transparent;
         }
 
         .search-box input::placeholder {
-            color: #999;
+            color: var(--text-muted);
         }
 
         .search-icons {
             display: flex;
             gap: 8px;
-            color: #999;
+            color: var(--text-muted);
         }
 
         .search-icons svg {
@@ -79,24 +94,13 @@
             margin-top: 8px;
         }
 
-        .project-group {
-            margin-bottom: 8px;
-        }
-
-        .group-label {
-            font-size: 12px;
-            color: #999;
-            padding: 12px 8px 8px;
-            font-weight: 500;
-        }
-
         .project-item {
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.15s;
-            margin-bottom: 2px;
-            position: relative;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+            border: 1px solid transparent;
         }
 
         .project-item:hover {
@@ -104,28 +108,26 @@
         }
 
         .project-item.active {
-            background-color: #f0eeeb;
+            background-color: var(--bg-card);
+            border-color: var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .project-item-header {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
+            gap: 10px;
         }
 
         .project-icon {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #e8b94b;
+            color: var(--accent);
             flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .project-icon.check {
-            color: #4ade80;
+            margin-top: 1px;
         }
 
         .project-content {
@@ -142,8 +144,8 @@
 
         .project-title {
             font-size: 14px;
-            font-weight: 500;
-            color: #333;
+            font-weight: 600;
+            color: var(--text);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -151,13 +153,13 @@
 
         .project-time {
             font-size: 12px;
-            color: #999;
+            color: var(--text-muted);
             flex-shrink: 0;
         }
 
         .project-meta {
             font-size: 12px;
-            color: #999;
+            color: var(--text-muted);
         }
 
         /* 右侧主区域 */
@@ -165,7 +167,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: #fff;
+            background-color: var(--bg-card);
             overflow: hidden;
         }
 
@@ -182,15 +184,15 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
-            background-size: 200% 100%;
-            animation: gradientMove 1s ease infinite;
+            height: 2px;
+            background: var(--accent);
+            animation: loading 1.5s ease infinite;
         }
 
-        @keyframes gradientMove {
-            0% { background-position: 100% 0; }
-            100% { background-position: -100% 0; }
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            50% { transform: translateX(0%); }
+            100% { transform: translateX(100%); }
         }
 
         .card-tabs {
@@ -206,23 +208,23 @@
 
         .card-tab {
             min-width: 140px;
-            padding: 16px 20px;
-            background-color: #faf9f7;
-            border-radius: 12px;
+            padding: 14px 18px;
+            background-color: var(--bg);
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s;
-            border: 2px solid transparent;
+            border: 1px solid transparent;
             position: relative;
         }
 
         .card-tab:hover {
-            background-color: #f5f3f0;
+            background-color: #f0eeeb;
         }
 
         .card-tab.active {
-            border-color: #667eea;
-            background-color: #fff;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+            background-color: var(--bg-card);
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .card-tab.loading {
@@ -236,9 +238,9 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
             animation: shimmer 1.5s infinite;
-            border-radius: 10px;
+            border-radius: 9px;
         }
 
         @keyframes shimmer {
@@ -250,19 +252,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .card-tab-name {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
-            color: #333;
+            color: var(--text);
         }
 
         .card-tab-status {
-            width: 16px;
-            height: 16px;
-            color: #e8b94b;
+            width: 14px;
+            height: 14px;
+            color: var(--accent);
         }
 
         .card-tab-status.loading {
@@ -270,7 +272,7 @@
         }
 
         .card-tab-status.completed {
-            color: #4ade80;
+            color: var(--success);
         }
 
         @keyframes pulse {
@@ -280,7 +282,7 @@
 
         .card-tab-meta {
             font-size: 12px;
-            color: #999;
+            color: var(--text-muted);
         }
 
         /* 展开/折叠按钮 */
@@ -289,17 +291,17 @@
             margin: 12px auto 0;
             padding: 6px 16px;
             background-color: transparent;
-            border: 1px solid #e8e6e3;
+            border: 1px solid var(--border);
             border-radius: 20px;
             font-size: 13px;
-            color: #666;
+            color: var(--text-secondary);
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .toggle-cards-btn:hover {
-            background-color: #f5f3f0;
-            color: #333;
+            background-color: var(--bg);
+            color: var(--text);
         }
 
         .toggle-cards-btn.visible {
@@ -323,7 +325,7 @@
             flex: 1;
             overflow-y: auto;
             padding: 32px 48px;
-            background: linear-gradient(180deg, #fefefe 0%, #faf9f7 100%);
+            background-color: var(--bg-card);
             transition: opacity 0.3s;
         }
 
@@ -343,23 +345,22 @@
 
         /* 用户消息 */
         .user-message {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: var(--primary);
             color: white;
-            padding: 16px 24px;
-            border-radius: 20px 20px 6px 20px;
+            padding: 16px 22px;
+            border-radius: 16px 16px 4px 16px;
             display: inline-block;
             max-width: 75%;
             font-size: 15px;
             line-height: 1.6;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.25);
-            position: relative;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
         }
 
         /* 助手消息 */
         .assistant-message {
             margin-top: 20px;
             padding-left: 16px;
-            border-left: 3px solid #e8e6e3;
+            border-left: 2px solid var(--border);
         }
 
         /* 状态标签 */
@@ -375,36 +376,36 @@
             align-items: center;
             gap: 6px;
             padding: 6px 12px;
-            border-radius: 20px;
+            border-radius: 6px;
             font-size: 13px;
             font-weight: 500;
         }
 
         .status-pill.ready {
-            background-color: #ecfdf5;
-            color: #059669;
+            background-color: #e8f5e9;
+            color: #2d8a4e;
         }
 
         .status-pill.ready svg {
-            color: #10b981;
+            color: #2d8a4e;
         }
 
         .status-pill.thought {
-            background-color: #fef3c7;
-            color: #b45309;
+            background-color: #fff8e6;
+            color: #9a7b1c;
         }
 
         .status-pill.thought svg {
-            color: #f59e0b;
+            color: #c9a227;
         }
 
         .status-pill.explored {
-            background-color: #ede9fe;
-            color: #7c3aed;
+            background-color: #e3f2fd;
+            color: #1e6f9f;
         }
 
         .status-pill.explored svg {
-            color: #8b5cf6;
+            color: #1e6f9f;
         }
 
         .status-pill svg {
@@ -414,9 +415,9 @@
 
         /* 思考内容 */
         .thought-box {
-            background: linear-gradient(135deg, #fef9e7 0%, #fef3c7 100%);
-            border: 1px solid #fcd34d;
-            border-radius: 12px;
+            background-color: #fffcf0;
+            border: 1px solid #f0e6c0;
+            border-radius: 10px;
             padding: 16px 20px;
             margin-bottom: 20px;
             position: relative;
@@ -427,16 +428,15 @@
             position: absolute;
             top: -10px;
             left: 16px;
-            font-size: 18px;
-            background: #fff;
+            font-size: 16px;
+            background: var(--bg-card);
             padding: 0 4px;
-            border-radius: 50%;
         }
 
         .thought-box-content {
             font-size: 14px;
             line-height: 1.7;
-            color: #92400e;
+            color: #7a6520;
             font-style: italic;
         }
 
@@ -448,25 +448,19 @@
         }
 
         .response-content h2 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             margin: 28px 0 16px;
-            color: #1f2937;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            color: var(--text);
             padding-bottom: 10px;
-            border-bottom: 2px solid #e5e7eb;
+            border-bottom: 1px solid var(--border);
         }
 
         .response-content h3 {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 600;
             margin: 20px 0 12px;
-            color: #374151;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            color: var(--text);
         }
 
         .response-content p {
@@ -486,36 +480,35 @@
         }
 
         .response-content a {
-            color: #6366f1;
+            color: var(--info);
             text-decoration: none;
-            border-bottom: 1px dashed #6366f1;
+            border-bottom: 1px dashed var(--info);
             transition: all 0.2s;
         }
 
         .response-content a:hover {
-            color: #4f46e5;
             border-bottom-style: solid;
         }
 
         .response-content strong {
-            color: #1f2937;
+            color: var(--text);
             font-weight: 600;
         }
 
         .response-content code {
-            background-color: #f3f4f6;
+            background-color: #f5f5f5;
             padding: 2px 8px;
-            border-radius: 6px;
+            border-radius: 4px;
             font-family: 'SF Mono', 'Consolas', monospace;
             font-size: 13px;
-            color: #e11d48;
+            color: #c7254e;
         }
 
         .response-content pre {
-            background-color: #1f2937;
-            color: #e5e7eb;
+            background-color: #1e1e1e;
+            color: #d4d4d4;
             padding: 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow-x: auto;
             margin: 16px 0;
             font-family: 'SF Mono', 'Consolas', monospace;
@@ -524,27 +517,26 @@
         }
 
         .response-content blockquote {
-            border-left: 4px solid #6366f1;
+            border-left: 3px solid var(--accent);
             padding: 12px 20px;
             margin: 16px 0;
-            background-color: #f5f3ff;
+            background-color: #fffcf5;
             border-radius: 0 8px 8px 0;
-            font-style: italic;
-            color: #5b21b6;
+            color: #5c5c5c;
         }
 
         /* 信息卡片 */
         .info-card {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border: 1px solid #7dd3fc;
-            border-radius: 12px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
             padding: 20px;
             margin: 20px 0;
         }
 
         .info-card-title {
             font-weight: 600;
-            color: #0369a1;
+            color: var(--text);
             margin-bottom: 10px;
             display: flex;
             align-items: center;
@@ -552,7 +544,7 @@
         }
 
         .info-card-content {
-            color: #0c4a6e;
+            color: #475569;
             font-size: 14px;
             line-height: 1.7;
         }
@@ -561,7 +553,7 @@
         .file-tree {
             background-color: #f9fafb;
             border: 1px solid #e5e7eb;
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 16px 20px;
             margin: 16px 0;
             font-family: 'SF Mono', 'Consolas', monospace;
@@ -577,7 +569,7 @@
         }
 
         .file-tree-item.folder {
-            color: #6366f1;
+            color: var(--info);
             font-weight: 500;
         }
 
@@ -588,8 +580,8 @@
 
         /* 滚动条样式 */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
         }
 
         ::-webkit-scrollbar-track {
@@ -597,18 +589,18 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #ddd;
-            border-radius: 4px;
+            background: #d0d0d0;
+            border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #ccc;
+            background: #b0b0b0;
         }
 
         /* 分隔线 */
         .divider {
             height: 1px;
-            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
             margin: 24px 0;
         }
 
@@ -622,11 +614,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #374151;
+            background-color: #2d2d2d;
             padding: 10px 16px;
-            border-radius: 12px 12px 0 0;
+            border-radius: 10px 10px 0 0;
             font-size: 12px;
-            color: #9ca3af;
+            color: #999;
         }
 
         .code-lang {
@@ -636,12 +628,9 @@
         .code-copy {
             background: none;
             border: none;
-            color: #9ca3af;
+            color: #999;
             cursor: pointer;
             font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
         .code-copy:hover {
@@ -650,7 +639,7 @@
 
         .code-block pre {
             margin: 0;
-            border-radius: 0 0 12px 12px;
+            border-radius: 0 0 10px 10px;
         }
 
         /* 刷新成功提示 */
@@ -658,13 +647,13 @@
             position: fixed;
             bottom: 24px;
             right: 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: var(--primary);
             color: white;
             padding: 12px 20px;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 14px;
             font-weight: 500;
-            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             transform: translateY(100px);
             opacity: 0;
             transition: all 0.3s ease;
@@ -682,6 +671,7 @@
         .refresh-toast svg {
             width: 18px;
             height: 18px;
+            color: var(--accent);
         }
 
         /* 加载占位 */
@@ -691,14 +681,14 @@
             align-items: center;
             justify-content: center;
             padding: 60px 20px;
-            color: #999;
+            color: var(--text-muted);
         }
 
         .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #e8e6e3;
-            border-top-color: #667eea;
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--border);
+            border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 16px;
@@ -731,7 +721,7 @@
             </div>
 
             <div class="project-list" id="projectList">
-                <!-- 项目列表将通过JavaScript动态生成 -->
+                <!-- 项目卡片 -->
             </div>
         </div>
 
@@ -740,7 +730,7 @@
             <!-- 子卡片标签页 -->
             <div class="card-tabs-container" id="cardTabsContainer">
                 <div class="card-tabs collapsed" id="cardTabs">
-                    <!-- 子卡片将通过JavaScript动态生成 -->
+                    <!-- 子卡片 -->
                 </div>
                 <button class="toggle-cards-btn" id="toggleCardsBtn" onclick="toggleCards()">
                     <span id="toggleText">展开更多</span>
@@ -784,7 +774,6 @@
         async function apiGetCardIdsByProject(projectId) {
             await delay(300);
             
-            // 根据不同的 projectId 返回不同数量的子卡片
             const mockCardIds = {
                 'wealthboxapi_project': [
                     { id: 'card_001', name: 'Opus 4.5', status: 'working', time: '1m 53s' },
@@ -814,11 +803,10 @@
             return mockCardIds[projectId] || mockCardIds['default'];
         }
 
-        // Mock: 根据 card_id 获取卡片详情（对话内容）
+        // Mock: 根据 card_id 获取卡片详情
         async function apiGetCardDetail(cardId) {
             await delay(500);
             
-            // 不同卡片返回不同的对话内容
             const mockCardDetails = {
                 'card_001': {
                     messages: [
@@ -830,14 +818,14 @@
                                 { type: 'thought', icon: 'brain', text: 'Thought for 3s' },
                                 { type: 'explored', icon: 'folder', text: 'Explored 1 directory, 13 files' }
                             ],
-                            thought: '我来详细探索这个项目，首先阅读关键文件来理解项目的整体架构和功能。让我从 README.md 和主要的源代码目录开始分析...',
+                            thought: '我来详细探索这个项目，首先阅读关键文件来理解项目的整体架构和功能...',
                             content: `<p>现在我已经全面分析了这个项目。让我为您详细讲解。</p>
 <h2>🚀 Moatless Tree Search 项目详解</h2>
 <h3>📁 项目概述</h3>
 <p>这是一个名为 <strong>Moatless Tree Search</strong> 的开源项目，是论文 <a href="#">"SWE-Search: Enhancing Software Agents with Monte Carlo Tree Search and Iterative Refinement"</a> 的代码实现。</p>
 <div class="info-card">
     <div class="info-card-title">💡 核心目标</div>
-    <div class="info-card-content">使用 <strong>蒙特卡洛树搜索（MCTS）</strong> 算法来增强 AI 软件工程代理的能力，帮助自动化解决软件开发中的问题（如 bug 修复、功能实现等）。</div>
+    <div class="info-card-content">使用 <strong>蒙特卡洛树搜索（MCTS）</strong> 算法来增强 AI 软件工程代理的能力。</div>
 </div>
 <h3>📂 项目结构</h3>
 <div class="file-tree">
@@ -845,7 +833,6 @@
     <div class="file-tree-item file">├── actions/ - 定义各种代码操作</div>
     <div class="file-tree-item file">├── benchmark/ - 基准测试相关</div>
     <div class="file-tree-item file">├── completion/ - 模型补全逻辑</div>
-    <div class="file-tree-item file">├── index/ - 代码索引功能</div>
     <div class="file-tree-item file">└── search_tree.py - 核心搜索树实现</div>
 </div>`
                         },
@@ -854,17 +841,26 @@
                             role: 'assistant',
                             statusPills: [
                                 { type: 'ready', icon: 'check', text: 'Analysis complete' },
-                                { type: 'thought', icon: 'brain', text: 'Thought for 8s' },
-                                { type: 'explored', icon: 'folder', text: 'Explored 5 files' }
+                                { type: 'thought', icon: 'brain', text: 'Thought for 8s' }
                             ],
-                            thought: '让我深入分析 search_tree.py 和相关文件，理解 MCTS 的具体实现细节...',
-                            content: `<h2>🌲 MCTS 算法在项目中的工作原理</h2>
+                            thought: '让我深入分析 search_tree.py 和相关文件...',
+                            content: `<h2>🌲 MCTS 算法工作原理</h2>
 <p>蒙特卡洛树搜索在这个项目中被创新性地应用于<strong>代码修复和生成任务</strong>。</p>
 <h3>1️⃣ 选择阶段 (Selection)</h3>
 <p>从根节点开始，使用 <code>UCB1</code> 公式选择最有潜力的子节点。</p>
+<div class="code-block">
+    <div class="code-header">
+        <span class="code-lang">Python</span>
+        <button class="code-copy">复制代码</button>
+    </div>
+    <pre>def select_node(self, node: Node) -> Node:
+    while node.children:
+        node = max(node.children, 
+                   key=lambda n: n.ucb_score())
+    return node</pre>
+</div>
 <h3>2️⃣ 扩展阶段 (Expansion)</h3>
 <p>当到达叶节点时，生成可能的代码修改操作作为新的子节点。</p>
-<h3>3️⃣ 模拟阶段 (Simulation)</h3>
 <blockquote>与传统 MCTS 不同，这里使用 LLM 来评估代码修改的质量。</blockquote>`
                         }
                     ]
@@ -889,7 +885,7 @@
 </ul>
 <div class="info-card">
     <div class="info-card-title">🎯 GPT-5.2 特别发现</div>
-    <div class="info-card-content">该项目使用了创新的 <strong>迭代细化</strong> 机制，每次迭代都会根据评估反馈优化解决方案。</div>
+    <div class="info-card-content">该项目使用了创新的 <strong>迭代细化</strong> 机制。</div>
 </div>`
                         }
                     ]
@@ -906,7 +902,6 @@
                             thought: 'Sonnet 4.5 正在深入分析代码库...',
                             content: `<h2>🔬 Sonnet 4.5 深度分析</h2>
 <p>从代码架构的角度来看，这个项目展现了优秀的<strong>模块化设计</strong>。</p>
-<h3>架构亮点</h3>
 <div class="code-block">
     <div class="code-header">
         <span class="code-lang">Python</span>
@@ -915,13 +910,7 @@
     <pre>class SearchTree:
     def __init__(self, root_node):
         self.root = root_node
-        self.exploration_weight = 1.41
-    
-    def search(self, iterations=100):
-        for _ in range(iterations):
-            node = self.select(self.root)
-            reward = self.simulate(node)
-            self.backpropagate(node, reward)</pre>
+        self.exploration_weight = 1.41</pre>
 </div>`
                         }
                     ]
@@ -956,19 +945,18 @@
                             ],
                             content: `<h2>🎼 Composer 1 综合分析</h2>
 <p>作为 Composer 模型，我将从<strong>整体架构</strong>角度为您分析这个项目。</p>
-<h3>项目生态</h3>
 <table style="width:100%; border-collapse: collapse; margin: 16px 0;">
-    <tr style="background: #f3f4f6;">
-        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">组件</th>
-        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">职责</th>
+    <tr style="background: #f8f9fa;">
+        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e9ecef;">组件</th>
+        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e9ecef;">职责</th>
     </tr>
     <tr>
-        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;"><strong>SearchTree</strong></td>
-        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">核心搜索算法</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e9ecef;"><strong>SearchTree</strong></td>
+        <td style="padding: 12px; border-bottom: 1px solid #e9ecef;">核心搜索算法</td>
     </tr>
     <tr>
-        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;"><strong>Actions</strong></td>
-        <td style="padding: 12px; border-bottom: 1px solid #e5e7eb;">代码修改操作</td>
+        <td style="padding: 12px; border-bottom: 1px solid #e9ecef;"><strong>Actions</strong></td>
+        <td style="padding: 12px; border-bottom: 1px solid #e9ecef;">代码修改操作</td>
     </tr>
     <tr>
         <td style="padding: 12px;"><strong>Completion</strong></td>
@@ -980,7 +968,6 @@
                 }
             };
 
-            // 对于其他卡片ID，返回通用内容
             if (!mockCardDetails[cardId]) {
                 return {
                     messages: [
@@ -993,7 +980,6 @@
                             thought: `正在使用 ${cardId} 分析项目...`,
                             content: `<h2>📝 ${cardId} 分析结果</h2>
 <p>这是来自 <strong>${cardId}</strong> 的分析结果。</p>
-<p>该模型正在处理您的请求，请稍候...</p>
 <div class="info-card">
     <div class="info-card-title">⏳ 处理中</div>
     <div class="info-card-content">模型正在分析代码库并生成详细报告。</div>
@@ -1006,44 +992,10 @@
             return mockCardDetails[cardId];
         }
 
-        // ==================== 左侧项目列表 Mock 数据 ====================
-        function getMockProjectsData(projectId) {
-            return {
-                today: [
-                    {
-                        id: 'p1',
-                        title: projectId, // 使用 project_id 作为第一个项目标题
-                        time: 'now',
-                        meta: '0/5 Models C... · moatless-tre...',
-                        icon: 'sparkle'
-                    },
-                    {
-                        id: 'p2',
-                        title: 'Project explanation',
-                        time: '39m',
-                        meta: '3 Models · moatless-tree-search',
-                        icon: 'sparkle'
-                    }
-                ],
-                older: [
-                    {
-                        id: 'p3',
-                        title: 'Search for context compre...',
-                        time: '1mo',
-                        meta: 'Sonnet 4.5 · Roo-Code',
-                        icon: 'check'
-                    }
-                ],
-                expired: []
-            };
-        }
-
         // ==================== 状态管理 ====================
-        let projectsData = null;
-        let currentProject = null;
-        let cardList = [];           // 子卡片列表（从API获取）
-        let currentCardId = null;    // 当前选中的子卡片ID
-        let currentCardData = null;  // 当前子卡片的对话数据
+        let cardList = [];
+        let currentCardId = null;
+        let currentCardData = null;
         let cardsExpanded = false;
         let isRefreshing = false;
 
@@ -1053,7 +1005,6 @@
             document.getElementById('cardTabsContainer').classList.add('refreshing');
             document.getElementById('chatArea').classList.add('refreshing');
             
-            // 标记当前卡片为loading
             const activeTab = document.querySelector('.card-tab.active');
             if (activeTab) {
                 activeTab.classList.add('loading');
@@ -1065,7 +1016,6 @@
             document.getElementById('cardTabsContainer').classList.remove('refreshing');
             document.getElementById('chatArea').classList.remove('refreshing');
             
-            // 移除loading状态
             document.querySelectorAll('.card-tab.loading').forEach(el => {
                 el.classList.remove('loading');
             });
@@ -1079,81 +1029,28 @@
             }, 2000);
         }
 
-        // ==================== 渲染左侧项目列表 ====================
+        // ==================== 渲染左侧项目列表（只有一个项目）====================
         function renderProjectList() {
             const projectList = document.getElementById('projectList');
-            projectList.innerHTML = '';
-
-            if (!projectsData) return;
-
-            // Today 分组
-            if (projectsData.today && projectsData.today.length > 0) {
-                const todayGroup = createProjectGroup('Today', projectsData.today);
-                projectList.appendChild(todayGroup);
-            }
-
-            // Older 分组
-            if (projectsData.older && projectsData.older.length > 0) {
-                const olderGroup = createProjectGroup('Older', projectsData.older);
-                projectList.appendChild(olderGroup);
-            }
-
-            // Expired 分组
-            const expiredGroup = document.createElement('div');
-            expiredGroup.className = 'project-group';
-            expiredGroup.innerHTML = '<div class="group-label">Expired</div>';
-            projectList.appendChild(expiredGroup);
-        }
-
-        function createProjectGroup(label, projects) {
-            const group = document.createElement('div');
-            group.className = 'project-group';
             
-            const labelEl = document.createElement('div');
-            labelEl.className = 'group-label';
-            labelEl.textContent = label;
-            group.appendChild(labelEl);
-
-            projects.forEach(project => {
-                const item = createProjectItem(project);
-                group.appendChild(item);
-            });
-
-            return group;
-        }
-
-        function createProjectItem(project) {
-            const item = document.createElement('div');
-            item.className = 'project-item';
-            item.id = `project-${project.id}`;
-            item.onclick = () => selectProject(project);
-
-            const iconSvg = project.icon === 'check' 
-                ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                   </svg>`
-                : `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                   </svg>`;
-
-            item.innerHTML = `
-                <div class="project-item-header">
-                    <div class="project-icon ${project.icon === 'check' ? 'check' : ''}">${iconSvg}</div>
-                    <div class="project-content">
-                        <div class="project-title-row">
-                            <span class="project-title">${project.title}</span>
-                            <span class="project-time">${project.time}</span>
+            projectList.innerHTML = `
+                <div class="project-item active" id="project-main">
+                    <div class="project-item-header">
+                        <div class="project-icon">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                            </svg>
                         </div>
-                        <div class="project-meta">${project.meta}</div>
+                        <div class="project-content">
+                            <div class="project-title-row">
+                                <span class="project-title">${currentProjectId}</span>
+                                <span class="project-time">now</span>
+                            </div>
+                            <div class="project-meta">${cardList.length} Models · running</div>
+                        </div>
                     </div>
                 </div>
             `;
-
-            if (currentProject && currentProject.id === project.id) {
-                item.classList.add('active');
-            }
-
-            return item;
         }
 
         // ==================== 渲染右上方子卡片标签页 ====================
@@ -1164,7 +1061,6 @@
 
             if (cardList.length === 0) return;
 
-            // 折叠状态管理
             if (cardsExpanded) {
                 cardTabs.classList.remove('collapsed');
                 toggleBtn.classList.add('expanded');
@@ -1175,7 +1071,6 @@
                 document.getElementById('toggleText').textContent = '展开更多';
             }
 
-            // 显示或隐藏展开按钮
             if (cardList.length > 5) {
                 toggleBtn.classList.add('visible');
             } else {
@@ -1293,46 +1188,16 @@
             chatArea.scrollTop = 0;
         }
 
-        // ==================== 选择左侧项目 ====================
-        async function selectProject(project) {
-            currentProject = project;
-            cardsExpanded = false;
-
-            // 更新左侧选中状态
-            document.querySelectorAll('.project-item').forEach(el => el.classList.remove('active'));
-            const activeItem = document.getElementById(`project-${project.id}`);
-            if (activeItem) {
-                activeItem.classList.add('active');
-            }
-
-            // 重新加载子卡片列表
-            await loadCardList();
-
-            // 默认选中第一个子卡片
-            if (cardList.length > 0) {
-                await selectCard(cardList[0].id);
-            }
-        }
-
-        // ==================== 选择右上方子卡片（点击时刷新数据）====================
+        // ==================== 选择子卡片（点击时刷新数据）====================
         async function selectCard(cardId) {
             currentCardId = cardId;
-
-            // 更新选中状态
             renderCardTabs();
-
-            // 显示刷新特效
             showRefreshEffect();
 
             try {
-                // 调用API获取卡片详情
                 const data = await apiGetCardDetail(cardId);
                 currentCardData = data;
-
-                // 渲染对话内容
                 renderChat();
-
-                // 显示刷新成功提示
                 showRefreshToast();
             } catch (error) {
                 console.error('Failed to load card detail:', error);
@@ -1346,6 +1211,7 @@
             try {
                 cardList = await apiGetCardIdsByProject(currentProjectId);
                 renderCardTabs();
+                renderProjectList(); // 更新项目卡片的模型数量
             } catch (error) {
                 console.error('Failed to load card list:', error);
                 cardList = [];
@@ -1356,25 +1222,13 @@
         async function init() {
             console.log('Initializing with project_id:', currentProjectId);
             
-            // 加载左侧项目列表（Mock数据）
-            projectsData = getMockProjectsData(currentProjectId);
-            renderProjectList();
-
-            // 加载子卡片列表（通过 project_id 查询）
             await loadCardList();
-
-            // 默认选中第一个项目和第一个子卡片
-            if (projectsData.today && projectsData.today.length > 0) {
-                currentProject = projectsData.today[0];
-                document.getElementById(`project-${currentProject.id}`).classList.add('active');
-            }
 
             if (cardList.length > 0) {
                 await selectCard(cardList[0].id);
             }
         }
 
-        // 启动
         init();
     </script>
 </body>
