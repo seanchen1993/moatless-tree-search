@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Chat Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #faf9f7;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* 左侧边栏 */
+        .sidebar {
+            width: 300px;
+            background-color: #faf9f7;
+            border-right: 1px solid #e8e6e3;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid #e8e6e3;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 14px;
+            color: #666;
+            background: transparent;
+        }
+
+        .search-box input::placeholder {
+            color: #999;
+        }
+
+        .search-icons {
+            display: flex;
+            gap: 8px;
+            color: #999;
+        }
+
+        .search-icons svg {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .new-agent-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .new-agent-btn:hover {
+            background-color: #1557b0;
+        }
+
+        .new-agent-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .project-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 8px;
+        }
+
+        .project-group {
+            margin-bottom: 8px;
+        }
+
+        .group-label {
+            font-size: 12px;
+            color: #999;
+            padding: 12px 8px 8px;
+            font-weight: 500;
+        }
+
+        .project-item {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.15s;
+            margin-bottom: 2px;
+        }
+
+        .project-item:hover {
+            background-color: #f0eeeb;
+        }
+
+        .project-item.active {
+            background-color: #f0eeeb;
+        }
+
+        .project-item-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .project-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e8b94b;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .project-icon.check {
+            color: #4ade80;
+        }
+
+        .project-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .project-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .project-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .project-time {
+            font-size: 12px;
+            color: #999;
+            flex-shrink: 0;
+        }
+
+        .project-meta {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* 右侧主区域 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        /* 模型卡片区域 */
+        .model-cards {
+            display: flex;
+            gap: 12px;
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            overflow-x: auto;
+        }
+
+        .model-card {
+            min-width: 140px;
+            padding: 16px 20px;
+            background-color: #faf9f7;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .model-card:hover {
+            background-color: #f5f3f0;
+        }
+
+        .model-card.active {
+            border-color: #e8e6e3;
+            background-color: #fff;
+        }
+
+        .model-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .model-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .model-status-icon {
+            width: 16px;
+            height: 16px;
+            color: #e8b94b;
+        }
+
+        .model-status-icon.loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .model-working {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* 对话区域 */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .chat-message {
+            margin-bottom: 24px;
+        }
+
+        .user-message {
+            background-color: #f5f3f0;
+            padding: 16px 20px;
+            border-radius: 12px;
+            display: inline-block;
+            max-width: 80%;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .assistant-message {
+            margin-top: 16px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .status-icon {
+            width: 16px;
+            height: 16px;
+            color: #4ade80;
+        }
+
+        .status-label {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .status-value {
+            color: #999;
+        }
+
+        .thought-section {
+            margin: 12px 0;
+        }
+
+        .thought-label {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .thought-time {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .thought-content {
+            margin-top: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .explored-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+
+        .explored-label {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .explored-value {
+            color: #999;
+        }
+
+        .response-content {
+            margin-top: 16px;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .response-content h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 24px 0 16px;
+            color: #333;
+        }
+
+        .response-content h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 16px 0 12px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .response-content p {
+            margin-bottom: 12px;
+            color: #444;
+        }
+
+        .response-content a {
+            color: #c9a227;
+            text-decoration: none;
+        }
+
+        .response-content a:hover {
+            text-decoration: underline;
+        }
+
+        .highlight {
+            font-weight: 600;
+        }
+
+        .folder-icon {
+            font-size: 16px;
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ccc;
+        }
+
+        /* 输入区域 */
+        .input-area {
+            padding: 16px 24px;
+            border-top: 1px solid #f0f0f0;
+            background: #fff;
+        }
+
+        .input-box {
+            display: flex;
+            align-items: center;
+            background-color: #f5f3f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            gap: 12px;
+        }
+
+        .input-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 15px;
+            color: #333;
+        }
+
+        .input-box input::placeholder {
+            color: #999;
+        }
+
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            background-color: #1a73e8;
+            border: none;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .send-btn:hover {
+            background-color: #1557b0;
+        }
+
+        .send-btn svg {
+            width: 18px;
+            height: 18px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧边栏 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <input type="text" placeholder="Search agents...">
+                    <div class="search-icons">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="4" y1="6" x2="20" y2="6"></line>
+                            <line x1="4" y1="12" x2="14" y2="12"></line>
+                            <line x1="4" y1="18" x2="18" y2="18"></line>
+                        </svg>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                </div>
+                <button class="new-agent-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    New Agent
+                </button>
+            </div>
+
+            <div class="project-list" id="projectList">
+                <!-- 项目列表将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <!-- 右侧主区域 -->
+        <div class="main-content">
+            <!-- 模型卡片 -->
+            <div class="model-cards" id="modelCards">
+                <!-- 模型卡片将通过JavaScript动态生成 -->
+            </div>
+
+            <!-- 对话区域 -->
+            <div class="chat-area" id="chatArea">
+                <!-- 对话内容将通过JavaScript动态生成 -->
+            </div>
+
+            <!-- 输入区域 -->
+            <div class="input-area">
+                <div class="input-box">
+                    <input type="text" placeholder="输入消息..." id="messageInput">
+                    <button class="send-btn" onclick="sendMessage()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock 数据
+        const projectsData = {
+            today: [
+                {
+                    id: 'p1',
+                    title: 'Project detailed explanation',
+                    time: 'now',
+                    meta: '0/5 Models C... · moatless-tre...',
+                    icon: 'sparkle',
+                    cards: [
+                        {
+                            id: 'c1',
+                            models: [
+                                { name: 'Opus 4.5', status: 'working', time: '1m 53s' },
+                                { name: 'GPT-5.2', status: 'working', time: '1m 53s' },
+                                { name: 'Sonnet 4.5', status: 'working', time: '1m 53s' },
+                                { name: 'Gemini 3 Pro', status: 'working', time: '1m 53s' },
+                                { name: 'Composer 1', status: 'working', time: '1m 53s' }
+                            ],
+                            messages: [
+                                {
+                                    role: 'user',
+                                    content: '详细讲解这个项目'
+                                },
+                                {
+                                    role: 'assistant',
+                                    status: [
+                                        { type: 'ready', label: 'Environment ready' },
+                                        { type: 'thought', label: 'Thought', value: 'for 3s' },
+                                    ],
+                                    thoughtContent: '我来详细探索这个项目，首先阅读关键文件来理解项目的整体架构和功能。',
+                                    explored: { label: 'Explored', value: '1 directory 13 files' },
+                                    content: `现在我已经全面分析了这个项目。让我为您详细讲解这个项目。
+
+## Moatless Tree Search 项目详解
+
+### 📁 项目概述
+
+这是一个名为 **Moatless Tree Search** 的开源项目，是论文 <a href="#">"SWE-Search: Enhancing Software Agents with Monte Carlo Tree Search and Iterative Refinement"</a> 的代码实现。
+
+**核心目标**：使用 <span class="highlight">蒙特卡洛树搜索（MCTS）</span> 算法来增强 AI 软件工程代理的能力，帮助自动化解决软件开发中的问题（如 bug 修复、功能实现等）。`
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 'p2',
+                    title: 'Project explanation',
+                    time: '39m',
+                    meta: '3 Models · moatless-tree-search',
+                    icon: 'sparkle',
+                    cards: [
+                        {
+                            id: 'c2',
+                            models: [
+                                { name: 'Claude 3.5', status: 'completed', time: '2m 15s' },
+                                { name: 'GPT-4', status: 'completed', time: '1m 45s' },
+                                { name: 'Gemini Pro', status: 'completed', time: '3m 22s' }
+                            ],
+                            messages: [
+                                {
+                                    role: 'user',
+                                    content: '请解释这个项目的主要功能'
+                                },
+                                {
+                                    role: 'assistant',
+                                    content: '这个项目是一个基于蒙特卡洛树搜索的软件工程AI代理系统...'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            older: [
+                {
+                    id: 'p3',
+                    title: 'Search for context compre...',
+                    time: '1mo',
+                    meta: 'Sonnet 4.5 · Roo-Code',
+                    icon: 'check',
+                    cards: [
+                        {
+                            id: 'c3',
+                            models: [
+                                { name: 'Sonnet 4.5', status: 'completed', time: '5m 30s' }
+                            ],
+                            messages: [
+                                {
+                                    role: 'user',
+                                    content: '搜索上下文压缩相关的内容'
+                                },
+                                {
+                                    role: 'assistant',
+                                    content: '根据搜索结果，找到了以下关于上下文压缩的内容...'
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            expired: []
+        };
+
+        let currentProject = null;
+        let currentCard = null;
+        let currentModelIndex = 0;
+
+        // 渲染项目列表
+        function renderProjectList() {
+            const projectList = document.getElementById('projectList');
+            projectList.innerHTML = '';
+
+            // Today 分组
+            if (projectsData.today.length > 0) {
+                const todayGroup = createProjectGroup('Today', projectsData.today);
+                projectList.appendChild(todayGroup);
+            }
+
+            // Older 分组
+            if (projectsData.older.length > 0) {
+                const olderGroup = createProjectGroup('Older', projectsData.older);
+                projectList.appendChild(olderGroup);
+            }
+
+            // Expired 分组
+            if (projectsData.expired.length > 0) {
+                const expiredGroup = createProjectGroup('Expired', projectsData.expired);
+                projectList.appendChild(expiredGroup);
+            } else {
+                const expiredGroup = document.createElement('div');
+                expiredGroup.className = 'project-group';
+                expiredGroup.innerHTML = '<div class="group-label">Expired</div>';
+                projectList.appendChild(expiredGroup);
+            }
+
+            // 默认选中第一个项目
+            if (projectsData.today.length > 0) {
+                selectProject(projectsData.today[0]);
+            }
+        }
+
+        function createProjectGroup(label, projects) {
+            const group = document.createElement('div');
+            group.className = 'project-group';
+            
+            const labelEl = document.createElement('div');
+            labelEl.className = 'group-label';
+            labelEl.textContent = label;
+            group.appendChild(labelEl);
+
+            projects.forEach(project => {
+                const item = createProjectItem(project);
+                group.appendChild(item);
+            });
+
+            return group;
+        }
+
+        function createProjectItem(project) {
+            const item = document.createElement('div');
+            item.className = 'project-item';
+            item.id = `project-${project.id}`;
+            item.onclick = () => selectProject(project);
+
+            const iconSvg = project.icon === 'check' 
+                ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                   </svg>`
+                : `<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                   </svg>`;
+
+            item.innerHTML = `
+                <div class="project-item-header">
+                    <div class="project-icon ${project.icon === 'check' ? 'check' : ''}">${iconSvg}</div>
+                    <div class="project-content">
+                        <div class="project-title-row">
+                            <span class="project-title">${project.title}</span>
+                            <span class="project-time">${project.time}</span>
+                        </div>
+                        <div class="project-meta">${project.meta}</div>
+                    </div>
+                </div>
+            `;
+
+            return item;
+        }
+
+        function selectProject(project) {
+            // 更新选中状态
+            document.querySelectorAll('.project-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`project-${project.id}`).classList.add('active');
+
+            currentProject = project;
+            currentCard = project.cards[0];
+            currentModelIndex = 0;
+
+            renderModelCards();
+            renderChat();
+        }
+
+        function renderModelCards() {
+            const modelCards = document.getElementById('modelCards');
+            modelCards.innerHTML = '';
+
+            if (!currentCard) return;
+
+            currentCard.models.forEach((model, index) => {
+                const card = document.createElement('div');
+                card.className = `model-card ${index === currentModelIndex ? 'active' : ''}`;
+                card.onclick = () => selectModel(index);
+
+                const statusIcon = model.status === 'working' 
+                    ? `<svg class="model-status-icon loading" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                       </svg>`
+                    : `<svg class="model-status-icon" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                       </svg>`;
+
+                card.innerHTML = `
+                    <div class="model-card-header">
+                        <span class="model-name">${model.name}</span>
+                        ${statusIcon}
+                    </div>
+                    <div class="model-working">Working for ${model.time}</div>
+                `;
+
+                modelCards.appendChild(card);
+            });
+        }
+
+        function selectModel(index) {
+            currentModelIndex = index;
+            renderModelCards();
+        }
+
+        function renderChat() {
+            const chatArea = document.getElementById('chatArea');
+            chatArea.innerHTML = '';
+
+            if (!currentCard) return;
+
+            currentCard.messages.forEach(message => {
+                const messageEl = document.createElement('div');
+                messageEl.className = 'chat-message';
+
+                if (message.role === 'user') {
+                    messageEl.innerHTML = `<div class="user-message">${message.content}</div>`;
+                } else {
+                    let statusHtml = '';
+                    
+                    if (message.status) {
+                        message.status.forEach(s => {
+                            if (s.type === 'ready') {
+                                statusHtml += `
+                                    <div class="status-item">
+                                        <svg class="status-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span class="status-label">${s.label}</span>
+                                    </div>
+                                `;
+                            } else if (s.type === 'thought') {
+                                statusHtml += `
+                                    <div class="thought-section">
+                                        <span class="thought-label">${s.label}</span>
+                                        <span class="thought-time">${s.value}</span>
+                                    </div>
+                                `;
+                            }
+                        });
+                    }
+
+                    let thoughtHtml = '';
+                    if (message.thoughtContent) {
+                        thoughtHtml = `<div class="thought-content">${message.thoughtContent}</div>`;
+                    }
+
+                    let exploredHtml = '';
+                    if (message.explored) {
+                        exploredHtml = `
+                            <div class="explored-section">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                                </svg>
+                                <span class="explored-label">${message.explored.label}</span>
+                                <span class="explored-value">${message.explored.value}</span>
+                            </div>
+                        `;
+                    }
+
+                    messageEl.innerHTML = `
+                        <div class="assistant-message">
+                            ${statusHtml}
+                            ${thoughtHtml}
+                            ${exploredHtml}
+                            <div class="response-content">${message.content}</div>
+                        </div>
+                    `;
+                }
+
+                chatArea.appendChild(messageEl);
+            });
+
+            // 滚动到底部
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || !currentCard) return;
+
+            // 添加用户消息
+            currentCard.messages.push({
+                role: 'user',
+                content: message
+            });
+
+            // 模拟助手回复
+            setTimeout(() => {
+                currentCard.messages.push({
+                    role: 'assistant',
+                    status: [
+                        { type: 'ready', label: 'Processing complete' }
+                    ],
+                    content: `收到您的消息："${message}"。这是一个模拟回复，实际应用中会连接到真正的AI模型。`
+                });
+                renderChat();
+            }, 1000);
+
+            input.value = '';
+            renderChat();
+        }
+
+        // 回车发送消息
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // 初始化
+        renderProjectList();
+    </script>
+</body>
+</html>
