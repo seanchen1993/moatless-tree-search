@@ -12,26 +12,32 @@
         }
 
         :root {
-            --primary: #1a1a1a;
-            --primary-light: #2d2d2d;
-            --accent: #c9a227;
-            --accent-light: #e8c547;
-            --bg: #faf9f7;
-            --bg-card: #fff;
-            --border: #e8e6e3;
-            --text: #1a1a1a;
-            --text-secondary: #666;
-            --text-muted: #999;
-            --success: #2d8a4e;
-            --info: #1e6f9f;
+            --bg-primary: #f8f8f6;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f0efed;
+            --bg-hover: #eae9e6;
+            --text-primary: #37352f;
+            --text-secondary: #6b6b6b;
+            --text-muted: #9b9a97;
+            --border: #e6e5e3;
+            --accent: #eb5757;
+            --accent-soft: #fbe4e4;
+            --success: #4daa57;
+            --success-soft: #e3f5e5;
+            --info: #529cca;
+            --info-soft: #e1f0f8;
+            --warning: #dfab01;
+            --warning-soft: #fbf3db;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             height: 100vh;
             overflow: hidden;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
@@ -41,8 +47,8 @@
 
         /* 左侧边栏 */
         .sidebar {
-            width: 300px;
-            background-color: var(--bg);
+            width: 280px;
+            background-color: var(--bg-primary);
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
@@ -50,24 +56,30 @@
         }
 
         .sidebar-header {
-            padding: 16px;
+            padding: 14px;
         }
 
         .search-box {
             display: flex;
             align-items: center;
-            background-color: var(--bg-card);
+            background-color: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 10px 12px;
+            border-radius: 6px;
+            padding: 8px 12px;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+
+        .search-box:focus-within {
+            border-color: #b4b4b4;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.04);
         }
 
         .search-box input {
             border: none;
             outline: none;
             flex: 1;
-            font-size: 14px;
-            color: var(--text-secondary);
+            font-size: 13px;
+            color: var(--text-primary);
             background: transparent;
         }
 
@@ -77,40 +89,37 @@
 
         .search-icons {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             color: var(--text-muted);
         }
 
         .search-icons svg {
-            width: 16px;
-            height: 16px;
+            width: 15px;
+            height: 15px;
             cursor: pointer;
+            opacity: 0.6;
         }
 
         .project-list {
             flex: 1;
             overflow-y: auto;
-            padding: 0 8px;
-            margin-top: 8px;
+            padding: 4px 8px;
         }
 
         .project-item {
-            padding: 14px;
-            border-radius: 10px;
+            padding: 10px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 4px;
-            border: 1px solid transparent;
+            transition: background-color 0.1s;
+            margin-bottom: 2px;
         }
 
         .project-item:hover {
-            background-color: #f0eeeb;
+            background-color: var(--bg-hover);
         }
 
         .project-item.active {
-            background-color: var(--bg-card);
-            border-color: var(--border);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            background-color: var(--bg-tertiary);
         }
 
         .project-item-header {
@@ -120,12 +129,12 @@
         }
 
         .project-icon {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent);
+            color: var(--warning);
             flex-shrink: 0;
             margin-top: 1px;
         }
@@ -139,13 +148,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .project-title {
             font-size: 14px;
-            font-weight: 600;
-            color: var(--text);
+            font-weight: 500;
+            color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -167,15 +176,16 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            background-color: var(--bg-card);
+            background-color: var(--bg-secondary);
             overflow: hidden;
         }
 
         /* 子卡片区域 */
         .card-tabs-container {
-            padding: 20px 24px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
             position: relative;
+            background-color: var(--bg-secondary);
         }
 
         .card-tabs-container.refreshing::before {
@@ -183,22 +193,22 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
+            width: 30%;
             height: 2px;
             background: var(--accent);
-            animation: loading 1.5s ease infinite;
+            animation: loadingBar 1s ease infinite;
         }
 
-        @keyframes loading {
-            0% { transform: translateX(-100%); }
-            50% { transform: translateX(0%); }
-            100% { transform: translateX(100%); }
+        @keyframes loadingBar {
+            0% { left: 0; width: 0; }
+            50% { left: 25%; width: 50%; }
+            100% { left: 100%; width: 0; }
         }
 
         .card-tabs {
             display: flex;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
 
@@ -207,64 +217,46 @@
         }
 
         .card-tab {
-            min-width: 140px;
-            padding: 14px 18px;
-            background-color: var(--bg);
-            border-radius: 10px;
+            min-width: 130px;
+            padding: 12px 16px;
+            background-color: var(--bg-primary);
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
+            transition: all 0.15s ease;
             position: relative;
         }
 
         .card-tab:hover {
-            background-color: #f0eeeb;
+            background-color: var(--bg-hover);
         }
 
         .card-tab.active {
-            background-color: var(--bg-card);
-            border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            background-color: var(--bg-secondary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
         }
 
         .card-tab.loading {
             pointer-events: none;
-        }
-
-        .card-tab.loading::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
-            animation: shimmer 1.5s infinite;
-            border-radius: 9px;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            opacity: 0.7;
         }
 
         .card-tab-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         .card-tab-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            color: var(--text);
+            color: var(--text-primary);
         }
 
         .card-tab-status {
-            width: 14px;
-            height: 14px;
-            color: var(--accent);
+            width: 12px;
+            height: 12px;
+            color: var(--warning);
         }
 
         .card-tab-status.loading {
@@ -277,42 +269,41 @@
 
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
+            50% { opacity: 0.3; }
         }
 
         .card-tab-meta {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
         }
 
         /* 展开/折叠按钮 */
         .toggle-cards-btn {
             display: none;
-            margin: 12px auto 0;
-            padding: 6px 16px;
+            margin: 10px auto 0;
+            padding: 5px 14px;
             background-color: transparent;
             border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 13px;
+            border-radius: 4px;
+            font-size: 12px;
             color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
         }
 
         .toggle-cards-btn:hover {
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: var(--bg-tertiary);
         }
 
         .toggle-cards-btn.visible {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .toggle-cards-btn svg {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
             transition: transform 0.2s;
         }
 
@@ -324,9 +315,9 @@
         .chat-area {
             flex: 1;
             overflow-y: auto;
-            padding: 32px 48px;
-            background-color: var(--bg-card);
-            transition: opacity 0.3s;
+            padding: 28px 40px;
+            background-color: var(--bg-secondary);
+            transition: opacity 0.2s;
         }
 
         .chat-area.refreshing {
@@ -334,32 +325,31 @@
         }
 
         .chat-message {
-            margin-bottom: 32px;
-            animation: fadeIn 0.3s ease;
+            margin-bottom: 28px;
+            animation: fadeIn 0.25s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* 用户消息 */
         .user-message {
-            background-color: var(--primary);
-            color: white;
-            padding: 16px 22px;
-            border-radius: 16px 16px 4px 16px;
+            background-color: var(--text-primary);
+            color: #ffffff;
+            padding: 14px 18px;
+            border-radius: 12px 12px 4px 12px;
             display: inline-block;
-            max-width: 75%;
-            font-size: 15px;
-            line-height: 1.6;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            max-width: 72%;
+            font-size: 14px;
+            line-height: 1.55;
         }
 
         /* 助手消息 */
         .assistant-message {
-            margin-top: 20px;
-            padding-left: 16px;
+            margin-top: 18px;
+            padding-left: 14px;
             border-left: 2px solid var(--border);
         }
 
@@ -367,205 +357,186 @@
         .status-pills {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 6px;
+            margin-bottom: 14px;
         }
 
         .status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
             font-weight: 500;
         }
 
         .status-pill.ready {
-            background-color: #e8f5e9;
-            color: #2d8a4e;
-        }
-
-        .status-pill.ready svg {
-            color: #2d8a4e;
+            background-color: var(--success-soft);
+            color: #2d7d3a;
         }
 
         .status-pill.thought {
-            background-color: #fff8e6;
-            color: #9a7b1c;
-        }
-
-        .status-pill.thought svg {
-            color: #c9a227;
+            background-color: var(--warning-soft);
+            color: #9a6700;
         }
 
         .status-pill.explored {
-            background-color: #e3f2fd;
-            color: #1e6f9f;
-        }
-
-        .status-pill.explored svg {
-            color: #1e6f9f;
+            background-color: var(--info-soft);
+            color: #2b6e99;
         }
 
         .status-pill svg {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
         }
 
         /* 思考内容 */
         .thought-box {
-            background-color: #fffcf0;
-            border: 1px solid #f0e6c0;
-            border-radius: 10px;
-            padding: 16px 20px;
-            margin-bottom: 20px;
+            background-color: var(--warning-soft);
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
             position: relative;
         }
 
         .thought-box::before {
             content: '💭';
             position: absolute;
-            top: -10px;
-            left: 16px;
-            font-size: 16px;
-            background: var(--bg-card);
-            padding: 0 4px;
+            top: -8px;
+            left: 14px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+            padding: 0 3px;
         }
 
         .thought-box-content {
-            font-size: 14px;
-            line-height: 1.7;
-            color: #7a6520;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #6b5900;
             font-style: italic;
         }
 
         /* 响应内容 */
         .response-content {
-            font-size: 15px;
-            line-height: 1.8;
-            color: #374151;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-primary);
         }
 
         .response-content h2 {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 28px 0 16px;
-            color: var(--text);
-            padding-bottom: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 24px 0 12px;
+            color: var(--text-primary);
+            padding-bottom: 8px;
             border-bottom: 1px solid var(--border);
         }
 
         .response-content h3 {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-            margin: 20px 0 12px;
-            color: var(--text);
+            margin: 18px 0 10px;
+            color: var(--text-primary);
         }
 
         .response-content p {
-            margin-bottom: 14px;
-            color: #4b5563;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
         }
 
         .response-content ul {
-            margin: 12px 0;
-            padding-left: 24px;
+            margin: 10px 0;
+            padding-left: 20px;
         }
 
         .response-content li {
-            margin-bottom: 8px;
-            color: #4b5563;
-            line-height: 1.7;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
         .response-content a {
             color: var(--info);
             text-decoration: none;
-            border-bottom: 1px dashed var(--info);
-            transition: all 0.2s;
         }
 
         .response-content a:hover {
-            border-bottom-style: solid;
+            text-decoration: underline;
         }
 
         .response-content strong {
-            color: var(--text);
+            color: var(--text-primary);
             font-weight: 600;
         }
 
         .response-content code {
-            background-color: #f5f5f5;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-family: 'SF Mono', 'Consolas', monospace;
+            background-color: var(--accent-soft);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
             font-size: 13px;
-            color: #c7254e;
+            color: var(--accent);
         }
 
         .response-content pre {
-            background-color: #1e1e1e;
-            color: #d4d4d4;
-            padding: 20px;
-            border-radius: 10px;
+            background-color: #2f3437;
+            color: #e6e6e6;
+            padding: 16px;
+            border-radius: 6px;
             overflow-x: auto;
-            margin: 16px 0;
-            font-family: 'SF Mono', 'Consolas', monospace;
+            margin: 14px 0;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
             font-size: 13px;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .response-content blockquote {
-            border-left: 3px solid var(--accent);
-            padding: 12px 20px;
-            margin: 16px 0;
-            background-color: #fffcf5;
-            border-radius: 0 8px 8px 0;
-            color: #5c5c5c;
+            border-left: 3px solid var(--border);
+            padding: 10px 16px;
+            margin: 14px 0;
+            background-color: var(--bg-primary);
+            border-radius: 0 6px 6px 0;
+            color: var(--text-secondary);
+            font-style: italic;
         }
 
         /* 信息卡片 */
         .info-card {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
         }
 
         .info-card-title {
             font-weight: 600;
-            color: var(--text);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 13px;
         }
 
         .info-card-content {
-            color: #475569;
-            font-size: 14px;
-            line-height: 1.7;
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.6;
         }
 
         /* 文件树 */
         .file-tree {
-            background-color: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 16px 20px;
-            margin: 16px 0;
-            font-family: 'SF Mono', 'Consolas', monospace;
-            font-size: 13px;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 14px 16px;
+            margin: 14px 0;
+            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
         }
 
         .file-tree-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 0;
-            color: #374151;
+            padding: 3px 0;
+            color: var(--text-secondary);
         }
 
         .file-tree-item.folder {
@@ -574,11 +545,10 @@
         }
 
         .file-tree-item.file {
-            padding-left: 24px;
-            color: #6b7280;
+            padding-left: 20px;
         }
 
-        /* 滚动条样式 */
+        /* 滚动条 */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -589,74 +559,69 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #d0d0d0;
+            background: #d4d4d4;
             border-radius: 3px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #b0b0b0;
+            background: #b8b8b8;
         }
 
         /* 分隔线 */
         .divider {
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--border), transparent);
-            margin: 24px 0;
+            background: var(--border);
+            margin: 22px 0;
         }
 
         /* 代码块 */
         .code-block {
-            position: relative;
-            margin: 16px 0;
+            margin: 14px 0;
         }
 
         .code-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #2d2d2d;
-            padding: 10px 16px;
-            border-radius: 10px 10px 0 0;
-            font-size: 12px;
-            color: #999;
-        }
-
-        .code-lang {
-            font-weight: 500;
+            background-color: #3a3f42;
+            padding: 8px 14px;
+            border-radius: 6px 6px 0 0;
+            font-size: 11px;
+            color: #9a9a9a;
         }
 
         .code-copy {
             background: none;
             border: none;
-            color: #999;
+            color: #9a9a9a;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .code-copy:hover {
-            color: #fff;
+            color: #e6e6e6;
         }
 
         .code-block pre {
             margin: 0;
-            border-radius: 0 0 10px 10px;
+            border-radius: 0 0 6px 6px;
         }
 
-        /* 刷新成功提示 */
+        /* 刷新提示 */
         .refresh-toast {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            background-color: var(--primary);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-size: 14px;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--text-primary);
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 500;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            transform: translateY(100px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(80px);
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -669,9 +634,9 @@
         }
 
         .refresh-toast svg {
-            width: 18px;
-            height: 18px;
-            color: var(--accent);
+            width: 16px;
+            height: 16px;
+            color: var(--success);
         }
 
         /* 加载占位 */
@@ -680,18 +645,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 60px 20px;
+            padding: 50px 20px;
             color: var(--text-muted);
         }
 
         .loading-spinner {
-            width: 36px;
-            height: 36px;
+            width: 28px;
+            height: 28px;
             border: 2px solid var(--border);
-            border-top-color: var(--primary);
+            border-top-color: var(--text-secondary);
             border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
         }
 
         @keyframes spin {
@@ -708,11 +673,6 @@
                     <input type="text" placeholder="Search agents...">
                     <div class="search-icons">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="4" y1="6" x2="20" y2="6"></line>
-                            <line x1="4" y1="12" x2="14" y2="12"></line>
-                            <line x1="4" y1="18" x2="18" y2="18"></line>
-                        </svg>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <circle cx="11" cy="11" r="8"></circle>
                             <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                         </svg>
@@ -720,18 +680,13 @@
                 </div>
             </div>
 
-            <div class="project-list" id="projectList">
-                <!-- 项目卡片 -->
-            </div>
+            <div class="project-list" id="projectList"></div>
         </div>
 
         <!-- 右侧主区域 -->
         <div class="main-content">
-            <!-- 子卡片标签页 -->
             <div class="card-tabs-container" id="cardTabsContainer">
-                <div class="card-tabs collapsed" id="cardTabs">
-                    <!-- 子卡片 -->
-                </div>
+                <div class="card-tabs collapsed" id="cardTabs"></div>
                 <button class="toggle-cards-btn" id="toggleCardsBtn" onclick="toggleCards()">
                     <span id="toggleText">展开更多</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -740,7 +695,6 @@
                 </button>
             </div>
 
-            <!-- 对话区域 -->
             <div class="chat-area" id="chatArea">
                 <div class="loading-placeholder">
                     <div class="loading-spinner"></div>
@@ -750,16 +704,15 @@
         </div>
     </div>
 
-    <!-- 刷新成功提示 -->
     <div class="refresh-toast" id="refreshToast">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
         </svg>
-        <span>Data refreshed</span>
+        <span>Refreshed</span>
     </div>
 
     <script>
-        // ==================== 从URL读取project_id ====================
+        // ==================== URL参数 ====================
         function getProjectIdFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('project_id') || 'wealthboxapi_project';
@@ -770,7 +723,6 @@
         // ==================== Mock API ====================
         const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        // Mock: 根据 project_id 获取子卡片ID列表
         async function apiGetCardIdsByProject(projectId) {
             await delay(300);
             
@@ -803,9 +755,8 @@
             return mockCardIds[projectId] || mockCardIds['default'];
         }
 
-        // Mock: 根据 card_id 获取卡片详情
         async function apiGetCardDetail(cardId) {
-            await delay(500);
+            await delay(400);
             
             const mockCardDetails = {
                 'card_001': {
@@ -816,13 +767,13 @@
                             statusPills: [
                                 { type: 'ready', icon: 'check', text: 'Environment ready' },
                                 { type: 'thought', icon: 'brain', text: 'Thought for 3s' },
-                                { type: 'explored', icon: 'folder', text: 'Explored 1 directory, 13 files' }
+                                { type: 'explored', icon: 'folder', text: 'Explored 13 files' }
                             ],
                             thought: '我来详细探索这个项目，首先阅读关键文件来理解项目的整体架构和功能...',
                             content: `<p>现在我已经全面分析了这个项目。让我为您详细讲解。</p>
 <h2>🚀 Moatless Tree Search 项目详解</h2>
 <h3>📁 项目概述</h3>
-<p>这是一个名为 <strong>Moatless Tree Search</strong> 的开源项目，是论文 <a href="#">"SWE-Search: Enhancing Software Agents with Monte Carlo Tree Search and Iterative Refinement"</a> 的代码实现。</p>
+<p>这是一个名为 <strong>Moatless Tree Search</strong> 的开源项目，是论文 <a href="#">"SWE-Search"</a> 的代码实现。</p>
 <div class="info-card">
     <div class="info-card-title">💡 核心目标</div>
     <div class="info-card-content">使用 <strong>蒙特卡洛树搜索（MCTS）</strong> 算法来增强 AI 软件工程代理的能力。</div>
@@ -836,7 +787,7 @@
     <div class="file-tree-item file">└── search_tree.py - 核心搜索树实现</div>
 </div>`
                         },
-                        { role: 'user', content: '能详细解释一下 MCTS 算法在这个项目中是如何工作的吗？' },
+                        { role: 'user', content: '能详细解释一下 MCTS 算法吗？' },
                         {
                             role: 'assistant',
                             statusPills: [
@@ -845,13 +796,13 @@
                             ],
                             thought: '让我深入分析 search_tree.py 和相关文件...',
                             content: `<h2>🌲 MCTS 算法工作原理</h2>
-<p>蒙特卡洛树搜索在这个项目中被创新性地应用于<strong>代码修复和生成任务</strong>。</p>
-<h3>1️⃣ 选择阶段 (Selection)</h3>
-<p>从根节点开始，使用 <code>UCB1</code> 公式选择最有潜力的子节点。</p>
+<p>蒙特卡洛树搜索在这个项目中用于<strong>代码修复和生成任务</strong>。</p>
+<h3>1️⃣ 选择阶段</h3>
+<p>使用 <code>UCB1</code> 公式选择最有潜力的子节点。</p>
 <div class="code-block">
     <div class="code-header">
-        <span class="code-lang">Python</span>
-        <button class="code-copy">复制代码</button>
+        <span>Python</span>
+        <button class="code-copy">复制</button>
     </div>
     <pre>def select_node(self, node: Node) -> Node:
     while node.children:
@@ -859,8 +810,8 @@
                    key=lambda n: n.ucb_score())
     return node</pre>
 </div>
-<h3>2️⃣ 扩展阶段 (Expansion)</h3>
-<p>当到达叶节点时，生成可能的代码修改操作作为新的子节点。</p>
+<h3>2️⃣ 扩展阶段</h3>
+<p>当到达叶节点时，生成可能的代码修改操作。</p>
 <blockquote>与传统 MCTS 不同，这里使用 LLM 来评估代码修改的质量。</blockquote>`
                         }
                     ]
@@ -871,7 +822,7 @@
                         {
                             role: 'assistant',
                             statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Environment ready' },
+                                { type: 'ready', icon: 'check', text: 'Ready' },
                                 { type: 'thought', icon: 'brain', text: 'Thought for 5s' }
                             ],
                             thought: 'GPT-5.2 正在分析项目结构...',
@@ -884,7 +835,7 @@
     <li><strong>评估模块</strong> - 使用 LLM 评估代码质量</li>
 </ul>
 <div class="info-card">
-    <div class="info-card-title">🎯 GPT-5.2 特别发现</div>
+    <div class="info-card-title">🎯 特别发现</div>
     <div class="info-card-content">该项目使用了创新的 <strong>迭代细化</strong> 机制。</div>
 </div>`
                         }
@@ -896,16 +847,15 @@
                         {
                             role: 'assistant',
                             statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Analysis started' },
-                                { type: 'thought', icon: 'brain', text: 'Thinking...' }
+                                { type: 'thought', icon: 'brain', text: 'Analyzing...' }
                             ],
                             thought: 'Sonnet 4.5 正在深入分析代码库...',
                             content: `<h2>🔬 Sonnet 4.5 深度分析</h2>
-<p>从代码架构的角度来看，这个项目展现了优秀的<strong>模块化设计</strong>。</p>
+<p>从代码架构来看，这个项目展现了优秀的<strong>模块化设计</strong>。</p>
 <div class="code-block">
     <div class="code-header">
-        <span class="code-lang">Python</span>
-        <button class="code-copy">复制代码</button>
+        <span>Python</span>
+        <button class="code-copy">复制</button>
     </div>
     <pre>class SearchTree:
     def __init__(self, root_node):
@@ -923,14 +873,14 @@
                             statusPills: [
                                 { type: 'thought', icon: 'brain', text: 'Processing...' }
                             ],
-                            thought: 'Gemini 3 Pro 正在使用多模态能力分析项目...',
-                            content: `<h2>🌐 Gemini 3 Pro 多模态分析</h2>
-<p>利用 Gemini 的长上下文能力，我已完整阅读了项目的所有代码文件。</p>
+                            thought: 'Gemini 3 Pro 正在分析项目...',
+                            content: `<h2>🌐 Gemini 3 Pro 分析</h2>
+<p>利用长上下文能力，我已完整阅读了项目的所有代码文件。</p>
 <h3>发现的模式</h3>
 <ul>
-    <li>采用了<strong>策略模式</strong>来处理不同类型的代码操作</li>
-    <li>使用<strong>观察者模式</strong>来追踪搜索进度</li>
-    <li>实现了<strong>工厂模式</strong>来创建不同的 LLM 补全器</li>
+    <li><strong>策略模式</strong> - 处理不同类型的代码操作</li>
+    <li><strong>观察者模式</strong> - 追踪搜索进度</li>
+    <li><strong>工厂模式</strong> - 创建不同的 LLM 补全器</li>
 </ul>`
                         }
                     ]
@@ -941,26 +891,26 @@
                         {
                             role: 'assistant',
                             statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Composer analysis' }
+                                { type: 'ready', icon: 'check', text: 'Complete' }
                             ],
                             content: `<h2>🎼 Composer 1 综合分析</h2>
-<p>作为 Composer 模型，我将从<strong>整体架构</strong>角度为您分析这个项目。</p>
-<table style="width:100%; border-collapse: collapse; margin: 16px 0;">
-    <tr style="background: #f8f9fa;">
-        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e9ecef;">组件</th>
-        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e9ecef;">职责</th>
+<p>从<strong>整体架构</strong>角度分析这个项目。</p>
+<table style="width:100%; border-collapse: collapse; margin: 14px 0; font-size: 13px;">
+    <tr style="background: #f8f8f6;">
+        <th style="padding: 10px; text-align: left; border-bottom: 1px solid #e6e5e3;">组件</th>
+        <th style="padding: 10px; text-align: left; border-bottom: 1px solid #e6e5e3;">职责</th>
     </tr>
     <tr>
-        <td style="padding: 12px; border-bottom: 1px solid #e9ecef;"><strong>SearchTree</strong></td>
-        <td style="padding: 12px; border-bottom: 1px solid #e9ecef;">核心搜索算法</td>
+        <td style="padding: 10px; border-bottom: 1px solid #e6e5e3;"><strong>SearchTree</strong></td>
+        <td style="padding: 10px; border-bottom: 1px solid #e6e5e3;">核心搜索算法</td>
     </tr>
     <tr>
-        <td style="padding: 12px; border-bottom: 1px solid #e9ecef;"><strong>Actions</strong></td>
-        <td style="padding: 12px; border-bottom: 1px solid #e9ecef;">代码修改操作</td>
+        <td style="padding: 10px; border-bottom: 1px solid #e6e5e3;"><strong>Actions</strong></td>
+        <td style="padding: 10px; border-bottom: 1px solid #e6e5e3;">代码修改操作</td>
     </tr>
     <tr>
-        <td style="padding: 12px;"><strong>Completion</strong></td>
-        <td style="padding: 12px;">LLM 调用封装</td>
+        <td style="padding: 10px;"><strong>Completion</strong></td>
+        <td style="padding: 10px;">LLM 调用封装</td>
     </tr>
 </table>`
                         }
@@ -974,15 +924,13 @@
                         { role: 'user', content: '分析这个项目' },
                         {
                             role: 'assistant',
-                            statusPills: [
-                                { type: 'thought', icon: 'brain', text: 'Analyzing...' }
-                            ],
+                            statusPills: [{ type: 'thought', icon: 'brain', text: 'Analyzing...' }],
                             thought: `正在使用 ${cardId} 分析项目...`,
                             content: `<h2>📝 ${cardId} 分析结果</h2>
 <p>这是来自 <strong>${cardId}</strong> 的分析结果。</p>
 <div class="info-card">
     <div class="info-card-title">⏳ 处理中</div>
-    <div class="info-card-content">模型正在分析代码库并生成详细报告。</div>
+    <div class="info-card-content">模型正在分析代码库并生成报告。</div>
 </div>`
                         }
                     ]
@@ -992,52 +940,38 @@
             return mockCardDetails[cardId];
         }
 
-        // ==================== 状态管理 ====================
+        // ==================== 状态 ====================
         let cardList = [];
         let currentCardId = null;
         let currentCardData = null;
         let cardsExpanded = false;
-        let isRefreshing = false;
 
-        // ==================== 刷新特效 ====================
+        // ==================== 刷新效果 ====================
         function showRefreshEffect() {
-            isRefreshing = true;
             document.getElementById('cardTabsContainer').classList.add('refreshing');
             document.getElementById('chatArea').classList.add('refreshing');
-            
-            const activeTab = document.querySelector('.card-tab.active');
-            if (activeTab) {
-                activeTab.classList.add('loading');
-            }
+            document.querySelectorAll('.card-tab.active').forEach(el => el.classList.add('loading'));
         }
 
         function hideRefreshEffect() {
-            isRefreshing = false;
             document.getElementById('cardTabsContainer').classList.remove('refreshing');
             document.getElementById('chatArea').classList.remove('refreshing');
-            
-            document.querySelectorAll('.card-tab.loading').forEach(el => {
-                el.classList.remove('loading');
-            });
+            document.querySelectorAll('.card-tab.loading').forEach(el => el.classList.remove('loading'));
         }
 
         function showRefreshToast() {
             const toast = document.getElementById('refreshToast');
             toast.classList.add('visible');
-            setTimeout(() => {
-                toast.classList.remove('visible');
-            }, 2000);
+            setTimeout(() => toast.classList.remove('visible'), 1800);
         }
 
-        // ==================== 渲染左侧项目列表（只有一个项目）====================
+        // ==================== 渲染 ====================
         function renderProjectList() {
-            const projectList = document.getElementById('projectList');
-            
-            projectList.innerHTML = `
-                <div class="project-item active" id="project-main">
+            document.getElementById('projectList').innerHTML = `
+                <div class="project-item active">
                     <div class="project-item-header">
                         <div class="project-icon">
-                            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
                                 <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
                             </svg>
                         </div>
@@ -1046,14 +980,13 @@
                                 <span class="project-title">${currentProjectId}</span>
                                 <span class="project-time">now</span>
                             </div>
-                            <div class="project-meta">${cardList.length} Models · running</div>
+                            <div class="project-meta">${cardList.length} Models</div>
                         </div>
                     </div>
                 </div>
             `;
         }
 
-        // ==================== 渲染右上方子卡片标签页 ====================
         function renderCardTabs() {
             const cardTabs = document.getElementById('cardTabs');
             const toggleBtn = document.getElementById('toggleCardsBtn');
@@ -1071,11 +1004,7 @@
                 document.getElementById('toggleText').textContent = '展开更多';
             }
 
-            if (cardList.length > 5) {
-                toggleBtn.classList.add('visible');
-            } else {
-                toggleBtn.classList.remove('visible');
-            }
+            toggleBtn.classList.toggle('visible', cardList.length > 5);
 
             cardList.forEach(card => {
                 const tab = document.createElement('div');
@@ -1107,122 +1036,74 @@
             renderCardTabs();
         }
 
-        // ==================== 渲染对话内容 ====================
         function getStatusIcon(type) {
-            switch(type) {
-                case 'check':
-                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>`;
-                case 'brain':
-                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M12 2a9 9 0 0 1 9 9c0 3.1-1.5 5.8-4 7.5V21H7v-2.5c-2.5-1.7-4-4.4-4-7.5a9 9 0 0 1 9-9z"/>
-                    </svg>`;
-                case 'folder':
-                    return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-                    </svg>`;
-                default:
-                    return '';
-            }
+            const icons = {
+                check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
+                brain: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`,
+                folder: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`
+            };
+            return icons[type] || '';
         }
 
         function renderChat() {
             const chatArea = document.getElementById('chatArea');
 
-            if (!currentCardData || !currentCardData.messages) {
-                chatArea.innerHTML = `
-                    <div class="loading-placeholder">
-                        <div class="loading-spinner"></div>
-                        <span>Loading...</span>
-                    </div>
-                `;
+            if (!currentCardData?.messages) {
+                chatArea.innerHTML = `<div class="loading-placeholder"><div class="loading-spinner"></div><span>Loading...</span></div>`;
                 return;
             }
 
-            const messages = currentCardData.messages;
-            
-            chatArea.innerHTML = messages.map((message, index) => {
-                if (message.role === 'user') {
-                    return `
-                        <div class="chat-message">
-                            <div class="user-message">${message.content}</div>
-                        </div>
-                    `;
-                } else {
-                    let statusPillsHtml = '';
-                    if (message.statusPills && message.statusPills.length > 0) {
-                        const pills = message.statusPills.map(pill => 
-                            `<span class="status-pill ${pill.type}">
-                                ${getStatusIcon(pill.icon)}
-                                ${pill.text}
-                            </span>`
-                        ).join('');
-                        statusPillsHtml = `<div class="status-pills">${pills}</div>`;
-                    }
-
-                    let thoughtHtml = '';
-                    if (message.thought) {
-                        thoughtHtml = `
-                            <div class="thought-box">
-                                <div class="thought-box-content">${message.thought}</div>
-                            </div>
-                        `;
-                    }
-
-                    const divider = index < messages.length - 1 ? '<div class="divider"></div>' : '';
-
-                    return `
-                        <div class="chat-message">
-                            <div class="assistant-message">
-                                ${statusPillsHtml}
-                                ${thoughtHtml}
-                                <div class="response-content">${message.content}</div>
-                            </div>
-                        </div>
-                        ${divider}
-                    `;
+            chatArea.innerHTML = currentCardData.messages.map((msg, i) => {
+                if (msg.role === 'user') {
+                    return `<div class="chat-message"><div class="user-message">${msg.content}</div></div>`;
                 }
+
+                const pills = msg.statusPills?.map(p => 
+                    `<span class="status-pill ${p.type}">${getStatusIcon(p.icon)}${p.text}</span>`
+                ).join('') || '';
+
+                const thought = msg.thought ? 
+                    `<div class="thought-box"><div class="thought-box-content">${msg.thought}</div></div>` : '';
+
+                const divider = i < currentCardData.messages.length - 1 ? '<div class="divider"></div>' : '';
+
+                return `
+                    <div class="chat-message">
+                        <div class="assistant-message">
+                            ${pills ? `<div class="status-pills">${pills}</div>` : ''}
+                            ${thought}
+                            <div class="response-content">${msg.content}</div>
+                        </div>
+                    </div>
+                    ${divider}
+                `;
             }).join('');
 
             chatArea.scrollTop = 0;
         }
 
-        // ==================== 选择子卡片（点击时刷新数据）====================
+        // ==================== 选择卡片 ====================
         async function selectCard(cardId) {
             currentCardId = cardId;
             renderCardTabs();
             showRefreshEffect();
 
             try {
-                const data = await apiGetCardDetail(cardId);
-                currentCardData = data;
+                currentCardData = await apiGetCardDetail(cardId);
                 renderChat();
                 showRefreshToast();
-            } catch (error) {
-                console.error('Failed to load card detail:', error);
+            } catch (e) {
+                console.error('Failed to load:', e);
             } finally {
                 hideRefreshEffect();
             }
         }
 
-        // ==================== 加载子卡片列表 ====================
-        async function loadCardList() {
-            try {
-                cardList = await apiGetCardIdsByProject(currentProjectId);
-                renderCardTabs();
-                renderProjectList(); // 更新项目卡片的模型数量
-            } catch (error) {
-                console.error('Failed to load card list:', error);
-                cardList = [];
-            }
-        }
-
         // ==================== 初始化 ====================
         async function init() {
-            console.log('Initializing with project_id:', currentProjectId);
-            
-            await loadCardList();
+            cardList = await apiGetCardIdsByProject(currentProjectId);
+            renderCardTabs();
+            renderProjectList();
 
             if (cardList.length > 0) {
                 await selectCard(cardList[0].id);
