@@ -28,6 +28,8 @@
             --info-soft: #e1f0f8;
             --warning: #dfab01;
             --warning-soft: #fbf3db;
+            --purple: #9065b0;
+            --purple-soft: #f3e8ff;
         }
 
         body {
@@ -52,7 +54,6 @@
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            height: 100vh;
         }
 
         .sidebar-header {
@@ -66,7 +67,6 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             padding: 8px 12px;
-            transition: border-color 0.15s, box-shadow 0.15s;
         }
 
         .search-box:focus-within {
@@ -88,15 +88,12 @@
         }
 
         .search-icons {
-            display: flex;
-            gap: 6px;
             color: var(--text-muted);
         }
 
         .search-icons svg {
             width: 15px;
             height: 15px;
-            cursor: pointer;
             opacity: 0.6;
         }
 
@@ -111,7 +108,6 @@
             border-radius: 6px;
             cursor: pointer;
             transition: background-color 0.1s;
-            margin-bottom: 2px;
         }
 
         .project-item:hover {
@@ -129,14 +125,11 @@
         }
 
         .project-icon {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 18px;
+            height: 18px;
             color: var(--warning);
             flex-shrink: 0;
-            margin-top: 1px;
+            margin-top: 2px;
         }
 
         .project-content {
@@ -163,7 +156,6 @@
         .project-time {
             font-size: 12px;
             color: var(--text-muted);
-            flex-shrink: 0;
         }
 
         .project-meta {
@@ -185,7 +177,6 @@
             padding: 16px 20px;
             border-bottom: 1px solid var(--border);
             position: relative;
-            background-color: var(--bg-secondary);
         }
 
         .card-tabs-container.refreshing::before {
@@ -223,7 +214,6 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.15s ease;
-            position: relative;
         }
 
         .card-tab:hover {
@@ -277,7 +267,6 @@
             color: var(--text-muted);
         }
 
-        /* 展开/折叠按钮 */
         .toggle-cards-btn {
             display: none;
             margin: 10px auto 0;
@@ -288,7 +277,6 @@
             font-size: 12px;
             color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.15s;
         }
 
         .toggle-cards-btn:hover {
@@ -316,7 +304,6 @@
             flex: 1;
             overflow-y: auto;
             padding: 28px 40px;
-            background-color: var(--bg-secondary);
             transition: opacity 0.2s;
         }
 
@@ -325,7 +312,7 @@
         }
 
         .chat-message {
-            margin-bottom: 28px;
+            margin-bottom: 32px;
             animation: fadeIn 0.25s ease;
         }
 
@@ -338,220 +325,260 @@
         .user-message {
             background-color: var(--text-primary);
             color: #ffffff;
-            padding: 14px 18px;
+            padding: 16px 20px;
             border-radius: 12px 12px 4px 12px;
             display: inline-block;
-            max-width: 72%;
+            max-width: 80%;
             font-size: 14px;
-            line-height: 1.55;
+            line-height: 1.6;
         }
 
-        /* 助手消息 */
-        .assistant-message {
-            margin-top: 18px;
-            padding-left: 14px;
-            border-left: 2px solid var(--border);
+        .user-message-content {
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
-        /* 状态标签 */
-        .status-pills {
+        /* 问题卡片 */
+        .issue-card {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 10px;
+        }
+
+        .issue-card-row {
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
+            margin-bottom: 8px;
         }
 
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 4px 10px;
+        .issue-card-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .issue-card-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            min-width: 80px;
+            flex-shrink: 0;
+        }
+
+        .issue-card-value {
+            color: var(--text-secondary);
+            flex: 1;
+        }
+
+        .issue-tag {
+            display: inline-block;
+            background-color: var(--accent-soft);
+            color: var(--accent);
+            padding: 2px 8px;
             border-radius: 4px;
             font-size: 12px;
             font-weight: 500;
         }
 
-        .status-pill.ready {
-            background-color: var(--success-soft);
-            color: #2d7d3a;
+        /* 助手消息 */
+        .assistant-message {
+            margin-top: 20px;
         }
 
-        .status-pill.thought {
+        /* 思考区块 */
+        .thought-section {
             background-color: var(--warning-soft);
-            color: #9a6700;
-        }
-
-        .status-pill.explored {
-            background-color: var(--info-soft);
-            color: #2b6e99;
-        }
-
-        .status-pill svg {
-            width: 12px;
-            height: 12px;
-        }
-
-        /* 思考内容 */
-        .thought-box {
-            background-color: var(--warning-soft);
-            border-radius: 6px;
-            padding: 14px 16px;
+            border-radius: 8px;
+            padding: 16px;
             margin-bottom: 16px;
-            position: relative;
         }
 
-        .thought-box::before {
-            content: '💭';
-            position: absolute;
-            top: -8px;
-            left: 14px;
-            font-size: 14px;
-            background: var(--bg-secondary);
-            padding: 0 3px;
-        }
-
-        .thought-box-content {
-            font-size: 13px;
-            line-height: 1.6;
-            color: #6b5900;
-            font-style: italic;
-        }
-
-        /* 响应内容 */
-        .response-content {
-            font-size: 14px;
-            line-height: 1.7;
-            color: var(--text-primary);
-        }
-
-        .response-content h2 {
-            font-size: 18px;
+        .thought-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
-            margin: 24px 0 12px;
-            color: var(--text-primary);
-            padding-bottom: 8px;
+            color: #8a6d00;
+            font-size: 13px;
+        }
+
+        .thought-header svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .thought-content {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #6b5900;
+            white-space: pre-wrap;
+        }
+
+        /* 动作区块 */
+        .action-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .action-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background-color: var(--bg-tertiary);
             border-bottom: 1px solid var(--border);
         }
 
-        .response-content h3 {
-            font-size: 15px;
-            font-weight: 600;
-            margin: 18px 0 10px;
-            color: var(--text-primary);
-        }
-
-        .response-content p {
-            margin-bottom: 12px;
-            color: var(--text-secondary);
-        }
-
-        .response-content ul {
-            margin: 10px 0;
-            padding-left: 20px;
-        }
-
-        .response-content li {
-            margin-bottom: 6px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .response-content a {
-            color: var(--info);
-            text-decoration: none;
-        }
-
-        .response-content a:hover {
-            text-decoration: underline;
-        }
-
-        .response-content strong {
-            color: var(--text-primary);
-            font-weight: 600;
-        }
-
-        .response-content code {
-            background-color: var(--accent-soft);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            font-size: 13px;
-            color: var(--accent);
-        }
-
-        .response-content pre {
-            background-color: #2f3437;
-            color: #e6e6e6;
-            padding: 16px;
+        .action-icon {
+            width: 28px;
+            height: 28px;
             border-radius: 6px;
-            overflow-x: auto;
-            margin: 14px 0;
-            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            font-size: 13px;
-            line-height: 1.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .response-content blockquote {
-            border-left: 3px solid var(--border);
-            padding: 10px 16px;
-            margin: 14px 0;
-            background-color: var(--bg-primary);
-            border-radius: 0 6px 6px 0;
-            color: var(--text-secondary);
-            font-style: italic;
+        .action-icon.finish {
+            background-color: var(--success-soft);
+            color: var(--success);
         }
 
-        /* 信息卡片 */
-        .info-card {
-            background-color: var(--bg-primary);
+        .action-icon.search {
+            background-color: var(--info-soft);
+            color: var(--info);
+        }
+
+        .action-icon.edit {
+            background-color: var(--purple-soft);
+            color: var(--purple);
+        }
+
+        .action-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .action-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .action-body {
+            padding: 16px;
+        }
+
+        .action-block {
+            margin-bottom: 14px;
+        }
+
+        .action-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .action-block-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .action-block-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+        }
+
+        /* 验证步骤 */
+        .verification-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .verification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 12px;
+            background-color: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-
-        .info-card-title {
-            font-weight: 600;
-            color: var(--text-primary);
             margin-bottom: 8px;
             font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
         }
 
-        .info-card-content {
-            color: var(--text-secondary);
+        .verification-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .verification-number {
+            width: 20px;
+            height: 20px;
+            background-color: var(--success-soft);
+            color: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* 观察结果 */
+        .observation-section {
+            background-color: var(--info-soft);
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-top: 12px;
+        }
+
+        .observation-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #2b6e99;
+            margin-bottom: 8px;
+        }
+
+        .observation-header svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .observation-content {
             font-size: 13px;
             line-height: 1.6;
+            color: #1e5a7a;
         }
 
-        /* 文件树 */
-        .file-tree {
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 14px 16px;
-            margin: 14px 0;
-            font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
-            font-size: 12px;
+        /* 时间戳 */
+        .message-timestamp {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 8px;
         }
 
-        .file-tree-item {
-            padding: 3px 0;
-            color: var(--text-secondary);
-        }
-
-        .file-tree-item.folder {
-            color: var(--info);
-            font-weight: 500;
-        }
-
-        .file-tree-item.file {
-            padding-left: 20px;
+        /* 分隔线 */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 28px 0;
         }
 
         /* 滚动条 */
         ::-webkit-scrollbar {
             width: 6px;
-            height: 6px;
         }
 
         ::-webkit-scrollbar-track {
@@ -561,50 +588,6 @@
         ::-webkit-scrollbar-thumb {
             background: #d4d4d4;
             border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #b8b8b8;
-        }
-
-        /* 分隔线 */
-        .divider {
-            height: 1px;
-            background: var(--border);
-            margin: 22px 0;
-        }
-
-        /* 代码块 */
-        .code-block {
-            margin: 14px 0;
-        }
-
-        .code-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: #3a3f42;
-            padding: 8px 14px;
-            border-radius: 6px 6px 0 0;
-            font-size: 11px;
-            color: #9a9a9a;
-        }
-
-        .code-copy {
-            background: none;
-            border: none;
-            color: #9a9a9a;
-            cursor: pointer;
-            font-size: 11px;
-        }
-
-        .code-copy:hover {
-            color: #e6e6e6;
-        }
-
-        .code-block pre {
-            margin: 0;
-            border-radius: 0 0 6px 6px;
         }
 
         /* 刷新提示 */
@@ -639,7 +622,6 @@
             color: var(--success);
         }
 
-        /* 加载占位 */
         .loading-placeholder {
             display: flex;
             flex-direction: column;
@@ -666,7 +648,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- 左侧边栏 -->
         <div class="sidebar">
             <div class="sidebar-header">
                 <div class="search-box">
@@ -679,11 +660,9 @@
                     </div>
                 </div>
             </div>
-
             <div class="project-list" id="projectList"></div>
         </div>
 
-        <!-- 右侧主区域 -->
         <div class="main-content">
             <div class="card-tabs-container" id="cardTabsContainer">
                 <div class="card-tabs collapsed" id="cardTabs"></div>
@@ -694,7 +673,6 @@
                     </svg>
                 </button>
             </div>
-
             <div class="chat-area" id="chatArea">
                 <div class="loading-placeholder">
                     <div class="loading-spinner"></div>
@@ -725,219 +703,187 @@
 
         async function apiGetCardIdsByProject(projectId) {
             await delay(300);
-            
-            const mockCardIds = {
-                'wealthboxapi_project': [
-                    { id: 'card_001', name: 'Opus 4.5', status: 'working', time: '1m 53s' },
-                    { id: 'card_002', name: 'GPT-5.2', status: 'working', time: '1m 53s' },
-                    { id: 'card_003', name: 'Sonnet 4.5', status: 'working', time: '1m 53s' },
-                    { id: 'card_004', name: 'Gemini 3 Pro', status: 'working', time: '1m 53s' },
-                    { id: 'card_005', name: 'Composer 1', status: 'working', time: '1m 53s' }
-                ],
-                'moatless_project': [
-                    { id: 'card_101', name: 'Claude 3.5', status: 'completed', time: '2m 15s' },
-                    { id: 'card_102', name: 'GPT-4', status: 'completed', time: '1m 45s' },
-                    { id: 'card_103', name: 'Gemini Pro', status: 'completed', time: '3m 22s' },
-                    { id: 'card_104', name: 'Llama 3', status: 'completed', time: '2m 30s' },
-                    { id: 'card_105', name: 'Mistral', status: 'completed', time: '1m 55s' },
-                    { id: 'card_106', name: 'Claude 2', status: 'completed', time: '4m 10s' },
-                    { id: 'card_107', name: 'GPT-3.5', status: 'completed', time: '1m 20s' },
-                    { id: 'card_108', name: 'Qwen 2', status: 'completed', time: '2m 45s' },
-                    { id: 'card_109', name: 'DeepSeek', status: 'working', time: '0m 45s' }
-                ],
-                'default': [
-                    { id: 'card_201', name: 'Model 1', status: 'working', time: '0m 30s' },
-                    { id: 'card_202', name: 'Model 2', status: 'working', time: '0m 30s' },
-                    { id: 'card_203', name: 'Model 3', status: 'pending', time: '0s' }
-                ]
-            };
-
-            return mockCardIds[projectId] || mockCardIds['default'];
+            return [
+                { id: 'card_001', name: 'Opus 4.5', status: 'working', time: '1m 53s' },
+                { id: 'card_002', name: 'GPT-5.2', status: 'working', time: '1m 53s' },
+                { id: 'card_003', name: 'Sonnet 4.5', status: 'completed', time: '2m 10s' },
+                { id: 'card_004', name: 'Gemini 3 Pro', status: 'working', time: '1m 53s' },
+                { id: 'card_005', name: 'Composer 1', status: 'completed', time: '3m 05s' }
+            ];
         }
 
         async function apiGetCardDetail(cardId) {
             await delay(400);
             
-            const mockCardDetails = {
+            // Mock 新格式的数据
+            const mockData = {
                 'card_001': {
                     messages: [
-                        { role: 'user', content: '详细讲解这个项目' },
                         {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Environment ready' },
-                                { type: 'thought', icon: 'brain', text: 'Thought for 3s' },
-                                { type: 'explored', icon: 'folder', text: 'Explored 13 files' }
-                            ],
-                            thought: '我来详细探索这个项目，首先阅读关键文件来理解项目的整体架构和功能...',
-                            content: `<p>现在我已经全面分析了这个项目。让我为您详细讲解。</p>
-<h2>🚀 Moatless Tree Search 项目详解</h2>
-<h3>📁 项目概述</h3>
-<p>这是一个名为 <strong>Moatless Tree Search</strong> 的开源项目，是论文 <a href="#">"SWE-Search"</a> 的代码实现。</p>
-<div class="info-card">
-    <div class="info-card-title">💡 核心目标</div>
-    <div class="info-card-content">使用 <strong>蒙特卡洛树搜索（MCTS）</strong> 算法来增强 AI 软件工程代理的能力。</div>
-</div>
-<h3>📂 项目结构</h3>
-<div class="file-tree">
-    <div class="file-tree-item folder">📁 moatless/</div>
-    <div class="file-tree-item file">├── actions/ - 定义各种代码操作</div>
-    <div class="file-tree-item file">├── benchmark/ - 基准测试相关</div>
-    <div class="file-tree-item file">├── completion/ - 模型补全逻辑</div>
-    <div class="file-tree-item file">└── search_tree.py - 核心搜索树实现</div>
-</div>`
+                            type: "user_message",
+                            content: {
+                                message: JSON.stringify({
+                                    "问题名称": ["YX0020"],
+                                    "问题描述": "DTO属性不能为基本数据类型，必须使用包装数据类型",
+                                    "修复方案描述": "将DTO中所有基本数据类型的属性更改为相应的包装数据类型，以便在数据传输时能够正确处理null值，避免潜在的空指针异常。"
+                                }, null, 2)
+                            },
+                            node_id: 0,
+                            id: "0-user_message",
+                            timestamp: "2025-12-16T18:03:34.321688"
                         },
-                        { role: 'user', content: '能详细解释一下 MCTS 算法吗？' },
                         {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Analysis complete' },
-                                { type: 'thought', icon: 'brain', text: 'Thought for 8s' }
-                            ],
-                            thought: '让我深入分析 search_tree.py 和相关文件...',
-                            content: `<h2>🌲 MCTS 算法工作原理</h2>
-<p>蒙特卡洛树搜索在这个项目中用于<strong>代码修复和生成任务</strong>。</p>
-<h3>1️⃣ 选择阶段</h3>
-<p>使用 <code>UCB1</code> 公式选择最有潜力的子节点。</p>
-<div class="code-block">
-    <div class="code-header">
-        <span>Python</span>
-        <button class="code-copy">复制</button>
-    </div>
-    <pre>def select_node(self, node: Node) -> Node:
-    while node.children:
-        node = max(node.children, 
-                   key=lambda n: n.ucb_score())
-    return node</pre>
-</div>
-<h3>2️⃣ 扩展阶段</h3>
-<p>当到达叶节点时，生成可能的代码修改操作。</p>
-<blockquote>与传统 MCTS 不同，这里使用 LLM 来评估代码修改的质量。</blockquote>`
+                            type: "assistant_response",
+                            content: {
+                                thought: "经过再次检查，在model包下的所有DTO类中，我已经找到了并修改了所有基本数据类型属性。目前没有找到其他需要修改的类了。\n\n让我总结一下完成的工作：\n\n1. **ActvQlfResp.java**: 将三个int类型的字段(queryCount, errorQueryCount, actvCount)改为对应的包装类型(Integer)\n2. **WealthBoxActvDetail.java**: 将long类型的字段(forwardTotalCount)改为对应的包装类型(Long)\n3. **ResultCode.java**: 将int类型的字段(code)改为对应的包装类型(Integer)\n\n这些修改确保了DTO属性都使用包装数据类型，可以正确处理null值，避免潜在的空指针异常。",
+                                actions: [
+                                    {
+                                        name: "Finish",
+                                        properties: {
+                                            finish_reason: "已完成DTO属性类型修复。将所有基本数据类型的属性更改为相应的包装数据类型，确保在数据传输时能够正确处理null值。",
+                                            test_verification: "1. 修改了ActvQlfResp.java，将int改为Integer\n2. 修改了WealthBoxActvDetail.java，将long改为Long\n3. 修改了ResultCode.java，将int改为Integer\n4. 验证了修改后代码符合规范\n5. 保证了原有功能逻辑不变"
+                                        },
+                                        observation: {
+                                            message: "已完成DTO属性类型修复，共修改3个文件。"
+                                        }
+                                    }
+                                ]
+                            },
+                            node_id: 33,
+                            id: "33-assistant_response",
+                            timestamp: "2025-12-17T10:57:15.372817"
                         }
                     ]
                 },
                 'card_002': {
                     messages: [
-                        { role: 'user', content: '详细讲解这个项目' },
                         {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Ready' },
-                                { type: 'thought', icon: 'brain', text: 'Thought for 5s' }
-                            ],
-                            thought: 'GPT-5.2 正在分析项目结构...',
-                            content: `<h2>📊 GPT-5.2 分析结果</h2>
-<p>这是一个用于<strong>软件工程任务自动化</strong>的 AI 代理系统。</p>
-<h3>核心组件</h3>
-<ul>
-    <li><strong>搜索引擎</strong> - 基于 MCTS 的代码搜索</li>
-    <li><strong>动作系统</strong> - 支持多种代码修改操作</li>
-    <li><strong>评估模块</strong> - 使用 LLM 评估代码质量</li>
-</ul>
-<div class="info-card">
-    <div class="info-card-title">🎯 特别发现</div>
-    <div class="info-card-content">该项目使用了创新的 <strong>迭代细化</strong> 机制。</div>
-</div>`
+                            type: "user_message",
+                            content: {
+                                message: JSON.stringify({
+                                    "问题名称": ["YX0009"],
+                                    "问题描述": "分层架构违规：infrastructure层不应该依赖application层的service实现类",
+                                    "修复方案描述": "将infrastructure层引用的service实现类方法移至工具类中，消除分层依赖违规。"
+                                }, null, 2)
+                            },
+                            node_id: 0,
+                            id: "0-user_message",
+                            timestamp: "2025-12-16T10:08:19.057999"
+                        },
+                        {
+                            type: "assistant_response",
+                            content: {
+                                thought: "我需要分析代码结构，找出infrastructure层对application层的依赖，然后将相关方法移动到合适的工具类中。\n\n首先，我需要查找ZhMessageListener.java文件中对WealthBoxCommonImpl的引用...",
+                                actions: [
+                                    {
+                                        name: "SearchCode",
+                                        properties: {
+                                            query: "import WealthBoxCommonImpl",
+                                            file_pattern: "*.java"
+                                        },
+                                        observation: {
+                                            message: "找到1个文件引用了WealthBoxCommonImpl"
+                                        }
+                                    }
+                                ]
+                            },
+                            node_id: 5,
+                            id: "5-assistant_response",
+                            timestamp: "2025-12-16T10:10:22.123456"
+                        },
+                        {
+                            type: "assistant_response",
+                            content: {
+                                thought: "找到了问题所在。ZhMessageListener.java位于event包（infrastructure层），但它使用了import static来引用WealthBoxCommonImpl.isWealthOfficeType3方法。\n\n解决方案：创建一个新的工具类WealthBoxUtils，将isWealthOfficeType3方法移动到这个工具类中。",
+                                actions: [
+                                    {
+                                        name: "CreateFile",
+                                        properties: {
+                                            path: "src/main/java/com/cmbchina/ue/util/WealthBoxUtils.java",
+                                            content: "工具类代码..."
+                                        },
+                                        observation: {
+                                            message: "成功创建WealthBoxUtils.java"
+                                        }
+                                    },
+                                    {
+                                        name: "EditFile",
+                                        properties: {
+                                            path: "src/main/java/com/cmbchina/ue/event/ZhMessageListener.java",
+                                            changes: "更新import语句和方法调用"
+                                        },
+                                        observation: {
+                                            message: "成功修改ZhMessageListener.java"
+                                        }
+                                    }
+                                ]
+                            },
+                            node_id: 12,
+                            id: "12-assistant_response",
+                            timestamp: "2025-12-16T10:15:45.789012"
+                        },
+                        {
+                            type: "assistant_response",
+                            content: {
+                                thought: "所有修改已完成，现在验证修改是否正确...",
+                                actions: [
+                                    {
+                                        name: "Finish",
+                                        properties: {
+                                            finish_reason: "已完成分层架构违规修复。将原本在infrastructure层（event包）中直接引用application层service实现类的静态方法isWealthOfficeType3移至新的工具类com.cmbchina.ue.util.WealthBoxUtils中，避免了infrastructure层对application层service的依赖。",
+                                            test_verification: "1. 新增了工具类src/main/java/com/cmbchina/ue/util/WealthBoxUtils.java\n2. 修改了ZhMessageListener.java的import语句\n3. 将所有isWealthOfficeType3调用点修改为WealthBoxUtils.isWealthOfficeType3\n4. 验证了修改后代码符合分层架构规范\n5. 保证了原有功能逻辑不变"
+                                        },
+                                        observation: {
+                                            message: "已完成分层架构违规修复。"
+                                        }
+                                    }
+                                ]
+                            },
+                            node_id: 20,
+                            id: "20-assistant_response",
+                            timestamp: "2025-12-16T10:20:30.456789"
                         }
                     ]
                 },
                 'card_003': {
                     messages: [
-                        { role: 'user', content: '详细讲解这个项目' },
                         {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'thought', icon: 'brain', text: 'Analyzing...' }
-                            ],
-                            thought: 'Sonnet 4.5 正在深入分析代码库...',
-                            content: `<h2>🔬 Sonnet 4.5 深度分析</h2>
-<p>从代码架构来看，这个项目展现了优秀的<strong>模块化设计</strong>。</p>
-<div class="code-block">
-    <div class="code-header">
-        <span>Python</span>
-        <button class="code-copy">复制</button>
-    </div>
-    <pre>class SearchTree:
-    def __init__(self, root_node):
-        self.root = root_node
-        self.exploration_weight = 1.41</pre>
-</div>`
-                        }
-                    ]
-                },
-                'card_004': {
-                    messages: [
-                        { role: 'user', content: '详细讲解这个项目' },
+                            type: "user_message",
+                            content: {
+                                message: JSON.stringify({
+                                    "问题名称": ["YX0015"],
+                                    "问题描述": "日志输出不规范，使用了System.out.println",
+                                    "修复方案描述": "将所有System.out.println替换为标准的日志框架调用。"
+                                }, null, 2)
+                            },
+                            node_id: 0,
+                            timestamp: "2025-12-16T09:00:00.000000"
+                        },
                         {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'thought', icon: 'brain', text: 'Processing...' }
-                            ],
-                            thought: 'Gemini 3 Pro 正在分析项目...',
-                            content: `<h2>🌐 Gemini 3 Pro 分析</h2>
-<p>利用长上下文能力，我已完整阅读了项目的所有代码文件。</p>
-<h3>发现的模式</h3>
-<ul>
-    <li><strong>策略模式</strong> - 处理不同类型的代码操作</li>
-    <li><strong>观察者模式</strong> - 追踪搜索进度</li>
-    <li><strong>工厂模式</strong> - 创建不同的 LLM 补全器</li>
-</ul>`
-                        }
-                    ]
-                },
-                'card_005': {
-                    messages: [
-                        { role: 'user', content: '详细讲解这个项目' },
-                        {
-                            role: 'assistant',
-                            statusPills: [
-                                { type: 'ready', icon: 'check', text: 'Complete' }
-                            ],
-                            content: `<h2>🎼 Composer 1 综合分析</h2>
-<p>从<strong>整体架构</strong>角度分析这个项目。</p>
-<table style="width:100%; border-collapse: collapse; margin: 14px 0; font-size: 13px;">
-    <tr style="background: #f8f8f6;">
-        <th style="padding: 10px; text-align: left; border-bottom: 1px solid #e6e5e3;">组件</th>
-        <th style="padding: 10px; text-align: left; border-bottom: 1px solid #e6e5e3;">职责</th>
-    </tr>
-    <tr>
-        <td style="padding: 10px; border-bottom: 1px solid #e6e5e3;"><strong>SearchTree</strong></td>
-        <td style="padding: 10px; border-bottom: 1px solid #e6e5e3;">核心搜索算法</td>
-    </tr>
-    <tr>
-        <td style="padding: 10px; border-bottom: 1px solid #e6e5e3;"><strong>Actions</strong></td>
-        <td style="padding: 10px; border-bottom: 1px solid #e6e5e3;">代码修改操作</td>
-    </tr>
-    <tr>
-        <td style="padding: 10px;"><strong>Completion</strong></td>
-        <td style="padding: 10px;">LLM 调用封装</td>
-    </tr>
-</table>`
+                            type: "assistant_response",
+                            content: {
+                                thought: "我需要搜索项目中所有使用System.out.println的地方，然后将它们替换为使用Slf4j的日志记录。",
+                                actions: [
+                                    {
+                                        name: "Finish",
+                                        properties: {
+                                            finish_reason: "已完成日志规范化修复。将所有System.out.println替换为log.info()或log.debug()调用。",
+                                            test_verification: "1. 搜索并定位了所有System.out.println调用\n2. 为每个类添加了@Slf4j注解\n3. 将println替换为适当级别的日志调用\n4. 验证了日志输出正常"
+                                        },
+                                        observation: {
+                                            message: "已完成日志规范化，共修改5个文件。"
+                                        }
+                                    }
+                                ]
+                            },
+                            node_id: 10,
+                            timestamp: "2025-12-16T09:05:00.000000"
                         }
                     ]
                 }
             };
 
-            if (!mockCardDetails[cardId]) {
-                return {
-                    messages: [
-                        { role: 'user', content: '分析这个项目' },
-                        {
-                            role: 'assistant',
-                            statusPills: [{ type: 'thought', icon: 'brain', text: 'Analyzing...' }],
-                            thought: `正在使用 ${cardId} 分析项目...`,
-                            content: `<h2>📝 ${cardId} 分析结果</h2>
-<p>这是来自 <strong>${cardId}</strong> 的分析结果。</p>
-<div class="info-card">
-    <div class="info-card-title">⏳ 处理中</div>
-    <div class="info-card-content">模型正在分析代码库并生成报告。</div>
-</div>`
-                        }
-                    ]
-                };
-            }
-
-            return mockCardDetails[cardId];
+            return mockData[cardId] || mockData['card_001'];
         }
 
         // ==================== 状态 ====================
@@ -946,17 +892,57 @@
         let currentCardData = null;
         let cardsExpanded = false;
 
+        // ==================== 工具函数 ====================
+        function formatTimestamp(ts) {
+            if (!ts) return '';
+            const date = new Date(ts);
+            return date.toLocaleString('zh-CN', { 
+                month: '2-digit', 
+                day: '2-digit',
+                hour: '2-digit', 
+                minute: '2-digit'
+            });
+        }
+
+        function parseUserMessage(content) {
+            try {
+                const msg = content.message;
+                if (typeof msg === 'string' && msg.trim().startsWith('{')) {
+                    return JSON.parse(msg);
+                }
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function parseVerificationSteps(text) {
+            if (!text) return [];
+            return text.split('\n')
+                .map(line => line.trim())
+                .filter(line => line)
+                .map(line => line.replace(/^\d+\.\s*/, ''));
+        }
+
+        function getActionIcon(name) {
+            const icons = {
+                Finish: { class: 'finish', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>' },
+                SearchCode: { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>' },
+                CreateFile: { class: 'edit', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>' },
+                EditFile: { class: 'edit', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' }
+            };
+            return icons[name] || { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>' };
+        }
+
         // ==================== 刷新效果 ====================
         function showRefreshEffect() {
             document.getElementById('cardTabsContainer').classList.add('refreshing');
             document.getElementById('chatArea').classList.add('refreshing');
-            document.querySelectorAll('.card-tab.active').forEach(el => el.classList.add('loading'));
         }
 
         function hideRefreshEffect() {
             document.getElementById('cardTabsContainer').classList.remove('refreshing');
             document.getElementById('chatArea').classList.remove('refreshing');
-            document.querySelectorAll('.card-tab.loading').forEach(el => el.classList.remove('loading'));
         }
 
         function showRefreshToast() {
@@ -971,9 +957,7 @@
                 <div class="project-item active">
                     <div class="project-item-header">
                         <div class="project-icon">
-                            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18">
-                                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                            </svg>
+                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
                         </div>
                         <div class="project-content">
                             <div class="project-title-row">
@@ -991,8 +975,6 @@
             const cardTabs = document.getElementById('cardTabs');
             const toggleBtn = document.getElementById('toggleCardsBtn');
             cardTabs.innerHTML = '';
-
-            if (cardList.length === 0) return;
 
             if (cardsExpanded) {
                 cardTabs.classList.remove('collapsed');
@@ -1012,12 +994,8 @@
                 tab.onclick = () => selectCard(card.id);
 
                 const statusIcon = card.status === 'working' 
-                    ? `<svg class="card-tab-status loading" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
-                       </svg>`
-                    : `<svg class="card-tab-status completed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                       </svg>`;
+                    ? `<svg class="card-tab-status loading" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`
+                    : `<svg class="card-tab-status completed" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
 
                 tab.innerHTML = `
                     <div class="card-tab-header">
@@ -1026,7 +1004,6 @@
                     </div>
                     <div class="card-tab-meta">Working for ${card.time}</div>
                 `;
-
                 cardTabs.appendChild(tab);
             });
         }
@@ -1034,15 +1011,6 @@
         function toggleCards() {
             cardsExpanded = !cardsExpanded;
             renderCardTabs();
-        }
-
-        function getStatusIcon(type) {
-            const icons = {
-                check: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`,
-                brain: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>`,
-                folder: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>`
-            };
-            return icons[type] || '';
         }
 
         function renderChat() {
@@ -1053,32 +1021,119 @@
                 return;
             }
 
-            chatArea.innerHTML = currentCardData.messages.map((msg, i) => {
-                if (msg.role === 'user') {
-                    return `<div class="chat-message"><div class="user-message">${msg.content}</div></div>`;
+            let html = '';
+            
+            currentCardData.messages.forEach((msg, idx) => {
+                if (msg.type === 'user_message') {
+                    const parsed = parseUserMessage(msg.content);
+                    
+                    html += `<div class="chat-message">
+                        <div class="user-message">`;
+                    
+                    if (parsed) {
+                        html += `<div class="issue-card">`;
+                        if (parsed['问题名称']) {
+                            html += `<div class="issue-card-row">
+                                <span class="issue-card-label">问题名称</span>
+                                <span class="issue-card-value"><span class="issue-tag">${parsed['问题名称'].join(', ')}</span></span>
+                            </div>`;
+                        }
+                        if (parsed['问题描述']) {
+                            html += `<div class="issue-card-row">
+                                <span class="issue-card-label">问题描述</span>
+                                <span class="issue-card-value">${parsed['问题描述']}</span>
+                            </div>`;
+                        }
+                        if (parsed['修复方案描述']) {
+                            html += `<div class="issue-card-row">
+                                <span class="issue-card-label">修复方案</span>
+                                <span class="issue-card-value">${parsed['修复方案描述']}</span>
+                            </div>`;
+                        }
+                        html += `</div>`;
+                    } else {
+                        html += `<div class="user-message-content">${msg.content.message || msg.content}</div>`;
+                    }
+                    
+                    html += `</div>
+                        <div class="message-timestamp">${formatTimestamp(msg.timestamp)}</div>
+                    </div>`;
+                } 
+                else if (msg.type === 'assistant_response') {
+                    html += `<div class="chat-message"><div class="assistant-message">`;
+                    
+                    // 思考内容
+                    if (msg.content.thought) {
+                        html += `<div class="thought-section">
+                            <div class="thought-header">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                Thinking
+                            </div>
+                            <div class="thought-content">${msg.content.thought}</div>
+                        </div>`;
+                    }
+                    
+                    // 动作列表
+                    if (msg.content.actions) {
+                        msg.content.actions.forEach(action => {
+                            const iconInfo = getActionIcon(action.name);
+                            
+                            html += `<div class="action-section">
+                                <div class="action-header">
+                                    <div class="action-icon ${iconInfo.class}">${iconInfo.svg}</div>
+                                    <span class="action-name">${action.name}</span>
+                                </div>
+                                <div class="action-body">`;
+                            
+                            // 完成原因
+                            if (action.properties?.finish_reason) {
+                                html += `<div class="action-block">
+                                    <div class="action-block-title">完成说明</div>
+                                    <div class="action-block-content">${action.properties.finish_reason}</div>
+                                </div>`;
+                            }
+                            
+                            // 验证步骤
+                            if (action.properties?.test_verification) {
+                                const steps = parseVerificationSteps(action.properties.test_verification);
+                                html += `<div class="action-block">
+                                    <div class="action-block-title">验证步骤</div>
+                                    <ul class="verification-list">`;
+                                steps.forEach((step, i) => {
+                                    html += `<li class="verification-item">
+                                        <span class="verification-number">${i + 1}</span>
+                                        <span>${step}</span>
+                                    </li>`;
+                                });
+                                html += `</ul></div>`;
+                            }
+                            
+                            // 观察结果
+                            if (action.observation?.message) {
+                                html += `<div class="observation-section">
+                                    <div class="observation-header">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                        观察结果
+                                    </div>
+                                    <div class="observation-content">${action.observation.message}</div>
+                                </div>`;
+                            }
+                            
+                            html += `</div></div>`;
+                        });
+                    }
+                    
+                    html += `<div class="message-timestamp">${formatTimestamp(msg.timestamp)}</div>`;
+                    html += `</div></div>`;
                 }
+                
+                // 添加分隔线
+                if (idx < currentCardData.messages.length - 1) {
+                    html += `<div class="divider"></div>`;
+                }
+            });
 
-                const pills = msg.statusPills?.map(p => 
-                    `<span class="status-pill ${p.type}">${getStatusIcon(p.icon)}${p.text}</span>`
-                ).join('') || '';
-
-                const thought = msg.thought ? 
-                    `<div class="thought-box"><div class="thought-box-content">${msg.thought}</div></div>` : '';
-
-                const divider = i < currentCardData.messages.length - 1 ? '<div class="divider"></div>' : '';
-
-                return `
-                    <div class="chat-message">
-                        <div class="assistant-message">
-                            ${pills ? `<div class="status-pills">${pills}</div>` : ''}
-                            ${thought}
-                            <div class="response-content">${msg.content}</div>
-                        </div>
-                    </div>
-                    ${divider}
-                `;
-            }).join('');
-
+            chatArea.innerHTML = html;
             chatArea.scrollTop = 0;
         }
 
@@ -1104,7 +1159,6 @@
             cardList = await apiGetCardIdsByProject(currentProjectId);
             renderCardTabs();
             renderProjectList();
-
             if (cardList.length > 0) {
                 await selectCard(cardList[0].id);
             }
