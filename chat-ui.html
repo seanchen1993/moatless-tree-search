@@ -211,9 +211,9 @@
         }
 
         .card-tab {
-            min-width: 150px;
-            max-width: 170px;
-            padding: 10px 12px;
+            min-width: 170px;
+            max-width: 200px;
+            padding: 12px 14px;
             background-color: var(--bg-primary);
             border-radius: 8px;
             cursor: pointer;
@@ -235,11 +235,11 @@
         }
 
         .card-tab-header {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .card-tab-id {
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-primary);
             font-family: 'SF Mono', Monaco, monospace;
@@ -251,10 +251,10 @@
         .card-tab-status {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 3px;
+            gap: 5px;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
             font-weight: 500;
         }
 
@@ -264,8 +264,8 @@
         }
 
         .card-tab-status.running svg {
-            width: 10px;
-            height: 10px;
+            width: 11px;
+            height: 11px;
             animation: spin 1s linear infinite;
         }
 
@@ -275,8 +275,8 @@
         }
 
         .card-tab-status.finished svg {
-            width: 10px;
-            height: 10px;
+            width: 11px;
+            height: 11px;
         }
 
         @keyframes pulse {
@@ -462,31 +462,42 @@
             margin: 3px 0;
         }
 
-        /* 思考区块 - 简洁样式 */
+        /* 思考区块 */
         .thought-section {
-            padding: 10px 0;
-            margin-bottom: 8px;
-            border-bottom: 1px solid var(--border);
+            background-color: var(--warning-soft);
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
         }
 
         .thought-header {
-            display: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #8a6d00;
+            font-size: 11px;
+        }
+
+        .thought-header svg {
+            width: 12px;
+            height: 12px;
         }
 
         .thought-content {
             font-size: 13px;
             line-height: 1.6;
-            color: var(--text-secondary);
-            font-style: italic;
+            color: #6b5900;
         }
 
-        /* 动作区块 - 简洁列表样式 */
+        /* 动作区块 - 带颜色区分 */
         .action-section {
             background-color: transparent;
             border: none;
             border-left: 2px solid var(--border);
             border-radius: 0;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             margin-left: 8px;
             padding-left: 12px;
         }
@@ -495,18 +506,21 @@
             margin-bottom: 0;
         }
 
+        /* 不同类型action的左边框颜色 */
+        .action-section.type-list { border-left-color: var(--info); }
+        .action-section.type-read { border-left-color: var(--purple); }
+        .action-section.type-search { border-left-color: var(--warning); }
+        .action-section.type-think { border-left-color: #999; }
+        .action-section.type-default { border-left-color: var(--border); }
+
         .action-header {
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 6px 0;
+            padding: 8px 0;
             background-color: transparent;
             border-bottom: none;
             cursor: pointer;
-        }
-
-        .action-header:hover {
-            background-color: transparent;
         }
 
         .action-header:hover .action-name {
@@ -518,9 +532,9 @@
         }
 
         .action-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -531,7 +545,7 @@
         .action-icon.list { background-color: var(--info-soft); color: var(--info); }
         .action-icon.read { background-color: var(--purple-soft); color: var(--purple); }
         .action-icon.search { background-color: var(--warning-soft); color: var(--warning); }
-        .action-icon.think { background-color: #f5f5f5; color: #888; }
+        .action-icon.think { background-color: #f0f0f0; color: #777; }
         .action-icon.default { background-color: var(--bg-tertiary); color: var(--text-muted); }
 
         .action-icon svg {
@@ -550,8 +564,14 @@
         .action-name {
             font-weight: 500;
             font-size: 13px;
-            color: var(--text-secondary);
+            color: var(--text-primary);
         }
+
+        /* action名称颜色 */
+        .action-section.type-list .action-name { color: var(--info); }
+        .action-section.type-read .action-name { color: var(--purple); }
+        .action-section.type-search .action-name { color: #b8860b; }
+        .action-section.type-think .action-name { color: #777; }
 
         .action-summary {
             font-size: 12px;
@@ -657,27 +677,30 @@
             flex-shrink: 0;
         }
 
-        /* 观察结果 - 简洁样式 */
+        /* 观察结果 */
         .observation-section {
-            background-color: var(--bg-tertiary);
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
             border-radius: 6px;
-            padding: 8px 10px;
-            margin-top: 6px;
+            padding: 10px 12px;
+            margin-top: 8px;
         }
 
         .observation-header {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             font-size: 10px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--text-muted);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .observation-header svg {
-            width: 10px;
-            height: 10px;
+            width: 11px;
+            height: 11px;
         }
 
         .observation-content {
@@ -686,6 +709,7 @@
             color: var(--text-secondary);
             max-height: 120px;
             overflow-y: auto;
+            font-family: 'SF Mono', Monaco, monospace;
         }
 
         /* 时间戳 */
@@ -1474,8 +1498,10 @@
                         else if (action.properties.pattern) summary = action.properties.pattern;
                     }
                     
+                    const typeClass = isFinish ? '' : `type-${iconInfo.class}`;
+                    
                     html += `
-                        <div class="action-section ${isFinish ? 'finish-action' : ''}">
+                        <div class="action-section ${isFinish ? 'finish-action' : typeClass}">
                             <div class="action-header ${isFinish ? 'no-toggle' : ''}" onclick="toggleAction('${actionId}', ${isFinish})">
                                 <div class="action-icon ${iconInfo.class}">${iconInfo.svg}</div>
                                 <div class="action-title">
