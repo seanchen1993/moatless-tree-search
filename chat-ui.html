@@ -886,242 +886,39 @@
 
         const currentProjectId = getProjectIdFromUrl();
 
-        // ==================== Mock API ====================
-        const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        // ==================== API ====================
+        const API_BASE = 'http://codeagentx.paasuat.cmbchina.cn/api';
 
         // 根据project_id获取子卡片ID列表
         async function apiGetCardIdsByProject(projectId) {
-            await delay(300);
-            // 返回子卡片ID列表
-            return [
-                { id: 'YX0007_20251217025806' },
-                { id: 'YX0009_20251217030512' },
-                { id: 'YX0020_20251217031045' },
-                { id: 'YX0015_20251217032210' },
-                { id: 'YX0022_20251217033015' }
-            ];
+            try {
+                const response = await fetch(`${API_BASE}/trajectories/${projectId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                // 返回格式：数组转为对象数组
+                return data.map(id => ({ id }));
+            } catch (error) {
+                console.error('Failed to fetch card list:', error);
+                return [];
+            }
         }
 
-        // 根据card_id获取卡片详情 - 使用真实案例数据结构
+        // 根据card_id获取卡片详情
         async function apiGetCardDetail(cardId) {
-            await delay(400);
-            
-            // Mock真实数据
-            const mockData = {
-                'YX0007_20251217025806': {
-                    messages: [
-                        {
-                            type: "user_message",
-                            content: {
-                                message: "# 任务：代码分层架构违规自动检测与修复\n**身份：** 你是一名专业的代码架构师和自动化运维Agent。\n\n**输入：** 违反的分层架构规则\n\n## 分层架构规则\n```json\n{\n  \"问题名称\": [\"YX0007\"],\n  \"问题描述\": \"application层不能依赖adapter层\",\n  \"修复方案描述\": \"确保Application层只依赖于Domain层\"\n}\n```"
-                            },
-                            timestamp: "2025-12-17T11:05:25.777557"
-                        },
-                        {
-                            type: "assistant_response",
-                            content: {
-                                thought: "我需要按照任务要求来解决这个分层架构违规问题。首先我需要理解当前的项目结构和相关代码，找到违反\"application层不能依赖adapter层\"规则的部分。让我先查看项目的整体目录结构。",
-                                actions: [
-                                    {
-                                        name: "ListFiles",
-                                        properties: {
-                                            directory: "",
-                                            recursive: true
-                                        },
-                                        observation: {
-                                            message: "Contents of directory '(root)' (recursive)\n\n📁 src/main/java/com/cmbchina/ue/controller\n📁 src/main/java/com/cmbchina/ue/service\n📁 src/main/java/com/cmbchina/ue/dao\n📄 pom.xml\n\nNote: Results limited to 100 items. Total found: 529."
-                                        }
-                                    }
-                                ]
-                            },
-                            timestamp: "2025-12-17T11:05:30.123456"
-                        },
-                        {
-                            type: "assistant_response",
-                            content: {
-                                thought: "现在我需要更深入地了解项目结构，特别是关注application层和adapter层相关的代码。让我先看看controller包和service包中的内容。",
-                                actions: [
-                                    {
-                                        name: "ListFiles",
-                                        properties: {
-                                            directory: "src/main/java/com/cmbchina/ue/controller"
-                                        },
-                                        observation: {
-                                            message: "📄 DataBoardController.java\n📄 SubjectController.java\n📄 WealthBoxCommonController.java"
-                                        }
-                                    }
-                                ]
-                            },
-                            timestamp: "2025-12-17T11:05:35.234567"
-                        },
-                        {
-                            type: "assistant_response",
-                            content: {
-                                thought: "让我查看SubjectController的代码，检查是否存在分层架构违规。",
-                                actions: [
-                                    {
-                                        name: "ReadFile",
-                                        shortSummary: "SubjectController.java",
-                                        properties: {
-                                            file_path: "src/main/java/com/cmbchina/ue/controller/SubjectController.java"
-                                        },
-                                        observation: {
-                                            message: "## File: SubjectController.java\n**Total Lines:** 65\n\n```java\npackage com.cmbchina.ue.controller;\n\nimport com.cmbchina.ue.service.SubjectService;\n\n@RestController\npublic class SubjectController {\n    @Autowired\n    SubjectService subjectService;\n}\n```"
-                                        }
-                                    }
-                                ]
-                            },
-                            timestamp: "2025-12-17T11:05:45.345678"
-                        },
-                        {
-                            type: "assistant_response",
-                            content: {
-                                thought: "让我搜索一下整个项目，看是否能找到任何controller直接被service引用的情况。",
-                                actions: [
-                                    {
-                                        name: "RipgrepTool",
-                                        properties: {
-                                            pattern: "import.*controller|import.*Controller",
-                                            include: "**/service/**/*.java"
-                                        },
-                                        observation: {
-                                            message: "No matches found for regex pattern 'import.*controller|import.*Controller'"
-                                        }
-                                    }
-                                ]
-                            },
-                            timestamp: "2025-12-17T11:06:00.456789"
-                        },
-                        {
-                            type: "assistant_response",
-                            content: {
-                                thought: "我已经仔细检查了整个代码库。根据分层架构规则\"application层不能依赖adapter层\"，我对代码进行了全面分析，没有发现违规情况。",
-                                actions: [
-                                    {
-                                        name: "Finish",
-                                        properties: {
-                                            finish_reason: "经过详细分析，该项目中不存在'application层不能依赖adapter层'的违规情况。service层（application层）只依赖domain层和infrastructure层的服务，没有直接依赖controller层（adapter层）。",
-                                            test_verification: "1. controller层包含在src/main/java/com/cmbchina/ue/controller目录中\n2. service层包含在src/main/java/com/cmbchina/ue/service目录中\n3. 服务实现类没有导入任何controller类\n4. 所有依赖关系都符合分层架构规范"
-                                        },
-                                        observation: {
-                                            message: "经过详细分析，该项目中不存在违规情况。所有代码都符合分层架构规范。"
-                                        }
-                                    }
-                                ]
-                            },
-                            timestamp: "2025-12-17T11:08:25.781968"
-                        }
-                    ]
-                },
-                'YX0009_20251217030512': {
-                    messages: [
-                        {
-                            type: "user_message",
-                            content: {
-                                message: "# 分层架构违规检测\n\n```json\n{\n  \"问题名称\": [\"YX0009\"],\n  \"问题描述\": \"infrastructure层不应该依赖application层的service实现类\"\n}\n```"
-                            },
-                            timestamp: "2025-12-17T11:10:00.000000"
-                        },
-                        {
-                            type: "assistant_response",
-                            content: {
-                                thought: "我需要检查infrastructure层是否有依赖application层service实现类的情况...",
-                                actions: [
-                                    {
-                                        name: "RipgrepTool",
-                                        properties: {
-                                            pattern: "import.*service\\.impl",
-                                            include: "**/event/**/*.java"
-                                        },
-                                        observation: {
-                                            message: "src/main/java/com/cmbchina/ue/event/ZhMessageListener.java:import static com.cmbchina.ue.service.impl.WealthBoxCommonImpl.isWealthOfficeType3;"
-                                        }
-                                    }
-                                ]
-                            },
-                            timestamp: "2025-12-17T11:10:30.000000"
-                        },
-                        {
-                            type: "assistant_response",
-                            content: {
-                                thought: "找到了违规代码！ZhMessageListener.java中引用了service实现类的静态方法。需要将该方法移到工具类中。",
-                                actions: [
-                                    {
-                                        name: "CreateFile",
-                                        properties: {
-                                            file_path: "src/main/java/com/cmbchina/ue/util/WealthBoxUtils.java"
-                                        },
-                                        observation: {
-                                            message: "成功创建WealthBoxUtils.java"
-                                        }
-                                    },
-                                    {
-                                        name: "EditFile",
-                                        properties: {
-                                            file_path: "src/main/java/com/cmbchina/ue/event/ZhMessageListener.java"
-                                        },
-                                        observation: {
-                                            message: "成功修改ZhMessageListener.java"
-                                        }
-                                    }
-                                ]
-                            },
-                            timestamp: "2025-12-17T11:12:00.000000"
-                        },
-                        {
-                            type: "assistant_response",
-                            content: {
-                                thought: "修复完成，验证修改结果。",
-                                actions: [
-                                    {
-                                        name: "Finish",
-                                        properties: {
-                                            finish_reason: "已完成分层架构违规修复。将isWealthOfficeType3方法移至WealthBoxUtils工具类。",
-                                            test_verification: "1. 新增WealthBoxUtils.java工具类\n2. 修改ZhMessageListener.java的import\n3. 验证分层架构规范"
-                                        },
-                                        observation: {
-                                            message: "修复完成"
-                                        }
-                                    }
-                                ]
-                            },
-                            timestamp: "2025-12-17T11:15:30.123456"
-                        }
-                    ]
-                },
-                'YX0020_20251217031045': {
-                    messages: [
-                        {
-                            type: "user_message",
-                            content: {
-                                message: "```json\n{\n  \"问题名称\": [\"YX0020\"],\n  \"问题描述\": \"DTO属性不能为基本数据类型\"\n}\n```"
-                            },
-                            timestamp: "2025-12-17T11:20:00.000000"
-                        },
-                        {
-                            type: "assistant_response",
-                            content: {
-                                thought: "正在搜索使用基本数据类型的DTO类...",
-                                actions: [
-                                    {
-                                        name: "RipgrepTool",
-                                        properties: {
-                                            pattern: "private int |private long |private boolean ",
-                                            include: "**/model/**/*.java"
-                                        },
-                                        observation: {
-                                            message: "Found 5 matches in 3 files"
-                                        }
-                                    }
-                                ]
-                            },
-                            timestamp: "2025-12-17T11:20:30.000000"
-                        }
-                    ]
+            try {
+                const response = await fetch(`${API_BASE}/trajectories/${currentProjectId}/${cardId}/chat-messages`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-            };
-
-            return mockData[cardId] || { messages: [] };
+                const data = await response.json();
+                // 返回格式：{ messages: [...] }
+                return { messages: data.messages || data };
+            } catch (error) {
+                console.error('Failed to fetch card detail:', error);
+                return { messages: [] };
+            }
         }
 
         // ==================== 状态 ====================
