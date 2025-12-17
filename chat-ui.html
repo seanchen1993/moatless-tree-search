@@ -229,7 +229,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .card-tab-id {
@@ -275,26 +275,9 @@
             height: 10px;
         }
 
-        .card-tab-status + .card-tab-footer {
-            margin-top: 8px;
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
-        }
-
-        .card-tab-footer {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .card-tab-footer svg {
-            width: 11px;
-            height: 11px;
         }
 
         .toggle-cards-btn {
@@ -526,6 +509,14 @@
 
         .action-header:hover {
             background-color: var(--bg-hover);
+        }
+
+        .action-header.no-toggle {
+            cursor: default;
+        }
+
+        .action-header.no-toggle:hover {
+            background-color: transparent;
         }
 
         .action-icon {
@@ -1316,32 +1307,20 @@
                 tab.className = `card-tab ${card.id === currentCardId ? 'active' : ''}`;
                 tab.onclick = () => selectCard(card.id);
 
-                let statusHtml, footerHtml;
+                let statusHtml;
 
                 if (card.finishInfo?.finished) {
                     statusHtml = `
                         <div class="card-tab-status finished">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            已完成
-                        </div>
-                    `;
-                    footerHtml = `
-                        <div class="card-tab-footer">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <span>完成于 ${formatShortTime(card.finishInfo.timestamp)}</span>
+                            完成于 ${formatShortTime(card.finishInfo.timestamp)}
                         </div>
                     `;
                 } else {
                     statusHtml = `
                         <div class="card-tab-status running">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                            运行中
-                        </div>
-                    `;
-                    footerHtml = `
-                        <div class="card-tab-footer">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                            <span>进行中...</span>
+                            运行中...
                         </div>
                     `;
                 }
@@ -1351,7 +1330,6 @@
                         <span class="card-tab-id" title="${card.id}">${card.id}</span>
                     </div>
                     ${statusHtml}
-                    ${footerHtml}
                 `;
                 cardTabs.appendChild(tab);
             }
@@ -1362,7 +1340,10 @@
             renderCardTabs();
         }
 
-        function toggleAction(actionId) {
+        function toggleAction(actionId, isFinish) {
+            // Finish不允许折叠
+            if (isFinish) return;
+            
             if (expandedActions.has(actionId)) {
                 expandedActions.delete(actionId);
             } else {
@@ -1479,7 +1460,8 @@
                     const actionId = `${msgIndex}-${actionIndex}`;
                     const iconInfo = getActionIconInfo(action.name);
                     const isFinish = action.name === 'Finish';
-                    const isExpanded = expandedActions.has(actionId) || isFinish;
+                    // Finish默认展开，其他默认折叠
+                    const isExpanded = isFinish || expandedActions.has(actionId);
                     
                     // 获取摘要信息
                     let summary = action.shortSummary || '';
@@ -1491,15 +1473,15 @@
                     
                     html += `
                         <div class="action-section ${isFinish ? 'finish-action' : ''}">
-                            <div class="action-header" onclick="toggleAction('${actionId}')">
+                            <div class="action-header ${isFinish ? 'no-toggle' : ''}" onclick="toggleAction('${actionId}', ${isFinish})">
                                 <div class="action-icon ${iconInfo.class}">${iconInfo.svg}</div>
                                 <div class="action-title">
                                     <span class="action-name">${escapeHtml(action.name)}</span>
                                     ${summary ? `<span class="action-summary">${escapeHtml(summary)}</span>` : ''}
                                 </div>
-                                <div class="action-toggle ${isExpanded ? '' : 'collapsed'}" id="action-toggle-${actionId}">
+                                ${isFinish ? '' : `<div class="action-toggle ${isExpanded ? '' : 'collapsed'}" id="action-toggle-${actionId}">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                                </div>
+                                </div>`}
                             </div>
                             <div class="action-body ${isExpanded ? 'expanded' : ''}" id="action-body-${actionId}">
                     `;
