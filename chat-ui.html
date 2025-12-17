@@ -202,8 +202,9 @@
         }
 
         .card-tab {
-            min-width: 160px;
-            padding: 12px 16px;
+            min-width: 180px;
+            max-width: 220px;
+            padding: 12px 14px;
             background-color: var(--bg-primary);
             border-radius: 8px;
             cursor: pointer;
@@ -228,7 +229,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .card-tab-id {
@@ -243,17 +244,39 @@
         }
 
         .card-tab-status {
-            width: 14px;
-            height: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
         }
 
         .card-tab-status.running {
-            color: var(--warning);
-            animation: pulse 1.5s ease-in-out infinite;
+            background-color: var(--warning-soft);
+            color: #8a6d00;
+            font-weight: 500;
+        }
+
+        .card-tab-status.running svg {
+            width: 10px;
+            height: 10px;
+            animation: spin 1s linear infinite;
         }
 
         .card-tab-status.finished {
+            background-color: var(--success-soft);
             color: var(--success);
+            font-weight: 500;
+        }
+
+        .card-tab-status.finished svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .card-tab-status + .card-tab-footer {
+            margin-top: 8px;
         }
 
         @keyframes pulse {
@@ -261,9 +284,17 @@
             50% { opacity: 0.3; }
         }
 
-        .card-tab-time {
+        .card-tab-footer {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             font-size: 11px;
             color: var(--text-muted);
+        }
+
+        .card-tab-footer svg {
+            width: 11px;
+            height: 11px;
         }
 
         .toggle-cards-btn {
@@ -320,34 +351,124 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 用户消息 */
+        /* 用户消息 - 任务卡片样式 */
         .user-message-wrapper {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .user-message {
-            background-color: var(--text-primary);
-            color: #ffffff;
-            padding: 14px 18px;
-            border-radius: 12px 12px 4px 12px;
-            display: inline-block;
-            max-width: 85%;
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .user-message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background-color: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .user-message-icon {
+            width: 24px;
+            height: 24px;
+            background-color: var(--info-soft);
+            color: var(--info);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-message-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .user-message-title {
             font-size: 13px;
-            line-height: 1.6;
+            font-weight: 600;
+            color: var(--text-primary);
         }
 
         .user-message-content {
-            white-space: pre-wrap;
-            word-break: break-word;
+            padding: 14px 16px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-primary);
         }
 
-        .user-message h1, .user-message h2, .user-message h3 {
-            margin: 12px 0 8px;
+        .user-message-content h1 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 10px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .user-message-content h2 {
             font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 16px 0 8px 0;
         }
 
-        .user-message strong {
-            color: #fff;
+        .user-message-content h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 12px 0 6px 0;
+        }
+
+        .user-message-content p {
+            margin: 8px 0;
+        }
+
+        .user-message-content strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .user-message-content code {
+            background-color: var(--bg-tertiary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        .user-message-content pre {
+            background-color: #2f3437;
+            color: #e6e6e6;
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .user-message-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-size: inherit;
+        }
+
+        .user-message-content ul, .user-message-content ol {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+
+        .user-message-content li {
+            margin: 4px 0;
         }
 
         /* 助手消息 */
@@ -594,8 +715,25 @@
         /* 分隔线 */
         .divider {
             height: 1px;
-            background: var(--border);
-            margin: 20px 0;
+            background: linear-gradient(to right, transparent, var(--border) 20%, var(--border) 80%, transparent);
+            margin: 28px 0;
+        }
+
+        /* 轮次标签 */
+        .turn-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .turn-label span {
+            background-color: var(--bg-tertiary);
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 12px;
         }
 
         /* 滚动条 */
@@ -1178,21 +1316,42 @@
                 tab.className = `card-tab ${card.id === currentCardId ? 'active' : ''}`;
                 tab.onclick = () => selectCard(card.id);
 
-                // 获取卡片的finish状态（这里简化处理，实际应该缓存）
-                let statusIcon = `<svg class="card-tab-status running" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>`;
-                let timeText = 'Running...';
+                let statusHtml, footerHtml;
 
                 if (card.finishInfo?.finished) {
-                    statusIcon = `<svg class="card-tab-status finished" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-                    timeText = formatShortTime(card.finishInfo.timestamp);
+                    statusHtml = `
+                        <div class="card-tab-status finished">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            已完成
+                        </div>
+                    `;
+                    footerHtml = `
+                        <div class="card-tab-footer">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>完成于 ${formatShortTime(card.finishInfo.timestamp)}</span>
+                        </div>
+                    `;
+                } else {
+                    statusHtml = `
+                        <div class="card-tab-status running">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                            运行中
+                        </div>
+                    `;
+                    footerHtml = `
+                        <div class="card-tab-footer">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>进行中...</span>
+                        </div>
+                    `;
                 }
 
                 tab.innerHTML = `
                     <div class="card-tab-header">
                         <span class="card-tab-id" title="${card.id}">${card.id}</span>
-                        ${statusIcon}
                     </div>
-                    <div class="card-tab-time">${timeText}</div>
+                    ${statusHtml}
+                    ${footerHtml}
                 `;
                 cardTabs.appendChild(tab);
             }
@@ -1221,14 +1380,76 @@
             }
         }
 
+        // 简单的Markdown渲染
+        function renderMarkdown(text) {
+            if (!text) return '';
+            
+            let html = escapeHtml(text);
+            
+            // 代码块 ```code```
+            html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                return `<pre><code>${code.trim()}</code></pre>`;
+            });
+            
+            // 行内代码 `code`
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // 标题
+            html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+            
+            // 粗体
+            html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            
+            // 有序列表
+            html = html.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+            
+            // 换行转段落（简化处理）
+            html = html.replace(/\n\n/g, '</p><p>');
+            html = html.replace(/\n/g, '<br>');
+            
+            return html;
+        }
+
+        // 提取任务标题
+        function extractTitle(content) {
+            if (!content) return '任务描述';
+            
+            // 尝试匹配 # 开头的标题
+            const h1Match = content.match(/^#\s+(.+?)(?:\n|$)/m);
+            if (h1Match) return h1Match[1].replace(/[*#]/g, '').trim();
+            
+            // 尝试匹配 任务：xxx 格式
+            const taskMatch = content.match(/任务[：:]\s*(.+?)(?:\n|$)/);
+            if (taskMatch) return taskMatch[1].trim();
+            
+            // 取前30个字符
+            const firstLine = content.split('\n')[0].replace(/[#*]/g, '').trim();
+            return firstLine.length > 40 ? firstLine.substring(0, 40) + '...' : firstLine || '任务描述';
+        }
+
         function renderUserMessage(msg) {
             const content = msg.content?.message || '';
+            const title = extractTitle(content);
             
             return `
                 <div class="chat-message">
                     <div class="user-message-wrapper">
                         <div class="user-message">
-                            <div class="user-message-content">${escapeHtml(content)}</div>
+                            <div class="user-message-header">
+                                <div class="user-message-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10 9 9 9 8 9"/>
+                                    </svg>
+                                </div>
+                                <span class="user-message-title">${escapeHtml(title)}</span>
+                            </div>
+                            <div class="user-message-content">${renderMarkdown(content)}</div>
                         </div>
                         <div class="message-timestamp">${formatTimestamp(msg.timestamp)}</div>
                     </div>
@@ -1356,16 +1577,19 @@
 
             expandedActions.clear();
             let html = '';
+            let hasShownExecutionLabel = false;
             
             currentCardData.messages.forEach((msg, idx) => {
                 if (msg.type === 'user_message') {
                     html += renderUserMessage(msg);
                 } else if (msg.type === 'assistant_response') {
+                    // 第一个助手响应前显示执行过程标签
+                    if (!hasShownExecutionLabel) {
+                        html += '<div class="divider"></div>';
+                        html += `<div class="turn-label"><span>Agent 执行过程</span></div>`;
+                        hasShownExecutionLabel = true;
+                    }
                     html += renderAssistantMessage(msg, idx);
-                }
-                
-                if (idx < currentCardData.messages.length - 1) {
-                    html += '<div class="divider"></div>';
                 }
             });
 
