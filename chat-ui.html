@@ -322,13 +322,17 @@
         }
 
         /* 用户消息 */
+        .user-message-wrapper {
+            margin-bottom: 8px;
+        }
+
         .user-message {
             background-color: var(--text-primary);
             color: #ffffff;
             padding: 16px 20px;
             border-radius: 12px 12px 4px 12px;
             display: inline-block;
-            max-width: 80%;
+            max-width: 85%;
             font-size: 14px;
             line-height: 1.6;
         }
@@ -338,57 +342,60 @@
             word-break: break-word;
         }
 
-        /* 问题卡片 */
-        .issue-card {
-            background-color: var(--bg-primary);
-            border: 1px solid var(--border);
+        /* 结构化内容卡片 */
+        .structured-card {
+            background-color: rgba(255,255,255,0.1);
             border-radius: 8px;
-            padding: 14px 16px;
-            margin-top: 10px;
+            padding: 12px 14px;
         }
 
-        .issue-card-row {
+        .structured-row {
             display: flex;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            gap: 12px;
         }
 
-        .issue-card-row:last-child {
+        .structured-row:last-child {
             margin-bottom: 0;
         }
 
-        .issue-card-label {
+        .structured-label {
             font-weight: 600;
-            color: var(--text-primary);
-            min-width: 80px;
+            color: rgba(255,255,255,0.7);
+            min-width: 70px;
             flex-shrink: 0;
+            font-size: 12px;
         }
 
-        .issue-card-value {
-            color: var(--text-secondary);
+        .structured-value {
+            color: #ffffff;
             flex: 1;
+            font-size: 13px;
         }
 
-        .issue-tag {
+        .structured-tag {
             display: inline-block;
-            background-color: var(--accent-soft);
-            color: var(--accent);
+            background-color: var(--accent);
+            color: #ffffff;
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 12px;
             font-weight: 500;
+            margin-right: 4px;
+            margin-bottom: 4px;
         }
 
         /* 助手消息 */
         .assistant-message {
-            margin-top: 20px;
+            margin-top: 16px;
         }
 
         /* 思考区块 */
         .thought-section {
             background-color: var(--warning-soft);
             border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 16px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
         }
 
         .thought-header {
@@ -418,7 +425,7 @@
             background-color: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             overflow: hidden;
         }
 
@@ -426,48 +433,39 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 12px 16px;
+            padding: 10px 14px;
             background-color: var(--bg-tertiary);
             border-bottom: 1px solid var(--border);
         }
 
         .action-icon {
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .action-icon.finish {
-            background-color: var(--success-soft);
-            color: var(--success);
-        }
-
-        .action-icon.search {
-            background-color: var(--info-soft);
-            color: var(--info);
-        }
-
-        .action-icon.edit {
-            background-color: var(--purple-soft);
-            color: var(--purple);
-        }
+        .action-icon.finish { background-color: var(--success-soft); color: var(--success); }
+        .action-icon.search { background-color: var(--info-soft); color: var(--info); }
+        .action-icon.edit { background-color: var(--purple-soft); color: var(--purple); }
+        .action-icon.view { background-color: var(--warning-soft); color: var(--warning); }
+        .action-icon.default { background-color: var(--bg-tertiary); color: var(--text-secondary); }
 
         .action-icon svg {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
         }
 
         .action-name {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-primary);
         }
 
         .action-body {
-            padding: 16px;
+            padding: 14px;
         }
 
         .action-block {
@@ -479,7 +477,7 @@
         }
 
         .action-block-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -488,78 +486,113 @@
         }
 
         .action-block-content {
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.7;
             color: var(--text-primary);
             white-space: pre-wrap;
+            word-break: break-word;
         }
 
-        /* 验证步骤 */
-        .verification-list {
+        /* 列表样式 */
+        .step-list {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .verification-item {
+        .step-item {
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            padding: 10px 12px;
+            padding: 8px 10px;
             background-color: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 6px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-size: 13px;
-            line-height: 1.6;
+            line-height: 1.5;
             color: var(--text-secondary);
         }
 
-        .verification-item:last-child {
+        .step-item:last-child {
             margin-bottom: 0;
         }
 
-        .verification-number {
-            width: 20px;
-            height: 20px;
+        .step-number {
+            width: 18px;
+            height: 18px;
             background-color: var(--success-soft);
             color: var(--success);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             flex-shrink: 0;
+            margin-top: 1px;
         }
 
         /* 观察结果 */
         .observation-section {
             background-color: var(--info-soft);
-            border-radius: 8px;
-            padding: 14px 16px;
-            margin-top: 12px;
+            border-radius: 6px;
+            padding: 12px 14px;
+            margin-top: 10px;
         }
 
         .observation-header {
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: #2b6e99;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .observation-header svg {
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
         }
 
         .observation-content {
             font-size: 13px;
-            line-height: 1.6;
+            line-height: 1.5;
             color: #1e5a7a;
+        }
+
+        /* 属性表格 */
+        .properties-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .properties-table tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .properties-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .properties-table td {
+            padding: 8px 0;
+            vertical-align: top;
+        }
+
+        .properties-table td:first-child {
+            font-weight: 500;
+            color: var(--text-muted);
+            width: 120px;
+            padding-right: 12px;
+        }
+
+        .properties-table td:last-child {
+            color: var(--text-primary);
         }
 
         /* 时间戳 */
@@ -573,7 +606,7 @@
         .divider {
             height: 1px;
             background: var(--border);
-            margin: 28px 0;
+            margin: 24px 0;
         }
 
         /* 滚动条 */
@@ -715,18 +748,14 @@
         async function apiGetCardDetail(cardId) {
             await delay(400);
             
-            // Mock 新格式的数据
+            // Mock 数据 - 使用用户提供的真实格式
             const mockData = {
                 'card_001': {
                     messages: [
                         {
                             type: "user_message",
                             content: {
-                                message: JSON.stringify({
-                                    "问题名称": ["YX0020"],
-                                    "问题描述": "DTO属性不能为基本数据类型，必须使用包装数据类型",
-                                    "修复方案描述": "将DTO中所有基本数据类型的属性更改为相应的包装数据类型，以便在数据传输时能够正确处理null值，避免潜在的空指针异常。"
-                                }, null, 2)
+                                message: "{\n    \"问题名称\": [\"YX0020\"],\n    \"问题描述\": \"DTO属性不能为基本数据类型，必须使用包装数据类型\",\n    \"修复方案描述\": \"将DTO中所有基本数据类型的属性更改为相应的包装数据类型，以便在数据传输时能够正确处理null值，避免潜在的空指针异常。\"\n}"
                             },
                             node_id: 0,
                             id: "0-user_message",
@@ -739,12 +768,16 @@
                                 actions: [
                                     {
                                         name: "Finish",
+                                        shortSummary: "完成DTO类型修复",
                                         properties: {
+                                            thoughts: null,
                                             finish_reason: "已完成DTO属性类型修复。将所有基本数据类型的属性更改为相应的包装数据类型，确保在数据传输时能够正确处理null值。",
                                             test_verification: "1. 修改了ActvQlfResp.java，将int改为Integer\n2. 修改了WealthBoxActvDetail.java，将long改为Long\n3. 修改了ResultCode.java，将int改为Integer\n4. 验证了修改后代码符合规范\n5. 保证了原有功能逻辑不变"
                                         },
                                         observation: {
-                                            message: "已完成DTO属性类型修复，共修改3个文件。"
+                                            message: "已完成DTO属性类型修复，共修改3个文件。",
+                                            summary: null,
+                                            properties: {}
                                         }
                                     }
                                 ]
@@ -760,14 +793,9 @@
                         {
                             type: "user_message",
                             content: {
-                                message: JSON.stringify({
-                                    "问题名称": ["YX0009"],
-                                    "问题描述": "分层架构违规：infrastructure层不应该依赖application层的service实现类",
-                                    "修复方案描述": "将infrastructure层引用的service实现类方法移至工具类中，消除分层依赖违规。"
-                                }, null, 2)
+                                message: "{\n    \"问题名称\": [\"YX0009\"],\n    \"问题描述\": \"分层架构违规：infrastructure层不应该依赖application层的service实现类\",\n    \"修复方案描述\": \"将infrastructure层引用的service实现类方法移至工具类中，消除分层依赖违规。\"\n}"
                             },
                             node_id: 0,
-                            id: "0-user_message",
                             timestamp: "2025-12-16T10:08:19.057999"
                         },
                         {
@@ -782,13 +810,12 @@
                                             file_pattern: "*.java"
                                         },
                                         observation: {
-                                            message: "找到1个文件引用了WealthBoxCommonImpl"
+                                            message: "找到1个文件引用了WealthBoxCommonImpl: ZhMessageListener.java"
                                         }
                                     }
                                 ]
                             },
                             node_id: 5,
-                            id: "5-assistant_response",
                             timestamp: "2025-12-16T10:10:22.123456"
                         },
                         {
@@ -799,8 +826,7 @@
                                     {
                                         name: "CreateFile",
                                         properties: {
-                                            path: "src/main/java/com/cmbchina/ue/util/WealthBoxUtils.java",
-                                            content: "工具类代码..."
+                                            file_path: "src/main/java/com/cmbchina/ue/util/WealthBoxUtils.java"
                                         },
                                         observation: {
                                             message: "成功创建WealthBoxUtils.java"
@@ -809,17 +835,16 @@
                                     {
                                         name: "EditFile",
                                         properties: {
-                                            path: "src/main/java/com/cmbchina/ue/event/ZhMessageListener.java",
-                                            changes: "更新import语句和方法调用"
+                                            file_path: "src/main/java/com/cmbchina/ue/event/ZhMessageListener.java",
+                                            description: "更新import语句和方法调用"
                                         },
                                         observation: {
-                                            message: "成功修改ZhMessageListener.java"
+                                            message: "成功修改ZhMessageListener.java，更新了import语句"
                                         }
                                     }
                                 ]
                             },
                             node_id: 12,
-                            id: "12-assistant_response",
                             timestamp: "2025-12-16T10:15:45.789012"
                         },
                         {
@@ -830,8 +855,8 @@
                                     {
                                         name: "Finish",
                                         properties: {
-                                            finish_reason: "已完成分层架构违规修复。将原本在infrastructure层（event包）中直接引用application层service实现类的静态方法isWealthOfficeType3移至新的工具类com.cmbchina.ue.util.WealthBoxUtils中，避免了infrastructure层对application层service的依赖。",
-                                            test_verification: "1. 新增了工具类src/main/java/com/cmbchina/ue/util/WealthBoxUtils.java\n2. 修改了ZhMessageListener.java的import语句\n3. 将所有isWealthOfficeType3调用点修改为WealthBoxUtils.isWealthOfficeType3\n4. 验证了修改后代码符合分层架构规范\n5. 保证了原有功能逻辑不变"
+                                            finish_reason: "已完成分层架构违规修复。将原本在infrastructure层（event包）中直接引用application层service实现类的静态方法isWealthOfficeType3移至新的工具类com.cmbchina.ue.util.WealthBoxUtils中，避免了infrastructure层对application层service的依赖。同时，更新了对应的调用代码，确保了分层架构的合理性。",
+                                            test_verification: "1. 新增了工具类src/main/java/com/cmbchina/ue/util/WealthBoxUtils.java用于存放业务逻辑工具方法\n2. 修改了src/main/java/com/cmbchina/ue/event/ZhMessageListener.java文件\n3. 将所有原isWealthOfficeType3调用点修改为WealthBoxUtils.isWealthOfficeType3\n4. 验证了修改后代码符合分层架构规范\n5. 保证了原有功能逻辑不变"
                                         },
                                         observation: {
                                             message: "已完成分层架构违规修复。"
@@ -840,7 +865,6 @@
                                 ]
                             },
                             node_id: 20,
-                            id: "20-assistant_response",
                             timestamp: "2025-12-16T10:20:30.456789"
                         }
                     ]
@@ -850,11 +874,7 @@
                         {
                             type: "user_message",
                             content: {
-                                message: JSON.stringify({
-                                    "问题名称": ["YX0015"],
-                                    "问题描述": "日志输出不规范，使用了System.out.println",
-                                    "修复方案描述": "将所有System.out.println替换为标准的日志框架调用。"
-                                }, null, 2)
+                                message: "{\n    \"task\": \"Code Review\",\n    \"target_file\": \"UserService.java\",\n    \"review_type\": \"security\"\n}"
                             },
                             node_id: 0,
                             timestamp: "2025-12-16T09:00:00.000000"
@@ -862,16 +882,38 @@
                         {
                             type: "assistant_response",
                             content: {
-                                thought: "我需要搜索项目中所有使用System.out.println的地方，然后将它们替换为使用Slf4j的日志记录。",
+                                thought: "我需要对UserService.java进行安全审查，检查潜在的安全漏洞...",
+                                actions: [
+                                    {
+                                        name: "ViewCode",
+                                        properties: {
+                                            file_path: "src/main/java/com/example/UserService.java",
+                                            start_line: 1,
+                                            end_line: 100
+                                        },
+                                        observation: {
+                                            message: "已读取UserService.java的内容"
+                                        }
+                                    }
+                                ]
+                            },
+                            node_id: 5,
+                            timestamp: "2025-12-16T09:02:00.000000"
+                        },
+                        {
+                            type: "assistant_response",
+                            content: {
+                                thought: "发现了几个安全问题：\n1. SQL注入风险\n2. 密码明文存储\n3. 缺少输入验证",
                                 actions: [
                                     {
                                         name: "Finish",
                                         properties: {
-                                            finish_reason: "已完成日志规范化修复。将所有System.out.println替换为log.info()或log.debug()调用。",
-                                            test_verification: "1. 搜索并定位了所有System.out.println调用\n2. 为每个类添加了@Slf4j注解\n3. 将println替换为适当级别的日志调用\n4. 验证了日志输出正常"
+                                            finish_reason: "完成安全审查，发现3个安全问题需要修复",
+                                            findings: "1. SQL注入风险 - 使用了字符串拼接构建SQL\n2. 密码存储 - 密码未加密存储\n3. 输入验证 - 用户输入未经验证",
+                                            recommendations: "1. 使用PreparedStatement防止SQL注入\n2. 使用BCrypt加密密码\n3. 添加输入验证逻辑"
                                         },
                                         observation: {
-                                            message: "已完成日志规范化，共修改5个文件。"
+                                            message: "安全审查完成"
                                         }
                                     }
                                 ]
@@ -904,34 +946,80 @@
             });
         }
 
-        function parseUserMessage(content) {
+        // 尝试解析JSON
+        function tryParseJSON(str) {
+            if (!str || typeof str !== 'string') return null;
             try {
-                const msg = content.message;
-                if (typeof msg === 'string' && msg.trim().startsWith('{')) {
-                    return JSON.parse(msg);
+                const trimmed = str.trim();
+                if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+                    return JSON.parse(trimmed);
                 }
-                return null;
-            } catch (e) {
-                return null;
-            }
+            } catch (e) {}
+            return null;
         }
 
-        function parseVerificationSteps(text) {
+        // 判断是否为列表格式的文本（每行以数字开头）
+        function isListText(text) {
+            if (!text || typeof text !== 'string') return false;
+            const lines = text.trim().split('\n');
+            return lines.length > 1 && lines.every(line => /^\d+[\.\)、]\s*/.test(line.trim()));
+        }
+
+        // 解析列表文本
+        function parseListText(text) {
             if (!text) return [];
             return text.split('\n')
                 .map(line => line.trim())
                 .filter(line => line)
-                .map(line => line.replace(/^\d+\.\s*/, ''));
+                .map(line => line.replace(/^\d+[\.\)、]\s*/, ''));
         }
 
-        function getActionIcon(name) {
-            const icons = {
-                Finish: { class: 'finish', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>' },
-                SearchCode: { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>' },
-                CreateFile: { class: 'edit', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>' },
-                EditFile: { class: 'edit', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' }
+        // 格式化属性名（下划线转空格，首字母大写）
+        function formatPropertyName(name) {
+            return name
+                .replace(/_/g, ' ')
+                .replace(/([A-Z])/g, ' $1')
+                .replace(/^./, str => str.toUpperCase())
+                .trim();
+        }
+
+        // 获取动作图标
+        function getActionIconInfo(name) {
+            const iconMap = {
+                'Finish': { class: 'finish', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>' },
+                'SearchCode': { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>' },
+                'Search': { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>' },
+                'CreateFile': { class: 'edit', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>' },
+                'EditFile': { class: 'edit', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' },
+                'ViewCode': { class: 'view', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>' },
+                'RunTest': { class: 'success', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>' }
             };
-            return icons[name] || { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle></svg>' };
+            return iconMap[name] || { class: 'default', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>' };
+        }
+
+        // 渲染值（可能是数组、对象或字符串）
+        function renderValue(value, isTag = false) {
+            if (value === null || value === undefined) return '';
+            
+            if (Array.isArray(value)) {
+                if (isTag) {
+                    return value.map(v => `<span class="structured-tag">${escapeHtml(v)}</span>`).join('');
+                }
+                return value.map(v => escapeHtml(v)).join(', ');
+            }
+            
+            if (typeof value === 'object') {
+                return `<pre style="margin:0;font-size:12px;">${escapeHtml(JSON.stringify(value, null, 2))}</pre>`;
+            }
+            
+            return escapeHtml(String(value));
+        }
+
+        function escapeHtml(text) {
+            if (typeof text !== 'string') return text;
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
         }
 
         // ==================== 刷新效果 ====================
@@ -1013,6 +1101,131 @@
             renderCardTabs();
         }
 
+        // 渲染用户消息
+        function renderUserMessage(msg) {
+            const content = msg.content?.message || msg.content;
+            const parsed = tryParseJSON(content);
+            
+            let innerHtml = '';
+            
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                // 结构化JSON对象，渲染为卡片
+                innerHtml = '<div class="structured-card">';
+                for (const [key, value] of Object.entries(parsed)) {
+                    if (value === null || value === undefined) continue;
+                    const isTagField = key.includes('名称') || key.includes('name') || key.includes('tag') || key.includes('type');
+                    innerHtml += `
+                        <div class="structured-row">
+                            <span class="structured-label">${escapeHtml(key)}</span>
+                            <span class="structured-value">${renderValue(value, isTagField && Array.isArray(value))}</span>
+                        </div>
+                    `;
+                }
+                innerHtml += '</div>';
+            } else {
+                // 普通文本
+                innerHtml = `<div class="user-message-content">${escapeHtml(typeof content === 'string' ? content : JSON.stringify(content))}</div>`;
+            }
+            
+            return `
+                <div class="chat-message">
+                    <div class="user-message-wrapper">
+                        <div class="user-message">${innerHtml}</div>
+                        <div class="message-timestamp">${formatTimestamp(msg.timestamp)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 渲染助手消息
+        function renderAssistantMessage(msg) {
+            let html = '<div class="chat-message"><div class="assistant-message">';
+            
+            // 思考内容
+            if (msg.content?.thought) {
+                html += `
+                    <div class="thought-section">
+                        <div class="thought-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            Thinking
+                        </div>
+                        <div class="thought-content">${escapeHtml(msg.content.thought)}</div>
+                    </div>
+                `;
+            }
+            
+            // 动作列表
+            if (msg.content?.actions && Array.isArray(msg.content.actions)) {
+                for (const action of msg.content.actions) {
+                    const iconInfo = getActionIconInfo(action.name);
+                    
+                    html += `
+                        <div class="action-section">
+                            <div class="action-header">
+                                <div class="action-icon ${iconInfo.class}">${iconInfo.svg}</div>
+                                <span class="action-name">${escapeHtml(action.name)}</span>
+                            </div>
+                            <div class="action-body">
+                    `;
+                    
+                    // 渲染所有属性
+                    if (action.properties && typeof action.properties === 'object') {
+                        for (const [key, value] of Object.entries(action.properties)) {
+                            if (value === null || value === undefined || value === '') continue;
+                            
+                            const displayName = formatPropertyName(key);
+                            
+                            // 判断是否为列表格式
+                            if (typeof value === 'string' && isListText(value)) {
+                                const items = parseListText(value);
+                                html += `
+                                    <div class="action-block">
+                                        <div class="action-block-title">${escapeHtml(displayName)}</div>
+                                        <ul class="step-list">
+                                            ${items.map((item, i) => `
+                                                <li class="step-item">
+                                                    <span class="step-number">${i + 1}</span>
+                                                    <span>${escapeHtml(item)}</span>
+                                                </li>
+                                            `).join('')}
+                                        </ul>
+                                    </div>
+                                `;
+                            } else {
+                                // 普通属性
+                                html += `
+                                    <div class="action-block">
+                                        <div class="action-block-title">${escapeHtml(displayName)}</div>
+                                        <div class="action-block-content">${escapeHtml(String(value))}</div>
+                                    </div>
+                                `;
+                            }
+                        }
+                    }
+                    
+                    // 观察结果
+                    if (action.observation?.message) {
+                        html += `
+                            <div class="observation-section">
+                                <div class="observation-header">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    Result
+                                </div>
+                                <div class="observation-content">${escapeHtml(action.observation.message)}</div>
+                            </div>
+                        `;
+                    }
+                    
+                    html += '</div></div>';
+                }
+            }
+            
+            html += `<div class="message-timestamp">${formatTimestamp(msg.timestamp)}</div>`;
+            html += '</div></div>';
+            
+            return html;
+        }
+
         function renderChat() {
             const chatArea = document.getElementById('chatArea');
 
@@ -1025,111 +1238,14 @@
             
             currentCardData.messages.forEach((msg, idx) => {
                 if (msg.type === 'user_message') {
-                    const parsed = parseUserMessage(msg.content);
-                    
-                    html += `<div class="chat-message">
-                        <div class="user-message">`;
-                    
-                    if (parsed) {
-                        html += `<div class="issue-card">`;
-                        if (parsed['问题名称']) {
-                            html += `<div class="issue-card-row">
-                                <span class="issue-card-label">问题名称</span>
-                                <span class="issue-card-value"><span class="issue-tag">${parsed['问题名称'].join(', ')}</span></span>
-                            </div>`;
-                        }
-                        if (parsed['问题描述']) {
-                            html += `<div class="issue-card-row">
-                                <span class="issue-card-label">问题描述</span>
-                                <span class="issue-card-value">${parsed['问题描述']}</span>
-                            </div>`;
-                        }
-                        if (parsed['修复方案描述']) {
-                            html += `<div class="issue-card-row">
-                                <span class="issue-card-label">修复方案</span>
-                                <span class="issue-card-value">${parsed['修复方案描述']}</span>
-                            </div>`;
-                        }
-                        html += `</div>`;
-                    } else {
-                        html += `<div class="user-message-content">${msg.content.message || msg.content}</div>`;
-                    }
-                    
-                    html += `</div>
-                        <div class="message-timestamp">${formatTimestamp(msg.timestamp)}</div>
-                    </div>`;
-                } 
-                else if (msg.type === 'assistant_response') {
-                    html += `<div class="chat-message"><div class="assistant-message">`;
-                    
-                    // 思考内容
-                    if (msg.content.thought) {
-                        html += `<div class="thought-section">
-                            <div class="thought-header">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                Thinking
-                            </div>
-                            <div class="thought-content">${msg.content.thought}</div>
-                        </div>`;
-                    }
-                    
-                    // 动作列表
-                    if (msg.content.actions) {
-                        msg.content.actions.forEach(action => {
-                            const iconInfo = getActionIcon(action.name);
-                            
-                            html += `<div class="action-section">
-                                <div class="action-header">
-                                    <div class="action-icon ${iconInfo.class}">${iconInfo.svg}</div>
-                                    <span class="action-name">${action.name}</span>
-                                </div>
-                                <div class="action-body">`;
-                            
-                            // 完成原因
-                            if (action.properties?.finish_reason) {
-                                html += `<div class="action-block">
-                                    <div class="action-block-title">完成说明</div>
-                                    <div class="action-block-content">${action.properties.finish_reason}</div>
-                                </div>`;
-                            }
-                            
-                            // 验证步骤
-                            if (action.properties?.test_verification) {
-                                const steps = parseVerificationSteps(action.properties.test_verification);
-                                html += `<div class="action-block">
-                                    <div class="action-block-title">验证步骤</div>
-                                    <ul class="verification-list">`;
-                                steps.forEach((step, i) => {
-                                    html += `<li class="verification-item">
-                                        <span class="verification-number">${i + 1}</span>
-                                        <span>${step}</span>
-                                    </li>`;
-                                });
-                                html += `</ul></div>`;
-                            }
-                            
-                            // 观察结果
-                            if (action.observation?.message) {
-                                html += `<div class="observation-section">
-                                    <div class="observation-header">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-                                        观察结果
-                                    </div>
-                                    <div class="observation-content">${action.observation.message}</div>
-                                </div>`;
-                            }
-                            
-                            html += `</div></div>`;
-                        });
-                    }
-                    
-                    html += `<div class="message-timestamp">${formatTimestamp(msg.timestamp)}</div>`;
-                    html += `</div></div>`;
+                    html += renderUserMessage(msg);
+                } else if (msg.type === 'assistant_response') {
+                    html += renderAssistantMessage(msg);
                 }
                 
-                // 添加分隔线
+                // 分隔线
                 if (idx < currentCardData.messages.length - 1) {
-                    html += `<div class="divider"></div>`;
+                    html += '<div class="divider"></div>';
                 }
             });
 
