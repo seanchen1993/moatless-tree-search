@@ -211,13 +211,15 @@
         }
 
         .card-tab {
-            min-width: 170px;
-            max-width: 200px;
-            padding: 12px 14px;
+            min-width: 140px;
+            max-width: 160px;
+            padding: 12px;
             background-color: var(--bg-primary);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.15s ease;
+            text-align: center;
+            overflow: hidden;
         }
 
         .card-tab:hover {
@@ -234,28 +236,33 @@
             opacity: 0.7;
         }
 
-        .card-tab-header {
-            margin-bottom: 8px;
+        .card-tab-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
         }
 
-        .card-tab-id {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-family: 'SF Mono', Monaco, monospace;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .card-tab-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
         }
 
         .card-tab-status {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            font-size: 11px;
+            justify-content: center;
+            gap: 4px;
+            font-size: 10px;
             padding: 3px 8px;
             border-radius: 4px;
             font-weight: 500;
+        }
+
+        .card-tab-status.pending {
+            background-color: var(--bg-tertiary);
+            color: var(--text-muted);
         }
 
         .card-tab-status.running {
@@ -264,8 +271,8 @@
         }
 
         .card-tab-status.running svg {
-            width: 11px;
-            height: 11px;
+            width: 10px;
+            height: 10px;
             animation: spin 1s linear infinite;
         }
 
@@ -275,8 +282,8 @@
         }
 
         .card-tab-status.finished svg {
-            width: 11px;
-            height: 11px;
+            width: 10px;
+            height: 10px;
         }
 
         @keyframes pulse {
@@ -598,7 +605,7 @@
         }
 
         .action-body {
-            padding: 8px 0 8px 28px;
+            padding: 12px 0 12px 28px;
             display: none;
         }
 
@@ -607,7 +614,7 @@
         }
 
         .action-block {
-            margin-bottom: 10px;
+            margin-bottom: 14px;
         }
 
         .action-block:last-child {
@@ -618,7 +625,7 @@
             font-size: 11px;
             font-weight: 500;
             color: var(--text-muted);
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .action-block-content {
@@ -627,10 +634,10 @@
             color: var(--text-primary);
             white-space: pre-wrap;
             word-break: break-word;
-            max-height: 180px;
+            max-height: 300px;
             overflow-y: auto;
             background-color: var(--bg-tertiary);
-            padding: 10px 12px;
+            padding: 12px 14px;
             border-radius: 6px;
         }
 
@@ -707,7 +714,7 @@
             font-size: 12px;
             line-height: 1.5;
             color: var(--text-secondary);
-            max-height: 120px;
+            max-height: 250px;
             overflow-y: auto;
             font-family: 'SF Mono', Monaco, monospace;
         }
@@ -809,6 +816,73 @@
             to { transform: rotate(360deg); }
         }
 
+        /* 错误提示 */
+        .error-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .error-icon {
+            width: 48px;
+            height: 48px;
+            color: #e57373;
+            margin-bottom: 16px;
+        }
+
+        .error-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .error-message {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .retry-btn {
+            padding: 8px 20px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .retry-btn:hover {
+            background-color: var(--bg-hover);
+        }
+
+        /* 空状态 */
+        .empty-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .empty-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
         /* Finish 特殊样式 */
         .action-section.finish-action {
             border-left-color: var(--success);
@@ -891,34 +965,88 @@
 
         // 根据project_id获取子卡片ID列表
         async function apiGetCardIdsByProject(projectId) {
-            try {
-                const response = await fetch(`${API_BASE}/trajectories/${projectId}`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                // 返回格式：数组转为对象数组
-                return data.map(id => ({ id }));
-            } catch (error) {
-                console.error('Failed to fetch card list:', error);
-                return [];
+            const response = await fetch(`${API_BASE}/trajectories/${projectId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            const data = await response.json();
+            // 返回格式：数组转为对象数组
+            return data.map(id => ({ id }));
         }
 
         // 根据card_id获取卡片详情
         async function apiGetCardDetail(cardId) {
-            try {
-                const response = await fetch(`${API_BASE}/trajectories/${currentProjectId}/${cardId}/chat-messages`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                // 返回格式：{ messages: [...] }
-                return { messages: data.messages || data };
-            } catch (error) {
-                console.error('Failed to fetch card detail:', error);
-                return { messages: [] };
+            const response = await fetch(`${API_BASE}/trajectories/${currentProjectId}/${cardId}/chat-messages`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
+            const data = await response.json();
+            // 返回格式：{ messages: [...] }
+            return { messages: data.messages || data };
+        }
+
+        // ==================== 解析卡片ID ====================
+        function parseCardId(cardId) {
+            // 格式: YX0007_20251217025806326168
+            const parts = cardId.split('_');
+            const title = parts[0] || cardId;
+            const timeStr = parts[1] || '';
+            
+            // 解析时间: 20251217025806 -> 2025-12-17 02:58:06
+            let startTime = '';
+            if (timeStr.length >= 14) {
+                const year = timeStr.substring(0, 4);
+                const month = timeStr.substring(4, 6);
+                const day = timeStr.substring(6, 8);
+                const hour = timeStr.substring(8, 10);
+                const minute = timeStr.substring(10, 12);
+                const second = timeStr.substring(12, 14);
+                startTime = `${month}-${day} ${hour}:${minute}`;
+            }
+            
+            return { title, startTime };
+        }
+
+        // 解析消息获取状态
+        function parseCardStatus(messages) {
+            if (!messages || messages.length === 0) {
+                return { status: 'pending', finishTime: null };
+            }
+            
+            // 检查是否有assistant_response
+            const hasAssistantResponse = messages.some(m => m.type === 'assistant_response');
+            
+            // 检查是否有Finish
+            for (let i = messages.length - 1; i >= 0; i--) {
+                const msg = messages[i];
+                if (msg.type === 'assistant_response' && msg.content?.actions) {
+                    const finishAction = msg.content.actions.find(a => a.name === 'Finish');
+                    if (finishAction) {
+                        return { 
+                            status: 'finished', 
+                            finishTime: msg.timestamp 
+                        };
+                    }
+                }
+            }
+            
+            // 有assistant_response但没有Finish，说明正在运行
+            if (hasAssistantResponse) {
+                return { status: 'running', finishTime: null };
+            }
+            
+            return { status: 'pending', finishTime: null };
+        }
+
+        // 格式化完成时间
+        function formatFinishTime(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+            return `${month}-${day} ${hour}:${minute}`;
         }
 
         // ==================== 状态 ====================
@@ -927,6 +1055,8 @@
         let currentCardData = null;
         let cardsExpanded = false;
         let expandedActions = new Set();
+        let refreshTimers = {}; // 存储每个卡片的刷新定时器
+        let loadError = null; // 加载错误信息
 
         // ==================== 工具函数 ====================
         function formatTimestamp(ts) {
@@ -938,15 +1068,6 @@
                 hour: '2-digit', 
                 minute: '2-digit',
                 second: '2-digit'
-            });
-        }
-
-        function formatShortTime(ts) {
-            if (!ts) return '';
-            const date = new Date(ts);
-            return date.toLocaleString('zh-CN', { 
-                hour: '2-digit', 
-                minute: '2-digit'
             });
         }
 
@@ -1050,25 +1171,6 @@
             return div.innerHTML;
         }
 
-        // 检查消息列表最后是否为Finish
-        function getFinishInfo(messages) {
-            if (!messages || messages.length === 0) return null;
-            
-            for (let i = messages.length - 1; i >= 0; i--) {
-                const msg = messages[i];
-                if (msg.type === 'assistant_response' && msg.content?.actions) {
-                    const finishAction = msg.content.actions.find(a => a.name === 'Finish');
-                    if (finishAction) {
-                        return {
-                            finished: true,
-                            timestamp: msg.timestamp
-                        };
-                    }
-                }
-            }
-            return { finished: false };
-        }
-
         // ==================== 刷新效果 ====================
         function showRefreshEffect() {
             document.getElementById('cardTabsContainer').classList.add('refreshing');
@@ -1125,34 +1227,40 @@
 
             toggleBtn.classList.toggle('visible', cardList.length > 5);
 
-            // 需要获取每个卡片的状态
+            // 渲染每个卡片
             for (const card of cardList) {
                 const tab = document.createElement('div');
                 tab.className = `card-tab ${card.id === currentCardId ? 'active' : ''}`;
                 tab.onclick = () => selectCard(card.id);
 
-                let statusHtml;
+                const { title, startTime } = parseCardId(card.id);
+                const status = card.status || 'pending';
+                const finishTime = card.finishTime;
 
-                if (card.finishInfo?.finished) {
+                let statusHtml;
+                if (status === 'finished') {
                     statusHtml = `
                         <div class="card-tab-status finished">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                            完成于 ${formatShortTime(card.finishInfo.timestamp)}
+                            ${formatFinishTime(finishTime)}
+                        </div>
+                    `;
+                } else if (status === 'running') {
+                    statusHtml = `
+                        <div class="card-tab-status running">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                            运行中
                         </div>
                     `;
                 } else {
                     statusHtml = `
-                        <div class="card-tab-status running">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
-                            运行中...
-                        </div>
+                        <div class="card-tab-status pending">待执行</div>
                     `;
                 }
 
                 tab.innerHTML = `
-                    <div class="card-tab-header">
-                        <span class="card-tab-id" title="${card.id}">${card.id}</span>
-                    </div>
+                    <div class="card-tab-title">${title}</div>
+                    <div class="card-tab-time">${startTime ? '启动 ' + startTime : ''}</div>
                     ${statusHtml}
                 `;
                 cardTabs.appendChild(tab);
@@ -1379,7 +1487,7 @@
             const chatArea = document.getElementById('chatArea');
 
             if (!currentCardData?.messages || currentCardData.messages.length === 0) {
-                chatArea.innerHTML = `<div class="loading-placeholder"><div class="loading-spinner"></div><span>Loading...</span></div>`;
+                renderEmpty();
                 return;
             }
 
@@ -1408,41 +1516,164 @@
         // ==================== 选择卡片 ====================
         async function selectCard(cardId) {
             currentCardId = cardId;
+            loadError = null;
             showRefreshEffect();
 
             try {
                 currentCardData = await apiGetCardDetail(cardId);
                 
-                // 更新卡片的finish状态
-                const finishInfo = getFinishInfo(currentCardData.messages);
+                // 更新卡片状态
+                const statusInfo = parseCardStatus(currentCardData.messages);
                 const card = cardList.find(c => c.id === cardId);
                 if (card) {
-                    card.finishInfo = finishInfo;
+                    card.status = statusInfo.status;
+                    card.finishTime = statusInfo.finishTime;
                 }
                 
                 renderCardTabs();
                 renderChat();
                 showRefreshToast();
             } catch (e) {
-                console.error('Failed to load:', e);
+                console.error('Failed to load card:', e);
+                loadError = e.message;
+                renderChatError();
             } finally {
                 hideRefreshEffect();
             }
         }
 
-        // ==================== 初始化 ====================
-        async function init() {
-            // 获取卡片列表
-            const cards = await apiGetCardIdsByProject(currentProjectId);
-            cardList = cards.map(c => ({ ...c, finishInfo: null }));
+        // ==================== 后台刷新卡片状态 ====================
+        async function refreshCardStatus(cardId) {
+            // 不刷新当前选中的卡片
+            if (cardId === currentCardId) return;
             
-            renderCardTabs();
-            renderProjectList();
+            try {
+                const data = await apiGetCardDetail(cardId);
+                const statusInfo = parseCardStatus(data.messages);
+                
+                const card = cardList.find(c => c.id === cardId);
+                if (card) {
+                    const oldStatus = card.status;
+                    card.status = statusInfo.status;
+                    card.finishTime = statusInfo.finishTime;
+                    
+                    // 状态变化时更新UI
+                    if (oldStatus !== statusInfo.status) {
+                        renderCardTabs();
+                    }
+                }
+            } catch (e) {
+                console.error(`Failed to refresh card ${cardId}:`, e);
+            }
             
-            if (cardList.length > 0) {
-                await selectCard(cardList[0].id);
+            // 如果未完成，设置下一次刷新
+            const card = cardList.find(c => c.id === cardId);
+            if (card && card.status !== 'finished') {
+                scheduleCardRefresh(cardId);
             }
         }
+
+        // 安排卡片刷新（随机0-60秒）
+        function scheduleCardRefresh(cardId) {
+            // 清除已有的定时器
+            if (refreshTimers[cardId]) {
+                clearTimeout(refreshTimers[cardId]);
+            }
+            
+            // 随机0-60秒
+            const delay = Math.random() * 60000;
+            refreshTimers[cardId] = setTimeout(() => {
+                refreshCardStatus(cardId);
+            }, delay);
+        }
+
+        // 启动所有未完成卡片的刷新
+        function startBackgroundRefresh() {
+            for (const card of cardList) {
+                if (card.status !== 'finished') {
+                    scheduleCardRefresh(card.id);
+                }
+            }
+        }
+
+        // 停止所有刷新
+        function stopBackgroundRefresh() {
+            for (const timerId of Object.values(refreshTimers)) {
+                clearTimeout(timerId);
+            }
+            refreshTimers = {};
+        }
+
+        // ==================== 错误显示 ====================
+        function renderChatError() {
+            const chatArea = document.getElementById('chatArea');
+            chatArea.innerHTML = `
+                <div class="error-placeholder">
+                    <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <div class="error-title">加载失败</div>
+                    <div class="error-message">${loadError || '无法连接到服务器，请检查网络连接'}</div>
+                    <button class="retry-btn" onclick="selectCard(currentCardId)">重试</button>
+                </div>
+            `;
+        }
+
+        function renderCardsError() {
+            const cardTabs = document.getElementById('cardTabs');
+            cardTabs.innerHTML = `
+                <div class="error-placeholder" style="padding: 20px;">
+                    <div class="error-message">加载任务列表失败</div>
+                    <button class="retry-btn" onclick="init()">重试</button>
+                </div>
+            `;
+        }
+
+        function renderEmpty() {
+            const chatArea = document.getElementById('chatArea');
+            chatArea.innerHTML = `
+                <div class="empty-placeholder">
+                    <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    <div class="empty-title">暂无对话数据</div>
+                </div>
+            `;
+        }
+
+        // ==================== 初始化 ====================
+        async function init() {
+            loadError = null;
+            
+            try {
+                // 获取卡片列表
+                const cards = await apiGetCardIdsByProject(currentProjectId);
+                cardList = cards.map(c => ({ ...c, status: 'pending', finishTime: null }));
+                
+                renderCardTabs();
+                renderProjectList();
+                
+                if (cardList.length > 0) {
+                    await selectCard(cardList[0].id);
+                    // 启动后台刷新
+                    startBackgroundRefresh();
+                } else {
+                    renderEmpty();
+                }
+            } catch (e) {
+                console.error('Failed to init:', e);
+                loadError = e.message;
+                renderCardsError();
+            }
+        }
+
+        // 页面卸载时清理定时器
+        window.addEventListener('beforeunload', () => {
+            stopBackgroundRefresh();
+        });
 
         init();
     </script>
