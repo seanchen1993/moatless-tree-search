@@ -1,0 +1,1926 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Chat Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #f8f8f6;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f0efed;
+            --bg-hover: #eae9e6;
+            --text-primary: #37352f;
+            --text-secondary: #6b6b6b;
+            --text-muted: #9b9a97;
+            --border: #e6e5e3;
+            --border-light: #f0efed;
+            --success: #4daa57;
+            --success-soft: #e3f5e5;
+            --info: #529cca;
+            --info-soft: #e1f0f8;
+            --warning: #dfab01;
+            --warning-soft: #fbf3db;
+            --purple: #9065b0;
+            --purple-soft: #f3e8ff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* 左侧边栏 */
+        .sidebar {
+            width: 280px;
+            background-color: var(--bg-primary);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 14px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .search-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+        }
+
+        .search-box:focus-within {
+            border-color: #b4b4b4;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 13px;
+            color: var(--text-primary);
+            background: transparent;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-icons {
+            color: var(--text-muted);
+        }
+
+        .search-icons svg {
+            width: 15px;
+            height: 15px;
+            opacity: 0.6;
+        }
+
+        .refresh-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .refresh-btn:hover {
+            background-color: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .refresh-btn.loading {
+            pointer-events: none;
+        }
+
+        .refresh-btn.loading svg {
+            animation: spin 1s linear infinite;
+        }
+
+        .refresh-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .project-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 8px;
+        }
+
+        .project-item {
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .project-item.active {
+            background-color: var(--bg-tertiary);
+        }
+
+        .project-item-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .project-icon {
+            width: 32px;
+            height: 32px;
+            background-color: var(--warning-soft);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .project-icon svg {
+            width: 16px;
+            height: 16px;
+            color: var(--warning);
+        }
+
+        .project-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .project-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .project-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .project-time {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .project-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* 右侧主区域 */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-primary);
+            overflow: hidden;
+        }
+
+        /* 子卡片区域 */
+        .card-tabs-container {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            background-color: var(--bg-secondary);
+        }
+
+        .card-tabs-container.refreshing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 30%;
+            height: 2px;
+            background: var(--info);
+            animation: loadingBar 1s ease infinite;
+        }
+
+        @keyframes loadingBar {
+            0% { left: 0; width: 0; }
+            50% { left: 25%; width: 50%; }
+            100% { left: 100%; width: 0; }
+        }
+
+        .card-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .card-tabs.collapsed .card-tab:nth-child(n+6) {
+            display: none;
+        }
+
+        .card-tab {
+            width: 240px;
+            flex-shrink: 0;
+            padding: 10px 14px;
+            background-color: var(--bg-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-align: left;
+            overflow: hidden;
+        }
+
+        .card-tab:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .card-tab.active {
+            background-color: var(--bg-secondary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        .card-tab.loading {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .card-tab-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-tab-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .card-tab-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .card-tab-status.pending {
+            color: var(--text-muted);
+        }
+
+        .card-tab-status.running {
+            color: #8a6d00;
+        }
+
+        .card-tab-status.running svg {
+            width: 10px;
+            height: 10px;
+            animation: spin 1s linear infinite;
+        }
+
+        .card-tab-status.finished {
+            color: var(--success);
+        }
+
+        .card-tab-status.finished svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .toggle-cards-btn {
+            display: none;
+            margin: 10px auto 0;
+            padding: 5px 14px;
+            background-color: transparent;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .toggle-cards-btn:hover {
+            background-color: var(--bg-tertiary);
+        }
+
+        .toggle-cards-btn.visible {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .toggle-cards-btn svg {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.2s;
+        }
+
+        .toggle-cards-btn.expanded svg {
+            transform: rotate(180deg);
+        }
+
+        /* 对话区域 */
+        .chat-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 36px;
+            transition: opacity 0.2s;
+        }
+
+        .chat-area.refreshing {
+            opacity: 0.5;
+        }
+
+        .chat-message {
+            margin-bottom: 24px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 助手消息容器 */
+        .assistant-message {
+            margin-top: 16px;
+            padding: 12px 0;
+        }
+
+        /* 用户消息 - 简洁样式 */
+        .user-message-wrapper {
+            margin-bottom: 8px;
+        }
+
+        .user-message {
+            background-color: var(--bg-tertiary);
+            border-radius: 8px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .user-message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .user-message-icon {
+            width: 24px;
+            height: 24px;
+            background-color: var(--bg-secondary);
+            color: var(--text-muted);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-message-icon svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .user-message-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .user-message-content {
+            padding: 12px 14px;
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .user-message-content h1 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 8px 0;
+        }
+
+        .user-message-content h2 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 12px 0 6px 0;
+        }
+
+        .user-message-content h3 {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 10px 0 4px 0;
+        }
+
+        .user-message-content p {
+            margin: 6px 0;
+        }
+
+        .user-message-content strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .user-message-content code {
+            background-color: var(--bg-secondary);
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            color: var(--text-primary);
+        }
+
+        .user-message-content pre {
+            background-color: #2f3437;
+            color: #e6e6e6;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 8px 0;
+        }
+
+        .user-message-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+            font-size: inherit;
+        }
+
+        .user-message-content ul, .user-message-content ol {
+            margin: 6px 0;
+            padding-left: 18px;
+        }
+
+        .user-message-content li {
+            margin: 3px 0;
+        }
+
+        /* 思考区块 */
+        .thought-section {
+            background-color: var(--warning-soft);
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+        }
+
+        .thought-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: #8a6d00;
+            font-size: 11px;
+        }
+
+        .thought-header svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .thought-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #6b5900;
+        }
+
+        /* 动作区块 - 带颜色区分 */
+        .action-section {
+            background-color: transparent;
+            border: none;
+            border-left: 2px solid var(--border);
+            border-radius: 0;
+            margin-bottom: 4px;
+            margin-left: 8px;
+            padding-left: 12px;
+        }
+
+        .action-section:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 不同类型action的左边框颜色 */
+        .action-section.type-list { border-left-color: var(--info); }
+        .action-section.type-read { border-left-color: var(--purple); }
+        .action-section.type-search { border-left-color: var(--warning); }
+        .action-section.type-think { border-left-color: #999; }
+        .action-section.type-default { border-left-color: var(--border); }
+
+        .action-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            background-color: transparent;
+            border-bottom: none;
+            cursor: pointer;
+        }
+
+        .action-header:hover .action-name {
+            color: var(--text-primary);
+        }
+
+        .action-header.no-toggle {
+            cursor: default;
+        }
+
+        .action-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .action-icon.finish { background-color: var(--success-soft); color: var(--success); }
+        .action-icon.list { background-color: var(--info-soft); color: var(--info); }
+        .action-icon.read { background-color: var(--purple-soft); color: var(--purple); }
+        .action-icon.search { background-color: var(--warning-soft); color: var(--warning); }
+        .action-icon.think { background-color: #f0f0f0; color: #777; }
+        .action-icon.default { background-color: var(--bg-tertiary); color: var(--text-muted); }
+
+        .action-icon svg {
+            width: 11px;
+            height: 11px;
+        }
+
+        .action-title {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .action-name {
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        /* action名称颜色 */
+        .action-section.type-list .action-name { color: var(--info); }
+        .action-section.type-read .action-name { color: var(--purple); }
+        .action-section.type-search .action-name { color: #b8860b; }
+        .action-section.type-think .action-name { color: #777; }
+
+        .action-summary {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+
+        .action-toggle {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+            opacity: 0.6;
+        }
+
+        .action-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .action-toggle svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .action-body {
+            padding: 12px 0 12px 28px;
+            display: none;
+        }
+
+        .action-body.expanded {
+            display: block;
+        }
+
+        .action-block {
+            margin-bottom: 14px;
+        }
+
+        .action-block:last-child {
+            margin-bottom: 0;
+        }
+
+        .action-block-title {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .action-block-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: var(--bg-tertiary);
+            padding: 12px 14px;
+            border-radius: 6px;
+        }
+
+        .action-block-content.code {
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px;
+            background-color: #2f3437;
+            color: #e6e6e6;
+        }
+
+        /* 列表样式 */
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .step-item:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            width: 18px;
+            height: 18px;
+            background-color: var(--bg-tertiary);
+            color: var(--text-muted);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* 观察结果 */
+        .observation-section {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 8px;
+        }
+
+        .observation-header {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .observation-header svg {
+            width: 11px;
+            height: 11px;
+        }
+
+        .observation-content {
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            max-height: 250px;
+            overflow-y: auto;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        /* 时间戳 */
+        .message-timestamp {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+
+        /* 分隔线 */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        /* 完成提示 */
+        .finish-tips {
+            background-color: var(--success-soft);
+            border: 1px solid #c3e6c7;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+
+        .finish-tips-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .finish-tips-header svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .finish-tips-content {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #2d6a31;
+        }
+
+        .finish-tips-code {
+            display: block;
+            margin-top: 8px;
+            padding: 8px 10px;
+            background-color: #fff;
+            border: 1px solid #c3e6c7;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px;
+            color: var(--text-primary);
+            word-break: break-all;
+            cursor: pointer;
+        }
+
+        .finish-tips-code:hover {
+            background-color: #f8fff8;
+        }
+
+        .finish-tips-copy {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--success);
+            cursor: pointer;
+        }
+
+        .finish-tips-copy:hover {
+            text-decoration: underline;
+        }
+
+        /* 轮次标签 */
+        .turn-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .turn-label span {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* 滚动条 */
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #d4d4d4;
+            border-radius: 3px;
+        }
+
+        /* 刷新提示 */
+        .refresh-toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--text-primary);
+            color: #ffffff;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(80px);
+            opacity: 0;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .refresh-toast.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .refresh-toast svg {
+            width: 16px;
+            height: 16px;
+            color: var(--success);
+        }
+
+        .loading-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            width: 28px;
+            height: 28px;
+            border: 2px solid var(--border);
+            border-top-color: var(--text-secondary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 错误提示 */
+        .error-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .error-icon {
+            width: 48px;
+            height: 48px;
+            color: #e57373;
+            margin-bottom: 16px;
+        }
+
+        .error-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .error-message {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .retry-btn {
+            padding: 8px 20px;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        .retry-btn:hover {
+            background-color: var(--bg-hover);
+        }
+
+        /* 空状态 */
+        .empty-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-icon {
+            width: 48px;
+            height: 48px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .empty-title {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Finish 特殊样式 */
+        .action-section.finish-action {
+            border-left-color: var(--success);
+            background-color: var(--success-soft);
+            padding: 12px;
+            border-radius: 8px;
+            margin-left: 8px;
+        }
+
+        .action-section.finish-action .action-header {
+            padding: 0 0 8px 0;
+        }
+
+        .action-section.finish-action .action-name {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .action-section.finish-action .action-body {
+            padding: 0;
+            padding-top: 8px;
+            border-top: 1px solid rgba(77, 170, 87, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="search-box">
+                    <input type="text" placeholder="Search agents...">
+                    <div class="search-icons">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </div>
+                </div>
+                <button class="refresh-btn" id="refreshBtn" onclick="refreshAll()" title="刷新列表">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                        <polyline points="21 3 21 9 15 9"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="project-list" id="projectList"></div>
+        </div>
+
+        <div class="main-content">
+            <div class="card-tabs-container" id="cardTabsContainer">
+                <div class="card-tabs collapsed" id="cardTabs"></div>
+                <button class="toggle-cards-btn" id="toggleCardsBtn" onclick="toggleCards()">
+                    <span id="toggleText">展开更多</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <div class="chat-area" id="chatArea">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <span>Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="refresh-toast" id="refreshToast">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span>Refreshed</span>
+    </div>
+
+    <script>
+        // ==================== URL参数 ====================
+        function getProjectIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('project_id') || 'WE_WealthBox_Service';
+        }
+
+        const currentProjectId = getProjectIdFromUrl();
+
+        // ==================== API ====================
+        const API_BASE = 'http://codeagentx.paasuat.cmbchina.cn/api';
+
+        // 根据project_id获取子卡片ID列表
+        async function apiGetCardIdsByProject(projectId) {
+            const response = await fetch(`${API_BASE}/trajectories/${projectId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            // 按字典序排序后返回
+            const sortedData = data.sort((a, b) => a.localeCompare(b));
+            return sortedData.map(id => ({ id }));
+        }
+
+        // 根据card_id获取卡片详情
+        async function apiGetCardDetail(cardId) {
+            const response = await fetch(`${API_BASE}/trajectories/${currentProjectId}/${cardId}/chat-messages`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            // 返回格式：{ messages: [...] }
+            return { messages: data.messages || data };
+        }
+
+        // ==================== 解析卡片ID ====================
+        function parseCardId(cardId) {
+            // 格式: YX0007_20251217025806326168
+            const parts = cardId.split('_');
+            const title = parts[0] || cardId;
+            const timeStr = parts[1] || '';
+            
+            // 解析时间: 20251217025806 -> 需要加8小时转为北京时间
+            let startTime = '';
+            if (timeStr.length >= 14) {
+                const year = parseInt(timeStr.substring(0, 4));
+                const month = parseInt(timeStr.substring(4, 6)) - 1; // 月份从0开始
+                const day = parseInt(timeStr.substring(6, 8));
+                const hour = parseInt(timeStr.substring(8, 10));
+                const minute = parseInt(timeStr.substring(10, 12));
+                const second = parseInt(timeStr.substring(12, 14));
+                
+                // 创建UTC时间，然后加8小时转为北京时间
+                const utcDate = new Date(Date.UTC(year, month, day, hour, minute, second));
+                const beijingDate = new Date(utcDate.getTime() + 8 * 60 * 60 * 1000);
+                
+                const y = beijingDate.getUTCFullYear();
+                const m = String(beijingDate.getUTCMonth() + 1).padStart(2, '0');
+                const d = String(beijingDate.getUTCDate()).padStart(2, '0');
+                const h = String(beijingDate.getUTCHours()).padStart(2, '0');
+                const min = String(beijingDate.getUTCMinutes()).padStart(2, '0');
+                const s = String(beijingDate.getUTCSeconds()).padStart(2, '0');
+                startTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
+            }
+            
+            return { title, startTime };
+        }
+
+        // 格式化时间戳
+        function formatFullTime(timestamp) {
+            if (!timestamp) return '';
+            const date = new Date(timestamp);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+            const second = String(date.getSeconds()).padStart(2, '0');
+            return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+        }
+
+        // 解析消息获取状态
+        function parseCardStatus(messages) {
+            if (!messages || messages.length === 0) {
+                return { status: 'pending', finishTime: null };
+            }
+            
+            // 检查是否有assistant_response
+            const hasAssistantResponse = messages.some(m => m.type === 'assistant_response');
+            
+            // 检查是否有Finish
+            for (let i = messages.length - 1; i >= 0; i--) {
+                const msg = messages[i];
+                if (msg.type === 'assistant_response' && msg.content?.actions) {
+                    const finishAction = msg.content.actions.find(a => a.name === 'Finish');
+                    if (finishAction) {
+                        return { 
+                            status: 'finished', 
+                            finishTime: msg.timestamp 
+                        };
+                    }
+                }
+            }
+            
+            // 有assistant_response但没有Finish，说明正在运行
+            if (hasAssistantResponse) {
+                return { status: 'running', finishTime: null };
+            }
+            
+            return { status: 'pending', finishTime: null };
+        }
+
+        // ==================== 状态 ====================
+        let cardList = [];
+        let currentCardId = null;
+        let currentCardData = null;
+        let cardsExpanded = false;
+        let expandedActions = new Set();
+        let refreshTimers = {}; // 存储每个卡片的刷新定时器
+        let loadError = null; // 加载错误信息
+
+        // ==================== 工具函数 ====================
+        function formatTimestamp(ts) {
+            if (!ts) return '';
+            const date = new Date(ts);
+            return date.toLocaleString('zh-CN', { 
+                month: '2-digit', 
+                day: '2-digit',
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        function isListText(text) {
+            if (!text || typeof text !== 'string') return false;
+            const lines = text.trim().split('\n');
+            return lines.length > 1 && lines.every(line => /^\d+[\.\)、]\s*/.test(line.trim()));
+        }
+
+        function parseListText(text) {
+            if (!text) return [];
+            return text.split('\n')
+                .map(line => line.trim())
+                .filter(line => line)
+                .map(line => line.replace(/^\d+[\.\)、]\s*/, ''));
+        }
+
+        function formatPropertyName(name) {
+            const nameMap = {
+                'finish_reason': '完成说明',
+                'test_verification': '验证步骤',
+                'directory': '目录',
+                'file_path': '文件路径',
+                'pattern': '搜索模式',
+                'include': '包含文件',
+                'recursive': '递归',
+                'thought': '思考'
+            };
+            return nameMap[name] || name.replace(/_/g, ' ').replace(/^./, s => s.toUpperCase());
+        }
+
+        function getActionIconInfo(name) {
+            const iconMap = {
+                // 完成类
+                'Finish': { class: 'finish', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>' },
+                
+                // 文件操作类
+                'ListFiles': { class: 'list', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' },
+                'ReadFile': { class: 'read', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' },
+                'ViewCode': { class: 'read', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' },
+                'CreateFile': { class: 'read', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>' },
+                'EditFile': { class: 'read', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' },
+                'DeleteFile': { class: 'default', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' },
+                
+                // 搜索类
+                'RipgrepTool': { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' },
+                'SearchCode': { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' },
+                'Search': { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' },
+                'FindFunction': { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' },
+                'FindClass': { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' },
+                
+                // 执行类
+                'RunTest': { class: 'finish', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>' },
+                'RunCommand': { class: 'default', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>' },
+                'Bash': { class: 'default', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>' },
+                
+                // 思考类
+                'Think': { class: 'think', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' },
+                'Reasoning': { class: 'think', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' }
+            };
+            
+            // 尝试模糊匹配：如果精确匹配失败，尝试关键词匹配
+            if (iconMap[name]) {
+                return iconMap[name];
+            }
+            
+            const nameLower = name.toLowerCase();
+            if (nameLower.includes('file') || nameLower.includes('read') || nameLower.includes('view')) {
+                return { class: 'read', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>' };
+            }
+            if (nameLower.includes('search') || nameLower.includes('find') || nameLower.includes('grep')) {
+                return { class: 'search', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' };
+            }
+            if (nameLower.includes('list') || nameLower.includes('dir')) {
+                return { class: 'list', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>' };
+            }
+            if (nameLower.includes('run') || nameLower.includes('exec') || nameLower.includes('test')) {
+                return { class: 'finish', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>' };
+            }
+            if (nameLower.includes('create') || nameLower.includes('add') || nameLower.includes('new')) {
+                return { class: 'read', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>' };
+            }
+            if (nameLower.includes('edit') || nameLower.includes('modify') || nameLower.includes('update')) {
+                return { class: 'read', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>' };
+            }
+            if (nameLower.includes('delete') || nameLower.includes('remove')) {
+                return { class: 'default', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>' };
+            }
+            if (nameLower.includes('think') || nameLower.includes('reason') || nameLower.includes('plan')) {
+                return { class: 'think', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' };
+            }
+            
+            // 默认图标
+            return { class: 'default', svg: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' };
+        }
+
+        function escapeHtml(text) {
+            if (typeof text !== 'string') return String(text);
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ==================== 刷新效果 ====================
+        function showRefreshEffect() {
+            document.getElementById('cardTabsContainer').classList.add('refreshing');
+            document.getElementById('chatArea').classList.add('refreshing');
+        }
+
+        function hideRefreshEffect() {
+            document.getElementById('cardTabsContainer').classList.remove('refreshing');
+            document.getElementById('chatArea').classList.remove('refreshing');
+        }
+
+        function showRefreshToast() {
+            const toast = document.getElementById('refreshToast');
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 1800);
+        }
+
+        // ==================== 渲染 ====================
+        function renderProjectList() {
+            document.getElementById('projectList').innerHTML = `
+                <div class="project-item active">
+                    <div class="project-item-header">
+                        <div class="project-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            </svg>
+                        </div>
+                        <div class="project-content">
+                            <div class="project-title-row">
+                                <span class="project-title">${currentProjectId}</span>
+                                <span class="project-time">now</span>
+                            </div>
+                            <div class="project-meta">${cardList.length} Tasks</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function renderCardTabs() {
+            const cardTabs = document.getElementById('cardTabs');
+            const toggleBtn = document.getElementById('toggleCardsBtn');
+            cardTabs.innerHTML = '';
+
+            if (cardsExpanded) {
+                cardTabs.classList.remove('collapsed');
+                toggleBtn.classList.add('expanded');
+                document.getElementById('toggleText').textContent = '收起';
+            } else {
+                cardTabs.classList.add('collapsed');
+                toggleBtn.classList.remove('expanded');
+                document.getElementById('toggleText').textContent = '展开更多';
+            }
+
+            toggleBtn.classList.toggle('visible', cardList.length > 5);
+
+            // 渲染每个卡片
+            for (const card of cardList) {
+                const tab = document.createElement('div');
+                tab.className = `card-tab ${card.id === currentCardId ? 'active' : ''}`;
+                // 点击卡片时强制刷新数据
+                tab.onclick = () => selectCard(card.id, true);
+
+                const { title, startTime } = parseCardId(card.id);
+                const status = card.status || 'pending';
+                const finishTime = card.finishTime;
+
+                let statusHtml;
+                if (status === 'finished') {
+                    statusHtml = `
+                        <div class="card-tab-status finished">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            完成于 ${formatFullTime(finishTime)}
+                        </div>
+                    `;
+                } else if (status === 'running') {
+                    statusHtml = `
+                        <div class="card-tab-status running">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+                            运行中
+                        </div>
+                    `;
+                } else {
+                    statusHtml = `
+                        <div class="card-tab-status pending">待执行</div>
+                    `;
+                }
+
+                tab.innerHTML = `
+                    <div class="card-tab-title">${title}</div>
+                    <div class="card-tab-time">${startTime ? '启动于 ' + startTime : ''}</div>
+                    ${statusHtml}
+                `;
+                cardTabs.appendChild(tab);
+            }
+        }
+
+        function toggleCards() {
+            cardsExpanded = !cardsExpanded;
+            renderCardTabs();
+        }
+
+        function toggleAction(actionId, isFinish) {
+            // Finish不允许折叠
+            if (isFinish) return;
+            
+            if (expandedActions.has(actionId)) {
+                expandedActions.delete(actionId);
+            } else {
+                expandedActions.add(actionId);
+            }
+            
+            const body = document.getElementById(`action-body-${actionId}`);
+            const toggle = document.getElementById(`action-toggle-${actionId}`);
+            
+            if (body) {
+                body.classList.toggle('expanded');
+            }
+            if (toggle) {
+                toggle.classList.toggle('collapsed');
+            }
+        }
+
+        // 简单的Markdown渲染
+        function renderMarkdown(text) {
+            if (!text) return '';
+            
+            let html = escapeHtml(text);
+            
+            // 代码块 ```code```
+            html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                return `<pre><code>${code.trim()}</code></pre>`;
+            });
+            
+            // 行内代码 `code`
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // 标题
+            html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+            
+            // 粗体
+            html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+            
+            // 有序列表
+            html = html.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+            
+            // 换行转段落（简化处理）
+            html = html.replace(/\n\n/g, '</p><p>');
+            html = html.replace(/\n/g, '<br>');
+            
+            return html;
+        }
+
+        // 提取任务标题
+        function extractTitle(content) {
+            if (!content) return '任务描述';
+            
+            // 尝试匹配 # 开头的标题
+            const h1Match = content.match(/^#\s+(.+?)(?:\n|$)/m);
+            if (h1Match) return h1Match[1].replace(/[*#]/g, '').trim();
+            
+            // 尝试匹配 任务：xxx 格式
+            const taskMatch = content.match(/任务[：:]\s*(.+?)(?:\n|$)/);
+            if (taskMatch) return taskMatch[1].trim();
+            
+            // 取前30个字符
+            const firstLine = content.split('\n')[0].replace(/[#*]/g, '').trim();
+            return firstLine.length > 40 ? firstLine.substring(0, 40) + '...' : firstLine || '任务描述';
+        }
+
+        function renderUserMessage(msg) {
+            const content = msg.content?.message || '';
+            const title = extractTitle(content);
+            
+            return `
+                <div class="chat-message">
+                    <div class="user-message-wrapper">
+                        <div class="user-message">
+                            <div class="user-message-header">
+                                <div class="user-message-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                        <polyline points="10 9 9 9 8 9"/>
+                                    </svg>
+                                </div>
+                                <span class="user-message-title">${escapeHtml(title)}</span>
+                            </div>
+                            <div class="user-message-content">${renderMarkdown(content)}</div>
+                        </div>
+                        <div class="message-timestamp">${formatTimestamp(msg.timestamp)}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAssistantMessage(msg, msgIndex) {
+            let html = '<div class="chat-message"><div class="assistant-message">';
+            
+            // 思考内容
+            if (msg.content?.thought) {
+                html += `
+                    <div class="thought-section">
+                        <div class="thought-header">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            Thinking
+                        </div>
+                        <div class="thought-content">${escapeHtml(msg.content.thought)}</div>
+                    </div>
+                `;
+            }
+            
+            // 动作列表
+            if (msg.content?.actions && Array.isArray(msg.content.actions)) {
+                msg.content.actions.forEach((action, actionIndex) => {
+                    const actionId = `${msgIndex}-${actionIndex}`;
+                    const iconInfo = getActionIconInfo(action.name);
+                    const isFinish = action.name === 'Finish';
+                    // Finish默认展开，其他默认折叠
+                    const isExpanded = isFinish || expandedActions.has(actionId);
+                    
+                    // 获取摘要信息
+                    let summary = action.shortSummary || '';
+                    if (!summary && action.properties) {
+                        if (action.properties.file_path) summary = action.properties.file_path;
+                        else if (action.properties.directory) summary = action.properties.directory || '(root)';
+                        else if (action.properties.pattern) summary = action.properties.pattern;
+                    }
+                    
+                    const typeClass = isFinish ? '' : `type-${iconInfo.class}`;
+                    
+                    html += `
+                        <div class="action-section ${isFinish ? 'finish-action' : typeClass}">
+                            <div class="action-header ${isFinish ? 'no-toggle' : ''}" onclick="toggleAction('${actionId}', ${isFinish})">
+                                <div class="action-icon ${iconInfo.class}">${iconInfo.svg}</div>
+                                <div class="action-title">
+                                    <span class="action-name">${escapeHtml(action.name)}</span>
+                                    ${summary ? `<span class="action-summary">${escapeHtml(summary)}</span>` : ''}
+                                </div>
+                                ${isFinish ? '' : `<div class="action-toggle ${isExpanded ? '' : 'collapsed'}" id="action-toggle-${actionId}">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>`}
+                            </div>
+                            <div class="action-body ${isExpanded ? 'expanded' : ''}" id="action-body-${actionId}">
+                    `;
+                    
+                    // 渲染属性
+                    if (action.properties && typeof action.properties === 'object') {
+                        for (const [key, value] of Object.entries(action.properties)) {
+                            if (value === null || value === undefined || value === '' || key === 'thoughts') continue;
+                            
+                            const displayName = formatPropertyName(key);
+                            
+                            if (typeof value === 'string' && isListText(value)) {
+                                const items = parseListText(value);
+                                html += `
+                                    <div class="action-block">
+                                        <div class="action-block-title">${escapeHtml(displayName)}</div>
+                                        <ul class="step-list">
+                                            ${items.map((item, i) => `
+                                                <li class="step-item">
+                                                    <span class="step-number">${i + 1}</span>
+                                                    <span>${escapeHtml(item)}</span>
+                                                </li>
+                                            `).join('')}
+                                        </ul>
+                                    </div>
+                                `;
+                            } else if (typeof value === 'boolean') {
+                                html += `
+                                    <div class="action-block">
+                                        <div class="action-block-title">${escapeHtml(displayName)}</div>
+                                        <div class="action-block-content">${value ? 'Yes' : 'No'}</div>
+                                    </div>
+                                `;
+                            } else {
+                                html += `
+                                    <div class="action-block">
+                                        <div class="action-block-title">${escapeHtml(displayName)}</div>
+                                        <div class="action-block-content">${escapeHtml(String(value))}</div>
+                                    </div>
+                                `;
+                            }
+                        }
+                    }
+                    
+                    // 观察结果
+                    if (action.observation?.message) {
+                        html += `
+                            <div class="observation-section">
+                                <div class="observation-header">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                    Result
+                                </div>
+                                <div class="observation-content">${escapeHtml(action.observation.message)}</div>
+                            </div>
+                        `;
+                    }
+                    
+                    html += '</div></div>';
+                });
+            }
+            
+            html += `<div class="message-timestamp">${formatTimestamp(msg.timestamp)}</div>`;
+            html += '</div></div>';
+            
+            return html;
+        }
+
+        function renderChat() {
+            const chatArea = document.getElementById('chatArea');
+
+            if (!currentCardData?.messages || currentCardData.messages.length === 0) {
+                renderEmpty();
+                return;
+            }
+
+            // 检查当前卡片是否已完成
+            const currentCard = cardList.find(c => c.id === currentCardId);
+            const isFinished = currentCard?.status === 'finished';
+            const mcpId = `${currentProjectId}@@@${currentCardId}`;
+
+            expandedActions.clear();
+            let html = '';
+            let hasShownExecutionLabel = false;
+            
+            currentCardData.messages.forEach((msg, idx) => {
+                if (msg.type === 'user_message') {
+                    html += renderUserMessage(msg);
+                } else if (msg.type === 'assistant_response') {
+                    // 第一个助手响应前显示执行过程标签和完成提示
+                    if (!hasShownExecutionLabel) {
+                        html += '<div class="divider"></div>';
+                        
+                        // 如果已完成，显示提示
+                        if (isFinished) {
+                            html += `
+                                <div class="finish-tips">
+                                    <div class="finish-tips-header">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        任务已完成
+                                    </div>
+                                    <div class="finish-tips-content">
+                                        请确认Agent更改是否正确，如果正确可粘贴如下内容到云效DevAgent中：
+                                        <code class="finish-tips-code" onclick="copyMcpCommand(this)" title="点击复制">请使用MCP工具将变更应用于代码库，ID为：${mcpId}</code>
+                                        <span class="finish-tips-copy" onclick="copyMcpCommand(document.querySelector('.finish-tips-code'))">
+                                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            点击复制
+                                        </span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        html += `<div class="turn-label"><span>Agent 执行过程</span></div>`;
+                        hasShownExecutionLabel = true;
+                    }
+                    html += renderAssistantMessage(msg, idx);
+                }
+            });
+
+            chatArea.innerHTML = html;
+            chatArea.scrollTop = 0;
+        }
+
+        // 复制MCP命令
+        function copyMcpCommand(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                // 显示复制成功提示
+                element.style.backgroundColor = '#d4edda';
+                setTimeout(() => {
+                    element.style.backgroundColor = '';
+                }, 500);
+                showCopyToast();
+            }).catch(err => {
+                console.error('复制失败:', err);
+            });
+        }
+
+        // 显示复制成功提示
+        function showCopyToast() {
+            const toast = document.getElementById('refreshToast');
+            toast.querySelector('span').textContent = '已复制到剪贴板';
+            toast.classList.add('visible');
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                toast.querySelector('span').textContent = 'Refreshed';
+            }, 1800);
+        }
+
+        // ==================== 选择卡片 ====================
+        async function selectCard(cardId, forceRefresh = false) {
+            currentCardId = cardId;
+            loadError = null;
+            showRefreshEffect();
+
+            try {
+                const card = cardList.find(c => c.id === cardId);
+                
+                // 优先使用缓存数据（如果有且不强制刷新）
+                if (!forceRefresh && card?.cachedData) {
+                    currentCardData = card.cachedData;
+                    card.cachedData = null; // 使用后清除缓存
+                } else {
+                    currentCardData = await apiGetCardDetail(cardId);
+                    
+                    // 更新卡片状态
+                    const statusInfo = parseCardStatus(currentCardData.messages);
+                    if (card) {
+                        card.status = statusInfo.status;
+                        card.finishTime = statusInfo.finishTime;
+                    }
+                }
+                
+                renderCardTabs();
+                renderChat();
+                if (forceRefresh) {
+                    showRefreshToast();
+                }
+            } catch (e) {
+                console.error('Failed to load card:', e);
+                loadError = e.message;
+                renderChatError();
+            } finally {
+                hideRefreshEffect();
+            }
+        }
+
+        // ==================== 后台刷新卡片状态 ====================
+        async function refreshCardStatus(cardId) {
+            // 不刷新当前选中的卡片
+            if (cardId === currentCardId) return;
+            
+            try {
+                const data = await apiGetCardDetail(cardId);
+                const statusInfo = parseCardStatus(data.messages);
+                
+                const card = cardList.find(c => c.id === cardId);
+                if (card) {
+                    const oldStatus = card.status;
+                    card.status = statusInfo.status;
+                    card.finishTime = statusInfo.finishTime;
+                    
+                    // 状态变化时更新UI
+                    if (oldStatus !== statusInfo.status) {
+                        renderCardTabs();
+                    }
+                }
+            } catch (e) {
+                console.error(`Failed to refresh card ${cardId}:`, e);
+            }
+            
+            // 如果未完成，设置下一次刷新
+            const card = cardList.find(c => c.id === cardId);
+            if (card && card.status !== 'finished') {
+                scheduleCardRefresh(cardId);
+            }
+        }
+
+        // 安排卡片刷新（随机0-60秒）
+        function scheduleCardRefresh(cardId) {
+            // 清除已有的定时器
+            if (refreshTimers[cardId]) {
+                clearTimeout(refreshTimers[cardId]);
+            }
+            
+            // 随机0-60秒
+            const delay = Math.random() * 60000;
+            refreshTimers[cardId] = setTimeout(() => {
+                refreshCardStatus(cardId);
+            }, delay);
+        }
+
+        // 启动所有未完成卡片的刷新
+        function startBackgroundRefresh() {
+            for (const card of cardList) {
+                if (card.status !== 'finished') {
+                    scheduleCardRefresh(card.id);
+                }
+            }
+        }
+
+        // 停止所有刷新
+        function stopBackgroundRefresh() {
+            for (const timerId of Object.values(refreshTimers)) {
+                clearTimeout(timerId);
+            }
+            refreshTimers = {};
+        }
+
+        // ==================== 错误显示 ====================
+        function renderChatError() {
+            const chatArea = document.getElementById('chatArea');
+            chatArea.innerHTML = `
+                <div class="error-placeholder">
+                    <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <div class="error-title">加载失败</div>
+                    <div class="error-message">${loadError || '无法连接到服务器，请检查网络连接'}</div>
+                    <button class="retry-btn" onclick="selectCard(currentCardId)">重试</button>
+                </div>
+            `;
+        }
+
+        function renderCardsError() {
+            const cardTabs = document.getElementById('cardTabs');
+            cardTabs.innerHTML = `
+                <div class="error-placeholder" style="padding: 20px;">
+                    <div class="error-message">加载任务列表失败</div>
+                    <button class="retry-btn" onclick="init()">重试</button>
+                </div>
+            `;
+        }
+
+        function renderEmpty() {
+            const chatArea = document.getElementById('chatArea');
+            chatArea.innerHTML = `
+                <div class="empty-placeholder">
+                    <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                    <div class="empty-title">暂无对话数据</div>
+                </div>
+            `;
+        }
+
+        // ==================== 初始化 ====================
+        async function init() {
+            loadError = null;
+            
+            try {
+                // 获取卡片列表
+                const cards = await apiGetCardIdsByProject(currentProjectId);
+                cardList = cards.map(c => ({ ...c, status: 'pending', finishTime: null }));
+                
+                renderCardTabs();
+                renderProjectList();
+                
+                if (cardList.length > 0) {
+                    // 立即获取所有卡片的状态
+                    await fetchAllCardStatus();
+                    
+                    // 选中第一个卡片
+                    await selectCard(cardList[0].id);
+                    
+                    // 启动后台刷新
+                    startBackgroundRefresh();
+                } else {
+                    renderEmpty();
+                }
+            } catch (e) {
+                console.error('Failed to init:', e);
+                loadError = e.message;
+                renderCardsError();
+            }
+        }
+
+        // 获取所有卡片的状态，并缓存数据
+        async function fetchAllCardStatus() {
+            const promises = cardList.map(async (card) => {
+                try {
+                    const data = await apiGetCardDetail(card.id);
+                    const statusInfo = parseCardStatus(data.messages);
+                    card.status = statusInfo.status;
+                    card.finishTime = statusInfo.finishTime;
+                    card.cachedData = data; // 缓存数据，避免重复请求
+                } catch (e) {
+                    console.error(`Failed to fetch status for ${card.id}:`, e);
+                    card.cachedData = null;
+                }
+            });
+            
+            await Promise.all(promises);
+            renderCardTabs();
+        }
+
+        // 刷新全部
+        async function refreshAll() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.classList.add('loading');
+            
+            try {
+                // 停止现有的后台刷新
+                stopBackgroundRefresh();
+                
+                // 重新获取卡片列表
+                const cards = await apiGetCardIdsByProject(currentProjectId);
+                cardList = cards.map(c => ({ ...c, status: 'pending', finishTime: null }));
+                
+                renderCardTabs();
+                renderProjectList();
+                
+                if (cardList.length > 0) {
+                    // 立即获取所有卡片的状态
+                    await fetchAllCardStatus();
+                    
+                    // 如果当前选中的卡片还存在，使用缓存数据
+                    if (currentCardId && cardList.find(c => c.id === currentCardId)) {
+                        await selectCard(currentCardId, false);
+                    } else if (cardList.length > 0) {
+                        await selectCard(cardList[0].id, false);
+                    }
+                    
+                    // 重新启动后台刷新
+                    startBackgroundRefresh();
+                } else {
+                    currentCardId = null;
+                    renderEmpty();
+                }
+                
+                showRefreshToast();
+            } catch (e) {
+                console.error('Failed to refresh:', e);
+                loadError = e.message;
+                renderCardsError();
+            } finally {
+                refreshBtn.classList.remove('loading');
+            }
+        }
+
+        // 页面卸载时清理定时器
+        window.addEventListener('beforeunload', () => {
+            stopBackgroundRefresh();
+        });
+
+        init();
+    </script>
+</body>
+</html>
