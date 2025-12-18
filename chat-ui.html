@@ -1071,8 +1071,9 @@
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            // 返回格式：数组转为对象数组
-            return data.map(id => ({ id }));
+            // 按字典序排序后返回
+            const sortedData = data.sort((a, b) => a.localeCompare(b));
+            return sortedData.map(id => ({ id }));
         }
 
         // 根据card_id获取卡片详情
@@ -1119,18 +1120,16 @@
             return { title, startTime };
         }
 
-        // 格式化时间戳为北京时间
+        // 格式化时间戳
         function formatFullTime(timestamp) {
             if (!timestamp) return '';
             const date = new Date(timestamp);
-            // 转换为北京时间 (UTC+8)
-            const beijingTime = new Date(date.getTime() + (8 * 60 * 60 * 1000) - (date.getTimezoneOffset() * 60 * 1000));
-            const year = beijingTime.getUTCFullYear();
-            const month = String(beijingTime.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(beijingTime.getUTCDate()).padStart(2, '0');
-            const hour = String(beijingTime.getUTCHours()).padStart(2, '0');
-            const minute = String(beijingTime.getUTCMinutes()).padStart(2, '0');
-            const second = String(beijingTime.getUTCSeconds()).padStart(2, '0');
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hour = String(date.getHours()).padStart(2, '0');
+            const minute = String(date.getMinutes()).padStart(2, '0');
+            const second = String(date.getSeconds()).padStart(2, '0');
             return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
         }
 
