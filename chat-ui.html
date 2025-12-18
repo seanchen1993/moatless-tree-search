@@ -211,7 +211,8 @@
         }
 
         .card-tab {
-            min-width: 200px;
+            width: 240px;
+            flex-shrink: 0;
             padding: 10px 14px;
             background-color: var(--bg-primary);
             border-radius: 8px;
@@ -240,6 +241,9 @@
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .card-tab-time {
@@ -724,6 +728,68 @@
             height: 1px;
             background: var(--border);
             margin: 20px 0;
+        }
+
+        /* 完成提示 */
+        .finish-tips {
+            background-color: var(--success-soft);
+            border: 1px solid #c3e6c7;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+        }
+
+        .finish-tips-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .finish-tips-header svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .finish-tips-content {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #2d6a31;
+        }
+
+        .finish-tips-code {
+            display: block;
+            margin-top: 8px;
+            padding: 8px 10px;
+            background-color: #fff;
+            border: 1px solid #c3e6c7;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 11px;
+            color: var(--text-primary);
+            word-break: break-all;
+            cursor: pointer;
+        }
+
+        .finish-tips-code:hover {
+            background-color: #f8fff8;
+        }
+
+        .finish-tips-copy {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+            font-size: 11px;
+            color: var(--success);
+            cursor: pointer;
+        }
+
+        .finish-tips-copy:hover {
+            text-decoration: underline;
         }
 
         /* 轮次标签 */
@@ -1486,6 +1552,11 @@
                 return;
             }
 
+            // 检查当前卡片是否已完成
+            const currentCard = cardList.find(c => c.id === currentCardId);
+            const isFinished = currentCard?.status === 'finished';
+            const mcpId = `${currentProjectId}@@@${currentCardId}`;
+
             expandedActions.clear();
             let html = '';
             let hasShownExecutionLabel = false;
@@ -1494,9 +1565,30 @@
                 if (msg.type === 'user_message') {
                     html += renderUserMessage(msg);
                 } else if (msg.type === 'assistant_response') {
-                    // 第一个助手响应前显示执行过程标签
+                    // 第一个助手响应前显示执行过程标签和完成提示
                     if (!hasShownExecutionLabel) {
                         html += '<div class="divider"></div>';
+                        
+                        // 如果已完成，显示提示
+                        if (isFinished) {
+                            html += `
+                                <div class="finish-tips">
+                                    <div class="finish-tips-header">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                        任务已完成
+                                    </div>
+                                    <div class="finish-tips-content">
+                                        请确认Agent更改是否正确，如果正确可粘贴如下内容到云效DevAgent中：
+                                        <code class="finish-tips-code" onclick="copyMcpCommand(this)" title="点击复制">请使用MCP工具将变更应用于代码库，ID为：${mcpId}</code>
+                                        <span class="finish-tips-copy" onclick="copyMcpCommand(document.querySelector('.finish-tips-code'))">
+                                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                            点击复制
+                                        </span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
                         html += `<div class="turn-label"><span>Agent 执行过程</span></div>`;
                         hasShownExecutionLabel = true;
                     }
@@ -1506,6 +1598,32 @@
 
             chatArea.innerHTML = html;
             chatArea.scrollTop = 0;
+        }
+
+        // 复制MCP命令
+        function copyMcpCommand(element) {
+            const text = element.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                // 显示复制成功提示
+                element.style.backgroundColor = '#d4edda';
+                setTimeout(() => {
+                    element.style.backgroundColor = '';
+                }, 500);
+                showCopyToast();
+            }).catch(err => {
+                console.error('复制失败:', err);
+            });
+        }
+
+        // 显示复制成功提示
+        function showCopyToast() {
+            const toast = document.getElementById('refreshToast');
+            toast.querySelector('span').textContent = '已复制到剪贴板';
+            toast.classList.add('visible');
+            setTimeout(() => {
+                toast.classList.remove('visible');
+                toast.querySelector('span').textContent = 'Refreshed';
+            }, 1800);
         }
 
         // ==================== 选择卡片 ====================
