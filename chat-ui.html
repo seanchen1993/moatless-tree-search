@@ -1093,17 +1093,27 @@
             const title = parts[0] || cardId;
             const timeStr = parts[1] || '';
             
-            // 解析时间: 20251217025806 -> 2025-12-17 02:58:06
-            // 时间字符串是北京时间，直接显示即可
+            // 解析时间: 20251217025806 -> 需要加8小时转为北京时间
             let startTime = '';
             if (timeStr.length >= 14) {
-                const year = timeStr.substring(0, 4);
-                const month = timeStr.substring(4, 6);
-                const day = timeStr.substring(6, 8);
-                const hour = timeStr.substring(8, 10);
-                const minute = timeStr.substring(10, 12);
-                const second = timeStr.substring(12, 14);
-                startTime = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+                const year = parseInt(timeStr.substring(0, 4));
+                const month = parseInt(timeStr.substring(4, 6)) - 1; // 月份从0开始
+                const day = parseInt(timeStr.substring(6, 8));
+                const hour = parseInt(timeStr.substring(8, 10));
+                const minute = parseInt(timeStr.substring(10, 12));
+                const second = parseInt(timeStr.substring(12, 14));
+                
+                // 创建UTC时间，然后加8小时转为北京时间
+                const utcDate = new Date(Date.UTC(year, month, day, hour, minute, second));
+                const beijingDate = new Date(utcDate.getTime() + 8 * 60 * 60 * 1000);
+                
+                const y = beijingDate.getUTCFullYear();
+                const m = String(beijingDate.getUTCMonth() + 1).padStart(2, '0');
+                const d = String(beijingDate.getUTCDate()).padStart(2, '0');
+                const h = String(beijingDate.getUTCHours()).padStart(2, '0');
+                const min = String(beijingDate.getUTCMinutes()).padStart(2, '0');
+                const s = String(beijingDate.getUTCSeconds()).padStart(2, '0');
+                startTime = `${y}-${m}-${d} ${h}:${min}:${s}`;
             }
             
             return { title, startTime };
