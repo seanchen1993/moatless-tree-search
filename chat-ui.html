@@ -1337,7 +1337,8 @@
             for (const card of cardList) {
                 const tab = document.createElement('div');
                 tab.className = `card-tab ${card.id === currentCardId ? 'active' : ''}`;
-                tab.onclick = () => selectCard(card.id);
+                // 点击卡片时强制刷新数据
+                tab.onclick = () => selectCard(card.id, true);
 
                 const { title, startTime } = parseCardId(card.id);
                 const status = card.status || 'pending';
@@ -1672,25 +1673,34 @@
         }
 
         // ==================== 选择卡片 ====================
-        async function selectCard(cardId) {
+        async function selectCard(cardId, forceRefresh = false) {
             currentCardId = cardId;
             loadError = null;
             showRefreshEffect();
 
             try {
-                currentCardData = await apiGetCardDetail(cardId);
-                
-                // 更新卡片状态
-                const statusInfo = parseCardStatus(currentCardData.messages);
                 const card = cardList.find(c => c.id === cardId);
-                if (card) {
-                    card.status = statusInfo.status;
-                    card.finishTime = statusInfo.finishTime;
+                
+                // 优先使用缓存数据（如果有且不强制刷新）
+                if (!forceRefresh && card?.cachedData) {
+                    currentCardData = card.cachedData;
+                    card.cachedData = null; // 使用后清除缓存
+                } else {
+                    currentCardData = await apiGetCardDetail(cardId);
+                    
+                    // 更新卡片状态
+                    const statusInfo = parseCardStatus(currentCardData.messages);
+                    if (card) {
+                        card.status = statusInfo.status;
+                        card.finishTime = statusInfo.finishTime;
+                    }
                 }
                 
                 renderCardTabs();
                 renderChat();
-                showRefreshToast();
+                if (forceRefresh) {
+                    showRefreshToast();
+                }
             } catch (e) {
                 console.error('Failed to load card:', e);
                 loadError = e.message;
@@ -1833,7 +1843,7 @@
             }
         }
 
-        // 获取所有卡片的状态
+        // 获取所有卡片的状态，并缓存数据
         async function fetchAllCardStatus() {
             const promises = cardList.map(async (card) => {
                 try {
@@ -1841,8 +1851,10 @@
                     const statusInfo = parseCardStatus(data.messages);
                     card.status = statusInfo.status;
                     card.finishTime = statusInfo.finishTime;
+                    card.cachedData = data; // 缓存数据，避免重复请求
                 } catch (e) {
                     console.error(`Failed to fetch status for ${card.id}:`, e);
+                    card.cachedData = null;
                 }
             });
             
@@ -1870,11 +1882,11 @@
                     // 立即获取所有卡片的状态
                     await fetchAllCardStatus();
                     
-                    // 如果当前选中的卡片还存在，刷新它的数据
+                    // 如果当前选中的卡片还存在，使用缓存数据
                     if (currentCardId && cardList.find(c => c.id === currentCardId)) {
-                        await selectCard(currentCardId);
+                        await selectCard(currentCardId, false);
                     } else if (cardList.length > 0) {
-                        await selectCard(cardList[0].id);
+                        await selectCard(cardList[0].id, false);
                     }
                     
                     // 重新启动后台刷新
